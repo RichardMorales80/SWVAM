@@ -1,0 +1,131 @@
+*{
+
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: 'Arial';
+
+    padding-bottom: 50px;
+}
+
+
+
+.gallery{
+    padding-top: 15px;
+    padding-bottom: 20px;
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+     /* background: red; */
+}
+
+
+.gallery h2{
+   width: 70%;
+    font-size: 35px;
+    padding-top: 100px;
+    border-bottom: 4px solid #4343a1;
+   
+}
+
+
+
+
+.container{
+    
+    font-size: 0;
+    padding-top: 50px;
+}
+
+
+
+.container img{
+    padding: 20px;
+    width: 30%;
+    margin-left: 1.5%;
+    margin-right: 1.5%;
+    margin-bottom: 20px;
+    height: 280px;
+    cursor: pointer;
+    box-shadow:2px 2px 10px rgba(0, 0, 0, .5) ;
+}
+
+.btn{
+	font-size: 16px; /* Cambiar el tamaño de la tipografia */
+	text-transform: uppercase; /* Texto en mayusculas */
+	font-weight: bold; /* Fuente en negrita o bold */
+	color: #ffffff; /* Color del texto */
+	border-radius: 5px; /* Borde del boton */
+	letter-spacing: 2px; /* Espacio entre letras */
+	background-color: #E91E63; /* Color de fondo */
+    text-decoration: none;
+	padding: 18px 30px; /* Relleno del boton */
+	position: fixed;
+	bottom: 430px;
+	right: 40px;
+	transition: all 300ms ease 0ms;
+	box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+	z-index: 9;
+}
+.btn:hover {
+	background-color: #2c2fa5; /* Color de fondo al pasar el cursor */
+	box-shadow: 0px 15px 20px rgba(0, 0, 0, 0.3);
+	transform: translateY(-7px);
+}
+@media only screen and (max-width: 600px) {
+ 
+    .btn{
+        font-size: 10px;       
+        padding-top:20px;
+        padding-bottom: 15px;     
+	    transition: all 300ms ease 0ms;     
+    
+    }
+
+    .descarga{
+        display: flex;
+        flex-direction: column;
+        
+    }
+
+    .gallery h2{
+        width: 70%;
+         font-size: 25px;
+         padding-top: 90px;
+         border-bottom: 4px solid #4343a1;
+        
+     }
+
+     .titulo{
+        width: 70%;
+        font-size: 35px;
+        padding-top: 10px;
+    }
+
+     .gallery img{
+        display: flex;
+        flex-direction: column;
+        align-items:flex-start; 
+        padding: 30px;
+        width: 90%;
+        margin-left: 1%;
+        margin-right: 1.5%;
+        margin-bottom: 10px;
+        height:auto;
+        cursor: pointer;
+        box-shadow:2px 2px 10px rgba(0, 0, 0, .5) ;
+    }
+
+
+    .gallery .img{
+        width: 90%;
+    margin: 10px auto;    
+    bottom: 2em;
+    object-fit: cover;
+    display: block;  
+    }
+    
+}

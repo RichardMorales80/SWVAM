@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="estilos/galeria.css">
+
+    <link rel="stylesheet" href="estilos/principal.css">
+
+
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <nav class="main_nav"> <!-- se crea la clase para poder realizar el menu pegajoso -->
+		 <div class="menu_toggle" id="toggle">☰</div>
+        <!--se crea boton par poder utilizarlo en dispositivos moviles  -->
+
+       <ul id="main-menu" class="menu main-menu">
+
+    <li class="logo">
+        <a href="#" class="enlace">
+            <img src="../img/logo1.png" class="logo">
+        </a>
+    </li>
+
+    <li class="main_menu_item">
+        <a href="formulario.php" class="main_menu_link">Crear cuenta</a>
+    </li>
+
+    <li class="main_menu_item">
+        <a href="login.php" class="main_menu_link">Inicio sesión</a>
+    </li>
+
+    <li class="main_menu_item">
+        <a href="/" class="main_menu_link">Inicio</a>
+    </li>
+
+</ul>
+
+
+    </nav>
+
+    <section class="gallery">
+
+        <div class="titulo">
+            <h2 class="titulo">Galeria de productos NDT</h2>
+        </div>
+
+
+        <div class="container">
+            <img src="../img/img_1.png" alt="" class="galeria__img">
+            <img src="../img/img_2.png" alt="" class="galeria__img">
+            <img src="../img/img_3.png" alt="" class="galeria__img">
+            <img src="../img/img_4.png" alt="" class="galeria__img">
+            <img src="../img/img_5.png" alt="" class="galeria__img">
+            <img src="../img/img_6.png" alt="" class="galeria__img">
+            <img src="../img/img_7.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/automatic.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/defectbook 1000.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/defectbook 1000pa.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/hi.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/kit 704.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/scopio series p.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/v-wac.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/w6-601.png" alt="" class="galeria__img">
+            <img src="../img/menos vendidos/w6.png" alt="" class="galeria__img">
+            <img src="../img/img_9.png" alt="" class="galeria__img">
+            <img src="../img/img_10.png" alt="" class="galeria__img">
+
+
+        </div>
+
+        <div class="descarga">
+            <a href="pdf/catalo productos.pdf" class="btn" download="catalogo.pdf">Descargar catalogo</a>
+
+        </div>
+
+    </section>
+    <script>
+
+    </script>
+
+<script>
+const toggle = document.getElementById("toggle");
+const menu = document.getElementById("main-menu");
+
+toggle.addEventListener("click", ()=>{
+    menu.classList.toggle("active");
+});
+</script>
+
+</body>
+
+</html>

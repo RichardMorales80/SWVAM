@@ -1,0 +1,444 @@
+/* --- REINICIO GENERAL --- */
+html, body{
+    width:100%;
+    overflow-x:hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- CUERPO --- */
+body {
+    /* Si quieres fondo, puedes activar estas líneas
+    background: url(https://matthewndt.com.mx/wp-content/uploads/2021/05/cropped-LOGO-MATTHEW-TRANSPARNCIA.png);
+    background-color: rgba(215, 230, 230, 0.76);
+    background-size: 50vw 90vh;
+    background-repeat: no-repeat;
+    background-position-y: 8rem;
+    */
+}
+
+/* --- IMÁGENES --- */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Barra superior */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #6c63ff;
+    padding: 10px 40px;
+    height: 90px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Contenedor del logo */
+.enlace {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Logo */
+.logo {
+    width: 130px;
+    /* tamaño equilibrado */
+    height: auto;
+    transition: all 0.3s ease;
+}
+
+/* Menú */
+.menu a {
+    color: white;
+    text-decoration: none;
+    margin-left: 30px;
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+/* Efecto hover en los enlaces */
+
+
+/* --- MENÚ DE NAVEGACIÓN --- */
+.menu{
+    list-style:none;
+    display:flex;
+    margin:0;
+    padding:0;
+}
+
+@media screen and (min-width: 768px) {
+    .menu{
+    list-style:none;
+    display:flex;
+}
+.main_nav{
+    width:100%;
+    background:#5d76e7;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 25px;
+    box-sizing:border-box;
+}
+
+
+
+
+
+    .main_menu_item {
+        padding: 33px;
+    }
+}
+
+.main_menu_item {
+    padding: 3px 15px;
+}
+
+.main_menu_link {
+    color: black;
+    padding: 3px;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.main_menu_link:hover {
+    color: white;
+    text-decoration: none;
+}
+
+/* --- NOMBRE (texto genérico) --- */
+.nombre {
+    text-align: center;
+    color: rgb(109, 139, 194);
+    font-size: 15px;
+}
+
+/* --- CARRUSEL --- */
+.slider {
+    width: 95%;
+    margin: 20% auto 10%;
+    overflow: hidden;
+}
+
+.slider ul {
+    display: flex;
+    padding: 1%;
+    width: 600%;
+    animation: slide 90s infinite linear;
+    /* MÁS LENTO Y SUAVE */
+}
+
+.slider li {
+    list-style: none;
+    width: 90%;
+}
+
+.slider img {
+    width: 100%;
+    height: 400px;
+    object-fit: contain;
+    /* muestra toda la imagen */
+    background-color: #f0f0f0;
+    /* relleno neutro */
+    display: block;
+}
+
+
+/* Ajuste para pantallas grandes */
+@media screen and (min-width: 768px) {
+    .slider img {
+        height: 450px;
+    }
+}
+
+/* Animación del carrusel */
+@keyframes slide {
+    0% {
+        margin-left: 0%;
+    }
+
+    10% {
+        margin-left: -100%;
+    }
+
+    20% {
+        margin-left: -200%;
+    }
+
+    30% {
+        margin-left: -300%;
+    }
+
+    40% {
+        margin-left: -400%;
+    }
+
+    50% {
+        margin-left: -500%;
+    }
+
+    60% {
+        margin-left: -600%;
+    }
+
+    70% {
+        margin-left: -700%;
+    }
+
+    80% {
+        margin-left: -800%;
+    }
+
+    90% {
+        margin-left: -900%;
+    }
+
+    100% {
+        margin-left: -900%;
+    }
+}
+
+/* --- SECCIONES DE CONTENIDO --- */
+.cuerpo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.section {
+    width: 80%;
+    margin: 30px 15px;
+    border-radius: 5px;
+    background-color: aliceblue;
+}
+
+@media screen and (max-width: 768px) {
+    .cuerpo {
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+}
+
+.imagenes {
+    width: 90%;
+    margin: 10px auto;
+    bottom: 2em;
+    object-fit: cover;
+    display: block;
+}
+
+.title {
+    text-align: center;
+    color: rgb(79, 83, 56);
+}
+
+.copy {
+    text-align: center;
+}
+
+/* --- PIE DE PÁGINA --- */
+.pie_pagina {
+    width: 100%;
+    background-color: rgba(231, 226, 226, 0.644);
+}
+
+.pie_pagina .zona1 {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 51px;
+    padding: 45px 0px;
+}
+
+.pie_pagina .zona1 .box figure {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pie_pagina .zona1 .box figure img {
+    width: 200px;
+    padding-top: 10px;
+    padding-right: 5px;
+}
+
+.pie_pagina .zona1 h2 {
+    color: #000;
+    /* Texto negro */
+    margin-bottom: 25px;
+    font-size: 20px;
+}
+
+.pie_pagina .zona1 .box p {
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.pie_pagina .zona1 .red-social a {
+    display: inline-block;
+    text-decoration: none;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    color: #0d2033;
+    text-align: center;
+    transition: all 300ms ease;
+}
+
+.pie_pagina .zona1 .red-social a:hover {
+    color: aqua;
+}
+
+.pie_pagina .zona2 {
+    background-color: #0a1a2a;
+    padding: 15px 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.pie_pagina .zona2 small {
+    font-size: 15px;
+}
+
+.logo-footer {
+    pointer-events: none;
+    /* desactiva clics */
+    cursor: default;
+    /* cursor normal, no mano */
+}
+
+
+@media screen and (max-width: 758px) {
+    .pie_pagina .zona1 {
+        width: 90%;
+        grid-template-columns: repeat(1, 1fr);
+        grid-gap: 30px;
+        padding: 35px 0px;
+    }
+}
+
+.menu_toggle{
+    display:none;
+    font-size:40px;
+    padding:10px 15px;
+    color:black;
+    cursor:pointer;
+    margin-left:auto;
+}
+@media (max-width:768px){
+
+    .menu_toggle{
+        display:block;
+    }
+
+    .menu{
+        position:absolute;
+        top:80px;
+        left:0;
+        width:100%;
+        background:#111;
+        flex-direction:column;
+        display:none;
+    }
+
+    .menu li{
+        text-align:center;
+        border-top:1px solid #333;
+    }
+
+    .menu li a{
+        display:block;
+        padding:15px;
+        color:white;
+        font-size:18px;
+    }
+
+    .menu.active{
+        display:flex;
+    }
+}
+
+/* ===== FIX MENU RESPONSIVE ===== */
+
+.main_nav{
+    position:relative;
+    width:100%;
+    background:#5d76e7;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:15px 25px;
+    z-index:9999;
+}
+
+/* BOTON HAMBURGUESA */
+.menu_toggle{
+    display:none;
+    font-size:45px;
+    color:white;
+    cursor:pointer;
+}
+
+/* MENU PC */
+.menu{
+    display:flex;
+    list-style:none;
+    align-items:center;
+}
+
+/* LINKS PC */
+.main_menu_link{
+    color:white;
+    text-decoration:none;
+    padding:15px 20px;
+    font-size:17px;
+}
+
+/* ===== MOVIL ===== */
+
+@media (max-width:768px){
+
+    .menu_toggle{
+        display:block;
+        margin:auto;
+    }
+
+    .menu{
+        position:absolute;
+        top:80px;
+        left:0;
+        width:100%;
+        background:#5d76e7;
+        flex-direction:column;
+        display:none;
+    }
+
+    .menu.active{
+        display:flex;
+    }
+
+    .menu li{
+        text-align:center;
+    }
+
+    .menu li a{
+        color:white;
+        font-size:20px;
+        padding:18px;
+    }
+}
+
