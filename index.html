@@ -1,212 +1,189 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <title>Pagina principal</title>
-    <link rel="icon" href="public/img/logo.png"><!--favicon-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <!-- link de font-awesome para los iconos -->
-    <!--estilos-->
-    <link rel="stylesheet" href="../public/estilos/principal.css">
-    <style>
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('imagenes/logo1.png') no-repeat center center;
-            background-size: 300px;
-            opacity: 0.20;
-            /* Nivel de transparencia */
-            z-index: -5;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Página principal - Matthew NDT</title>
+
+<link rel="icon" href="../public/imgenes/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+
+<!-- TU CSS PRINCIPAL -->
+<link rel="stylesheet" href="../public/estilos/encabezado.css">
+
 </head>
 
-
 <body>
-    <!-- Botón flotante de WhatsApp -->
-    <a href="https://wa.me/525548929587?text=Hola%2C%20quiero%20más%20información%20sobre%20su%20sistema."
-        class="whatsapp-float" target="_blank" title="Chatea con el administrador">
-        <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png" alt="WhatsApp" />
-    </a>
 
-    <style>
-        .whatsapp-float {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            width: 60px;
-            height: 60px;
-        }
+<!-- FONDO CON CIRCULOS -->
+<div class="background-shapes">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+</div>
 
-        .whatsapp-float img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s;
-        }
+<!-- ================= NAV ================= -->
 
-        .whatsapp-float img:hover {
-            transform: scale(1.1);
-        }
-    </style>
+<nav class="main_nav">
 
-
-    <div class="caja">
-
-
-       <nav class="main_nav">
-           <!-- BOTON HAMBURGUESA -->
     <div class="menu_toggle" id="menuToggle">☰</div>
-          <ul class="menu" id="menu">
 
-                <!-- Logo -->
-                <li class="logo-item">
-                    <a href="#" class="enlace">
-                        <img src="..//public/imagenes/logo1.png" alt="logo" class="logo">
-                    </a>
-                </li>
+    <ul class="menu" id="menu">
 
-                <!-- Enlaces -->
-                <li><a href="../public/formulario.php" class="main_menu_link">Crea cuenta</a></li>
-                <li><a href="../public/login.php" class="main_menu_link">Inicio sesión</a></li>
-                <li><a href="../public/productos.html" class="main_menu_link">Productos</a></li>
-            </ul>
-        </nav>
+        <li class="logo-item">
+            <a href="#">
+                <img src="../public/imagenes/logo.png" class="logo" alt="logo">
+            </a>
+        </li>
 
+        <li>
+            <a href="../public/formulario.php" class="main_menu_link">Crea cuenta</a>
+        </li>
+
+        <li>
+            <a href="../public/login.php" class="main_menu_link">Inicio sesión</a>
+        </li>
+
+        <li>
+            <a href="../public/productos.html" class="main_menu_link">Catalogo</a>
+        </li>
+
+    </ul>
+
+</nav>
+
+
+<!-- ================= QUIENES SOMOS ================= -->
+
+<section class="quienes-somos">
+
+    <h2>¿Quiénes Somos?</h2>
+
+    <p>
+        Somos una empresa 100% mexicana que ofrece venta de equipos,
+        servicio y capacitaciones para la industria en general.
+        Contamos con personal capacitado para la elaboración de servicios
+        en la industria en general.
+    </p>
+
+</section>
+
+<!-- ================= CARRUSEL ================= -->
+
+<section class="carrusel">
+
+    <div class="slider">
+
+        <ul class="fotos">
+
+            <li><img src="../img/img_1.png"></li>
+            <li><img src="../img/img_2.png"></li>
+            <li><img src="../img/img_3.png"></li>
+            <li><img src="../img/img_4.png"></li>
+            <li><img src="../img/img_5.png"></li>
+            <li><img src="../img/img_6.png"></li>
+            <li><img src="../img/img_8.png"></li>
+            <li><img src="../img/img_9.png"></li>
+            <li><img src="../img/img_10.png"></li>
+
+        </ul>
 
     </div>
 
+</section>
 
-    <section class="carrusel">
+<!-- ================= MISION VISION VALORES ================= -->
 
-        <div class="slider">
-            <ul class="fotos">
-                <li><img src="../img/img_6.png" alt="slider_img 6"></li>
-                <li><img src="../img/img_1.png" alt="Imagen 1"></li>
-                <li><img src="../img/img_2.png" alt="slider_img 2"></li>
-                <li><img src="../img/img_3.png" alt="slider_img 3"></li>
-                <li><img src="../img/img_4.png" alt="slider_img 4"></li>
-                <li><img src="../img/img_5.png" alt="slider_img 5"></li>
-                <li><img src="../img/img_hi.png" alt="slider_hi"></li>
-                <li><img src="../img/img_8.png" alt="slider_img 8"></li>
-                <li><img src="../img/img_9.png" alt="slider_img 9"></li>
-                <li><img src="../img/img_10.png" alt="slider_img 10"></li>
-                <li><img src="../img/img_6.png" alt="slider_img 6"></li>
-                <li><img src="../img/img_1.png" alt="Imagen 1"></li>
-                <li><img src="../img/img_2.png" alt="slider_img 2"></li>
-                <li><img src="../img/img_3.png" alt="slider_img 3"></li>
-                <li><img src="../img/img_4.png" alt="slider_img 4"></li>
-                <li><img src="../img/img_5.png" alt="slider_img 5"></li>
-                <li><img src="../img/hi.png" alt="slider_hi"></li>
-                <li><img src="../img/img_8.png" alt="slider_img 8"></li>
-                <li><img src="../img/img_9.png" alt="slider_img 9"></li>
-                <li><img src="../img/img_10.png" alt="slider_img 10"></li>
-            </ul>
+<div class="cuerpo">
 
-        </div>
+    <section class="section">
+        <img src="img/mision.png" class="imagenes">
+        <h2 class="title">Misión</h2>
+        <p class="copy">
+            Ofrecer productos y servicios de calidad a empresas de cualquier actividad
+            ofreciendo siempre el mejor producto del mercado para satisfacer las necesidades del cliente.
+        </p>
     </section>
 
+    <section class="section">
+        <img src="img/valores1.png" class="imagenes">
+        <h2 class="title">Valores</h2>
+        <p class="copy">
+            Siempre podrás contar con nuestro optimismo, disciplina y transparencia.
+            ¡Lo más importante eres tú!
+        </p>
+    </section>
 
+    <section class="section">
+        <img src="img/vision1.png" class="imagenes">
+        <h2 class="title">Visión</h2>
+        <p class="copy">
+            Ser líder en comercialización y producción de bienes y servicios integrales,
+            comprometida con el bienestar del país al generar empleo.
+        </p>
+    </section>
+
+</div>
+
+<!-- ================= FOOTER ================= -->
+
+
+<!-- OLA SUAVE -->
+<div class="wave-container">
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" class="wave">
+        <path d="M0,60 C240,100 480,20 720,50 960,80 1200,110 1440,60 L1440,0 L0,0 Z"></path>
+    </svg>
+</div>
+
+<div class="zona1">
+
+    <div class="box">
+        <img src="../public/imagenes/logo.png" class="logo-footer">
     </div>
 
-    <div class="cuerpo">
-
-
-
-        <section class="section">
-            <img src="img/mision.png" alt="" class="imagenes">
-
-            <h2 class="title">Misión</h2>
-            <p class="copy">Ofrecer productos y servicios de calidad a empresas de cualquier actividad ofreciendo
-                siempre el
-                mejor producto del mercado para satisfacer las necesidades del cliente.</p>
-        </section>
-
-
-
-        <section class="section">
-            <img src="img/valores1.png" alt="" class="imagenes"><br><br><br>
-
-
-            <h2 class="title">Valores</h2>
-            <p class="copy">Siempre podrás contar con nuestro optimismo, disciplina y transparencia al contratar
-                nuestros
-                servicios. <br>
-                ¡Lo más importante eres tú!.</p>
-        </section>
-
-
-        <section class="section">
-            <img src="img/vision1.png" alt="spiderman" class="imagenes"><br><br>
-            <h2 class="title">Visión</h2>
-            <p class="copy">Ser líder en comercialización y producción de bienes y servicios integrales, comprometida
-                con
-                el bienestar de su país al generar fuentes de trabajo.</p>
-
-        </section>
-
-
-
+    <div class="box">
+        <h2>SOBRE NOSOTROS</h2>
+        <p>
+            Somos Matthew NDT. Empresa mexicana dedicada a venta de equipos,
+            productos NDT, servicios y capacitaciones para la industria.
+        </p>
     </div>
-    <footer class="pie_pagina">
-        <div class="zona1">
-            <!-- Logo Footer -->
-            <div class="box">
-                <figure class="logo-footer">
-                    <img src="../public/imagenes/logo1.png" alt="logo de empresa">
-                </figure>
-            </div>
 
-            <!-- Sobre nosotros -->
-            <div class="box">
-                <h2>SOBRE NOSOTROS</h2>
-                <p>
-                    Somos Matthew NDT. Una empresa 100% mexicana que ofrece venta de equipos, productos NDT
-                    (productos para pruebas no destructivas) y servicios y capacitaciones para la industria.
-                    Contamos con personal altamente capacitado para la elaboración de servicios de la industria en
-                    general.
-                </p>
-            </div>
-
-            <!-- Redes sociales -->
-            <div class="box">
-                <h2>SÍGUENOS</h2>
-                <div class="red-social">
-                    <a href="#" class="fa-brands fa-facebook"></a>
-                    <a href="#" class="fa-brands fa-youtube"></a>
-                    <a href="#" class="fa-solid fa-phone"></a>
-                    <a href="#" class="fa-solid fa-envelope"></a>
-                </div>
-            </div>
+    <div class="box">
+        <h2>SÍGUENOS</h2>
+        <div class="red-social">
+            <a href="#" class="fa-brands fa-facebook"></a>
+            <a href="#" class="fa-brands fa-youtube"></a>
+            <a href="#" class="fa-solid fa-phone"></a>
+            <a href="#" class="fa-solid fa-envelope"></a>
         </div>
-
-        <div class="zona2">
-            <small>&copy; 2022 <b>Matthew NDT</b> - Todos los Derechos Reservados</small>
-        </div>
-    </footer>
-
-
     </div>
-    </div>
+
+</div>
+
+<div class="zona2">
+    <small>&copy; 2026 Matthew NDT - Todos los derechos reservados</small>
+</div>
+
+
+<!-- ================= WHATSAPP ================= -->
+
+<a href="https://wa.me/525548929587" class="whatsapp-float" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png">
+</a>
+
+<!-- ================= JS MENU ================= -->
+
 <script>
 const toggle = document.getElementById("menuToggle");
 const menu = document.getElementById("menu");
 
-toggle.addEventListener("click", function(){
+toggle.addEventListener("click", () => {
     menu.classList.toggle("active");
 });
 </script>
 
-
 </body>
-
 </html>
