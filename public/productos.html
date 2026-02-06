@@ -8,43 +8,36 @@
 
     <link rel="stylesheet" href="estilos/galeria.css">
 
-    <link rel="stylesheet" href="estilos/principal.css">
+    <link rel="stylesheet" href="estilos/encabezado.css">
 
 
     <title>Document</title>
 </head>
 
 <body>
+    <!-- FONDO CON CIRCULOS -->
+    <div class="background-shapes">
+        <div class="circle circle1"></div>
+        <div class="circle circle2"></div>
+        <div class="circle circle3"></div>
+    </div>
 
-
-    <nav class="main_nav"> <!-- se crea la clase para poder realizar el menu pegajoso -->
-        <div class="menu_toggle" id="toggle">☰</div>
-        <!--se crea boton par poder utilizarlo en dispositivos moviles  -->
-
-        <ul id="main-menu" class="menu main-menu">
-
-            <li class="logo">
-                <a href="#" class="enlace">
-                    <img src="../img/logo1.png" class="logo">
+    <!-- ================= NAV ================= -->
+    <nav class="main_nav">
+        <div class="menu_toggle" id="menuToggle">☰</div>
+        <ul class="menu" id="menu">
+            <li class="logo-item">
+                <a href="#">
+                    <img src="../public/imagenes/logo.png" class="logo" alt="logo">
                 </a>
             </li>
-
-            <li class="main_menu_item">
-                <a href="formulario.php" class="main_menu_link">Crear cuenta</a>
-            </li>
-
-            <li class="main_menu_item">
-                <a href="login.php" class="main_menu_link">Inicio sesión</a>
-            </li>
-
-            <li class="main_menu_item">
-                <a href="/" class="main_menu_link">Inicio</a>
-            </li>
-
+            <li><a href="../public/formulario.php" class="main_menu_link">Crea cuenta</a></li>
+            <li><a href="/" class="main_menu_link">Pagina de inicio</a></li>
+            <li><a href="../public/productos.html" class="main_menu_link">Catalogo</a></li>
         </ul>
-
-
     </nav>
+
+
 
     <section class="gallery">
 
