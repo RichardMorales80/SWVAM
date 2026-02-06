@@ -25,10 +25,11 @@ class Conexion {
             // dbname → nombre de la base de datos
             // charset → codificación UTF-8
             $base = new PDO(
-                'mysql:host=sql201.byethost7.com;dbname=b7_40012077_Matthew;charset=utf8', 
-                'b7_40012077',     // Usuario de la base de datos
-                'Negrito123'      // Contraseña de la base de datos
-            );
+    'mysql:host=localhost;dbname=matthew;charset=utf8',
+    'root',
+    ''
+);
+
 
             // ============================
             // RETORNAR CONEXIÓN
