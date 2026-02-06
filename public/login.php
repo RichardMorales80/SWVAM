@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($captcha)) {
         $alertas[] = ['error', 'Verifica el reCAPTCHA'];
     } else {
-       $secret = '6LfDwd8rAAAAAFo0WyCcPZBVi8NxcPA8B1R-WWK8';
+       $secret = '6LeXHIMrAAAAAEZH2eoiGhX0bFdUk4xIPVlXZe-A';
         $verify = file_get_contents(
             "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha"
         );

@@ -119,7 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <link rel="stylesheet" href="estilos/estilos.css"> 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<link rel="icon" href="../public/imgenes/logo.png">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+<link rel="stylesheet" href="../public/estilos/encabezado.css">
 <style>
 body { padding: 2rem; }
 body::before {
@@ -131,25 +133,41 @@ body::before {
     background-size: 300px; opacity: 0.2; z-index: -5;
 }
 </style>
-</head>
-<body>
-<header class="header">
-  <div class="container">
-   
 
-    <!-- acá: class="menu main-menu" en una sola declaración -->
-    <ul id="main-menu" class="menu main-menu">
-      <li class="main_menu_item">
+</head>
+
+<body>
+
+<!-- FONDO CON CIRCULOS -->
+<div class="background-shapes">
+    <div class="circle circle1"></div>
+    <div class="circle circle2"></div>
+    <div class="circle circle3"></div>
+</div>
+
+<!-- ================= NAV ================= -->
+
+<nav class="">
+    
+
+    <div class="menu_toggle" id="menuToggle">☰</div>
+
+    <ul class="menu" id="menu">
+
+        <li class="logo-item">
+            <a href="#">
+                <img src="../public/imagenes/logo.png" class="logo" alt="logo">
+            </a>
+        </li>
         <a href="/" class="main_menu_link">
           <i class="fa-solid fa-arrow-left"></i>
           <span>Atrás</span>
         </a>
-      </li>
-    </ul>
-  </div>
-</header>
 
-<br><br><br><br><br><br>
+    </ul>
+</nav>
+</head>
+
 
 <!-- BOTÓN PARA ABRIR EL FORMULARIO -->
 <button id="btnAbrirForm" class="btn-abrir">Registrarse</button>
@@ -232,15 +250,15 @@ btnAbrir.onclick = () => {
     modal.style.display = "block";
     document.body.style.overflow = "hidden";
 
-    // 🔹 LIMPIAR FORMULARIO COMPLETO
+    //  LIMPIAR FORMULARIO COMPLETO
     form.reset();
 
-    // 🔹 QUITAR COLORES Y ERRORES
+    //  QUITAR COLORES Y ERRORES
     document.querySelectorAll(".form-control").forEach(input => {
         input.classList.remove("is-valid", "is-invalid");
     });
 
-    // 🔹 LIMPIAR MENSAJES
+    //  LIMPIAR MENSAJES
     document.getElementById("feedback-pass").innerHTML = "";
     document.getElementById("feedback-confirm").textContent = "";
 };

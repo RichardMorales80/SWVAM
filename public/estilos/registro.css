@@ -47,7 +47,7 @@ body {
 /* Botón */
 .boton {
   width: 100%;
-  background: #8B0000;
+  background: #6834f6;
   border: none;
   padding: 12px;
   color: white;
@@ -77,7 +77,7 @@ body {
   flex: 1;
   display: flex;
   justify-content: center;   /* centra horizontal */
-  align-items: center;       /* centra vertical */
+  align-items: flex-start;       /* centra vertical */
   min-height: 80vh;
 }
 
