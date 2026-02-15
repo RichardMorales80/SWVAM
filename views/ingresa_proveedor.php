@@ -1,23 +1,13 @@
 <?php
-session_start();
+require '../config/inactividad.php';
 require '../config/Conexion.php';
 
-/* =========================
-   PROTECCIÓN DE SESIÓN
-========================= */
-if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
+// Validar rol administrador
+if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
     header("Location: ../public/login.php");
-    exit;
+    exit();
 }
 
-/* =========================
-   FUNCIÓN LIMPIAR
-========================= */
-function limpiar($dato) {
-    return htmlspecialchars(trim($dato), ENT_QUOTES, 'UTF-8');
-}
-
-$alertas = [];
 $db = Conexion::conectar();
 
 /* =========================
