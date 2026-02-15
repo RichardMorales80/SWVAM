@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($captcha)) {
         $errores[] = "Verifica el reCAPTCHA.";
     } else {
-       $secret = '6LfDwd8rAAAAAFo0WyCcPZBVi8NxcPA8B1R-WWK8';
+       $secret = '6LeXHIMrAAAAAEZH2eoiGhX0bFdUk4xIPVlXZe-A';
         $verify = file_get_contents(
             "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha"
         );
@@ -118,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <link rel="stylesheet" href="estilos/estilos.css"> 
+ 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="icon" href="../public/imgenes/logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
@@ -229,7 +230,7 @@ body::before {
     </div>
 
     <div class="form-group mt-2">
-     <div class="g-recaptcha" data-sitekey="6LfDwd8rAAAAAO5jGdE_f9Es4QHlAH9KOzJWN7aK"></div>
+     <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
     </div>
 
     <input type="submit" class="btn btn-primary mt-3" value="Registrar">

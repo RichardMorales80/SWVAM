@@ -1,14 +1,23 @@
+/* ===============================
+   ESTILOS GENERALES
+================================ */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
+  background: #ecf0f1;
 }
 
+/* ===============================
+   DASHBOARD
+================================ */
 .dashboard {
   display: flex;
   height: 100vh;
 }
 
-/* Menú lateral */
+/* ===============================
+   MENÚ LATERAL
+================================ */
 .sidebar {
   width: 220px;
   background: #2c3e50;
@@ -35,7 +44,9 @@ body {
   background: #34495e;
 }
 
-/* Contenido principal */
+/* ===============================
+   CONTENIDO PRINCIPAL
+================================ */
 .main-content {
   flex: 1;
   background: #ecf0f1;
@@ -53,7 +64,157 @@ body {
   margin-top: 20px;
 }
 
-/* 📱 Responsivo */
+/* ===============================
+   MODAL GENERAL
+================================ */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  overflow-y: auto;
+}
+
+/* ===============================
+   CONTENIDO MODAL
+================================ */
+.modal-contenido {
+  background-color: #f8f9ff;
+  margin: 5% auto;
+  border: 2px solid #6c63ff;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 900px;
+  padding: 30px 40px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ===============================
+   BOTÓN CERRAR MODAL
+================================ */
+.cerrar {
+  color: #333;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.cerrar:hover {
+  color: #6c63ff;
+}
+
+/* ===============================
+   FORMULARIOS
+================================ */
+.formulario-modal h2 {
+  text-align: center;
+  color: #3c3c7a;
+  margin-bottom: 15px;
+}
+
+.formulario-modal form {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.form-columna {
+  flex: 1;
+  min-width: 300px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+input.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+input.form-control:focus {
+  border-color: #6c63ff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(108, 99, 255, 0.3);
+}
+
+/* ===============================
+   ERRORES DE VALIDACIÓN
+================================ */
+.error {
+  color: #dc3545;
+  font-size: 0.85em;
+  margin-top: 3px;
+  display: block;
+}
+
+.is-invalid {
+  border: 2px solid #dc3545 !important;
+  background-color: #fff5f5;
+}
+
+/* ===============================
+   BOTONES
+================================ */
+.btn.btn-primary {
+  width: 200%;
+  background-color: #6c63ff;
+  border: none;
+  padding: 12px;
+  color: white;
+  font-weight: bold;
+  font-size: 38px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn.btn-primary:hover {
+  background-color: #574bdf;
+}
+
+.btn-primary:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* BOTÓN ABRIR MODAL */
+.btn-abrir {
+  background-color: #6c63ff;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: block;
+  margin: 180px auto 40px;
+}
+
+.btn-abrir:hover {
+  background-color: #574de3;
+}
+
+/* ===============================
+   RESPONSIVE
+================================ */
 @media (max-width: 768px) {
   .dashboard {
     flex-direction: column;
@@ -71,5 +232,29 @@ body {
 
   .main-content {
     padding: 10px;
+  }
+
+  .formulario-modal form {
+    flex-direction: column;
+  }
+
+  .modal-contenido {
+    width: 95%;
+    margin-top: 15%;
+  }
+}
+
+/* ===============================
+   ANIMACIÓN
+================================ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
