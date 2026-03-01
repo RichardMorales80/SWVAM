@@ -1,92 +1,183 @@
-/* Fondo general */
+/* ================= REGISTRO.CSS ================= */
+
+/* ===== BOX SIZING ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column; /* nav arriba, footer abajo */
-  margin: 0;
-  font-family: 'calibri';
+  overflow-x: hidden; /* elimina barra desplazadora horizontal */
+  font-family: Arial, sans-serif;
 }
 
-/* Contenedor central para login */
-.main-content {
-  flex: 1; /* ocupa el espacio entre nav y footer */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ================= MODAL ================= */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  overflow-y: auto; /* scroll si es necesario */
+}
+
+.modal-content {
+  background: white;
+  margin: 3% auto;
+  width: 700px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px 25px;
+  border-radius: 12px;
   position: relative;
-}
-
-/* Formulario flotante */
-.registro {
-  width: 400px;
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0px 8px 25px rgba(0,0,0,0.6);
-  z-index: 50;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
   animation: aparecer 0.8s ease;
 }
 
-/* Título */
-.registro .title {
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 28px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* ================= FORMULARIO ================= */
+.registro h2 {
   text-align: center;
+  color: #8B0000;
   margin-bottom: 20px;
-  color: #8B0000; /* rojo vino */
+}
+
+.form-grid {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.form-grid > div {
+  flex: 1;
+  min-width: 250px; /* evita columnas demasiado pequeñas */
 }
 
 /* Inputs */
 .control {
   width: 100%;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 16px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border-radius: 6px;
   border: 1px solid #8B0000;
-  font-size: 16px;
+  font-size: 15px;
+  transition: border 0.3s, box-shadow 0.3s;
 }
 
-/* Botón */
+.control:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 6px rgba(231,76,60,0.3);
+  outline: none;
+}
+
+/* Botones */
 .boton {
-  width: 100%;
-  background: #6834f6;
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 8px;
   border: none;
   padding: 12px;
-  color: white;
-  border-radius: 4px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s ease;
+  width: 100%;
+  transition: background 0.3s, transform 0.2s;
 }
 
 .boton:hover {
-  background: #660000;
+  background: #c0392b;
+  transform: scale(1.02);
 }
 
-/* Animación */
+/* CAPTCHA */
+.g-recaptcha {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+/* Link “Olvidaste contraseña” */
+.forgot-password {
+  text-align: center;
+  margin-top: 5px;
+}
+
+.forgot-password a {
+  color: #8B0000;
+  font-weight: bold;
+  font-size: 13px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+  color: #e74c3c;
+}
+
+/* ================= ANIMACIONES ================= */
 @keyframes aparecer {
-  from { opacity: 0; transform: translateY(-30px); }
+  from { opacity: 0; transform: translateY(-20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Responsive */
+/* ================= RESPONSIVE ================= */
 @media screen and (max-width: 768px) {
-  .registro {
+  .modal-content {
     width: 90%;
-    padding: 20px;
+    padding: 20px 15px;
+  }
+
+  .form-grid {
+    flex-direction: column;
   }
 }
-.main-content {
-  flex: 1;
-  display: flex;
-  justify-content: center;   /* centra horizontal */
-  align-items: flex-start;       /* centra vertical */
-  min-height: 80vh;
+/* Validaciones visuales */
+.control.valid {
+    border: 2px solid #28a745; /* Verde */
+    background-color: #e6f4ea;
 }
 
-.registro {
-  width: 700px;              /* más grande */
-  background: #fff;
-  padding: 50px;
-  border-radius: 12px;
-  box-shadow: 0px 8px 25px rgba(0,0,0,0.6);
+.control.invalid {
+    border: 2px solid #dc3545; /* Rojo */
+    background-color: #f8d7da;
 }
 
+/* Tooltip de contraseña */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+}
 
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 220px;
+    background-color: #333;
+    color: #fff;
+    text-align: left;
+    border-radius: 5px;
+    padding: 8px;
+    position: absolute;
+    z-index: 10;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 12px;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}

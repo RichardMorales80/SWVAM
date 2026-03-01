@@ -53,35 +53,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (password_verify($pass, $usuario['password'])) {
 
                    //  SESIÓN
-$_SESSION['id_usuario'] = $usuario['id_usuario'];
-$_SESSION['nombre']     = $usuario['primer_nombre'];
-$_SESSION['apellido']   = $usuario['primer_apellido'];
-$_SESSION['correo']     = $usuario['correo'];
-$_SESSION['id_rol']     = $usuario['id_rol'];
+                   $_SESSION['id_usuario'] = $usuario['id_usuario'];
+                   $_SESSION['nombre']     = $usuario['primer_nombre'];
+                   $_SESSION['apellido']   = $usuario['primer_apellido'];
+                   $_SESSION['correo']     = $usuario['correo'];
+                   $_SESSION['id_rol']     = $usuario['id_rol'];
 
-//  ADMIN FORZADO
-if ($_SESSION['correo'] === 'richardmr77@gmail.com') {
-    $_SESSION['id_rol'] = 1;
-    header("Location: ../views/administrador.php");
-    exit;
-}
+                   // REDIRECCIÓN CORRECTA PARA MODAL
+                   if ($_SESSION['correo'] === 'richardmr77@gmail.com' || $_SESSION['id_rol'] == 1) {
+                       echo '<script>window.top.location.href = "../views/administrador.php";</script>';
+                       exit;
+                   }
 
-//  ADMIN POR ROL
-if ($_SESSION['id_rol'] == 1) {
-    header("Location: ../views/administrador.php");
-    exit;
-}
+                   if ($_SESSION['id_rol'] == 2) {
+                       echo '<script>window.top.location.href = "../views/clientes.php";</script>';
+                       exit;
+                   }
 
-//  USUARIO
-if ($_SESSION['id_rol'] == 2) {
-    header("Location: ../views/clientes.php");
-    exit;
-}
-
-// 🔵 OTROS
-header("Location: ../views/vendedor.php");
-exit;
-
+                   // Otros roles
+                   echo '<script>window.top.location.href = "../views/vendedor.php";</script>';
+                   exit;
 
                 } else {
                     $alertas[] = ['error', 'Contraseña incorrecta'];
@@ -96,6 +87,8 @@ exit;
         }
     }
 }
+session_regenerate_id(true);
+
 ?>
 
 <!DOCTYPE html>
@@ -103,65 +96,37 @@ exit;
 <head>
 <meta charset="UTF-8">
 <title>Login | Matthew NDT</title>
-
-<link rel="stylesheet" href="estilos/encabezado.css">
 <link rel="stylesheet" href="estilos/registro.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
-
 <body>
-
-<!-- FONDO CON CIRCULOS -->
-<div class="background-shapes">
-    <div class="circle circle1"></div>
-    <div class="circle circle2"></div>
-    <div class="circle circle3"></div>
-</div>
-
-<!-- ================= NAV ================= -->
-<nav class="main_nav">
-    <div class="menu_toggle" id="menuToggle">☰</div>
-    <ul class="menu" id="menu">
-        <li class="logo-item">
-            <a href="#">
-                <img src="../public/imagenes/logo.png" class="logo" alt="logo">
-            </a>
-        </li>
-        <li><a href="../public/formulario.php" class="main_menu_link">Crea cuenta</a></li>
-        <li><a href="/" class="main_menu_link">Pagina de inicio</a></li>
-        <li><a href="../public/productos.html" class="main_menu_link">Catalogo</a></li>
-    </ul>
-</nav>
 
 <!-- ================= LOGIN ================= -->
 <div class="main-content">
-    <div class="registro">
-        <form method="POST" class="form">
+    <form method="POST" class="registro">
+        <h2 class="title">Ingreso al sistema</h2>
 
-            <h2 class="title">Ingreso al sistema</h2>
+        <label>Correo</label>
+        <input type="email" name="correo" class="control" placeholder="Ingresa tu correo" required>
 
-            <label>Correo</label>
-            <input type="email" name="correo" class="control" required>
+        <label>Contraseña</label>
+        <input type="password" name="pas" class="control" placeholder="Ingresa tu contraseña" required>
 
-            <label>Contraseña</label>
-            <input type="password" name="pas" class="control" required>
+        <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
 
-            <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
-            <input type="submit" class="boton" value="Ingresar">
+        <input type="submit" class="boton" value="Ingresar">
 
-            <div style="margin-top:15px; text-align:center;">
-                <a href="../templetes/recuperar_password.php" style="color:#000; font-weight:bold; display:block;">
-                    ¿Olvidaste tu contraseña?
-                </a>
-            </div>
-
-        </form>
-    </div>
+        <div class="forgot-password">
+            <a href="../templetes/recuperar_password.php">
+                ¿Olvidaste tu contraseña?
+            </a>
+        </div>
+    </form>
 </div>
 
+<!-- ================= ALERTAS ================= -->
 <?php if (!empty($alertas)): ?>
 <script>
 <?php foreach ($alertas as $a): ?>
@@ -173,53 +138,6 @@ swal({
 <?php endforeach; ?>
 </script>
 <?php endif; ?>
-
-<!-- ================= FOOTER ================= -->
-<div class="wave-container">
-    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" class="wave">
-        <path d="M0,60 C240,100 480,20 720,50 960,80 1200,110 1440,60 L1440,0 L0,0 Z"></path>
-    </svg>
-</div>
-
-<div class="zona1">
-    <div class="box">
-        <img src="../public/imagenes/logo.png" class="logo-footer">
-    </div>
-    <div class="box">
-        <h2>SOBRE NOSOTROS</h2>
-        <p>
-            Somos Matthew NDT. Empresa mexicana dedicada a venta de equipos,
-            productos NDT, servicios y capacitaciones para la industria.
-        </p>
-    </div>
-    <div class="box">
-        <h2>SÍGUENOS</h2>
-        <div class="red-social">
-            <a href="#" class="fa-brands fa-facebook"></a>
-            <a href="#" class="fa-brands fa-youtube"></a>
-            <a href="#" class="fa-solid fa-phone"></a>
-            <a href="#" class="fa-solid fa-envelope"></a>
-        </div>
-    </div>
-</div>
-
-<div class="zona2">
-    <small>&copy; 2026 Matthew NDT - Todos los derechos reservados</small>
-</div>
-
-<!-- ================= WHATSAPP ================= -->
-<a href="https://wa.me/525548929587" class="whatsapp-float" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/124/124034.png">
-</a>
-
-<!-- ================= JS MENU ================= -->
-<script>
-const toggle = document.getElementById("menuToggle");
-const menu = document.getElementById("menu");
-toggle.addEventListener("click", () => {
-    menu.classList.toggle("active");
-});
-</script>
 
 </body>
 </html>
