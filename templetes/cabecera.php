@@ -58,7 +58,7 @@ body {
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
 
     <a class="navbar-brand" href="<?= $paginaPrincipal ?>">
-        <img src="../public/imagenes/logo1.png" width="90" height="90" alt="Logo">
+        <img src="../public/imagenes/logo.png" width="90" height="90" alt="Logo">
     </a>
 
     <button class="navbar-toggler" data-toggle="collapse" data-target="#my-nav">

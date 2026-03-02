@@ -1,6 +1,10 @@
 <?php
 require '../config/inactividad.php';
 require '../config/Conexion.php';
+require '../config/validaciones.php'; //validaciones centralizadas
+require __DIR__ . '/../config/seguridad.php';
+verificarRol(1);
+
 
 // Validar rol administrador
 if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
@@ -9,6 +13,13 @@ if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != 1) {
 }
 
 $db = Conexion::conectar();
+$alertas = [];
+
+// Inicializar variables
+$nombre = '';
+$correo = '';
+$telefono = '';
+$direccion = '';
 
 /* =========================
    MENSAJE POST-REDIRECT
@@ -30,25 +41,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* ===== VALIDACIONES ===== */
 
-    if (
-        empty($nombre) ||
-        empty($correo) ||
-        empty($telefono) ||
-        empty($direccion)
-    ) {
+    if (empty($nombre) || empty($correo) || empty($telefono) || empty($direccion)) {
         $alertas[] = ['error', 'Todos los campos son obligatorios'];
     }
 
-    if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+    if (!validarSoloLetras($nombre)) {
+        $alertas[] = ['error', 'El nombre solo debe contener letras'];
+    }
+
+    if (!validarCorreo($correo)) {
         $alertas[] = ['error', 'Correo no válido'];
     }
 
-    if (!preg_match('/^[0-9]+$/', $telefono)) {
-        $alertas[] = ['error', 'El teléfono solo debe contener números'];
-    }
-
-    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $nombre)) {
-        $alertas[] = ['error', 'El nombre solo debe contener letras'];
+    if (!validarTelefono($telefono)) {
+        $alertas[] = ['error', 'El teléfono debe tener entre 7 y 14 dígitos'];
     }
 
     /* ===== INSERT ===== */
@@ -80,23 +86,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <meta charset="UTF-8">
 <title>Ingresar Proveedor</title>
 
-<link rel="stylesheet" href="../public/estilos/principal.css">
+<link rel="stylesheet" href="../public/estilos/encabezado.css">
 <link rel="stylesheet" href="../public/estilos/registro.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
 </head>
+
 <body>
 
 <!-- ================= NAV ================= -->
-
-<ul class="menu">
-    <li><a href="../views/administrador.php">Atrás</a></li>
-    <li><a href="../config/cerrar_sesion.php">Salir</a></li>
-    <li><a href="../privadas/editar_proveedor.php">Editar proveedor</a></li>
-</ul>
-
-<br><br><br><br><br><br>
+<!-- NAV -->
+<nav class="main_nav">
+    <div class="menu_toggle" id="menuToggle">☰</div>
+    <ul class="menu" id="menu">
+        <li class="logo-item">
+            <a href="#"><img src="../public/imagenes/logo.png" class="logo" alt="logo"></a>
+        </li>
+        <li>
+            <a href="../views/administrador.php" class="main_menu_link">Atrás</a>
+        </li>
+        <li><a href="../config/cerrar_sesion.php"class="main_menu_link">Salir</a></li>
+         <li><a href="../privadas/editar_proveedor.php" class="main_menu_link">Editar proveedor</a></li>
+        </ul>
+</nav>
 
 <div class="container">
 
@@ -111,9 +123,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" 
                name="nombre" 
                class="form-control"
-               pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
-               title="Solo letras"
-               required>
+               required
+               value="<?= htmlspecialchars($nombre); ?>">
+        <?php generarJSValidarSoloLetras('nombre'); ?>
     </div>
 
     <div class="col-md-6 mb-3">
@@ -121,7 +133,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="email" 
                name="correo" 
                class="form-control"
-               required>
+               required
+               value="<?= htmlspecialchars($correo); ?>">
     </div>
 
 </div>
@@ -133,10 +146,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" 
                name="telefono" 
                class="form-control"
-               pattern="[0-9]+"
-               maxlength="10"
-               title="Solo números"
-               required>
+               required
+               value="<?= htmlspecialchars($telefono); ?>">
+        <?php generarJSValidarSoloNumeros('telefono'); ?>
     </div>
 
     <div class="col-md-6 mb-3">
@@ -144,7 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" 
                name="direccion" 
                class="form-control"
-               required>
+               required
+               value="<?= htmlspecialchars($direccion); ?>">
     </div>
 
 </div>
@@ -172,22 +185,6 @@ swal({
 <?php endforeach; ?>
 </script>
 <?php endif; ?>
-
-<!-- ================= JS VALIDACIÓN TIEMPO REAL ================= -->
-
-<script>
-
-// SOLO LETRAS EN NOMBRE
-document.querySelector('input[name="nombre"]').addEventListener('input', function(){
-    this.value = this.value.replace(/[^a-zA-ZÁÉÍÓÚáéíóúÑñ\s]/g,'');
-});
-
-// SOLO NUMEROS EN TELEFONO
-document.querySelector('input[name="telefono"]').addEventListener('input', function(){
-    this.value = this.value.replace(/[^0-9]/g,'');
-});
-
-</script>
 
 </body>
 </html>

@@ -1,0 +1,169 @@
+/* =========================
+   MODULO VENTAS
+========================= */
+
+/* CONTENEDOR */
+.dashboard-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+
+/* CARD */
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    padding: 25px;
+}
+
+/* TABLA PRO */
+.table-pro {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.table-pro thead {
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    color: white;
+}
+
+.table-pro th {
+    padding: 14px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.table-pro td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+.table-pro tbody tr:hover {
+    background-color: #f8f9fc;
+    transition: 0.2s ease-in-out;
+}
+
+/* TOTAL */
+.total-box {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 20px;
+    font-weight: bold;
+    color: #1cc88a;
+}
+
+/* FILTRO */
+.filtro-container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.filtro-form {
+    display: flex;
+    gap: 20px;
+    align-items: end;
+    flex-wrap: wrap;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
+}
+
+.campo label {
+    font-size: 13px;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #444;
+}
+
+.campo input {
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+
+.campo input:focus {
+    outline: none;
+    border-color: #1cc88a;
+    box-shadow: 0 0 6px rgba(28,200,138,0.3);
+}
+
+.campo.boton button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.campo.boton button:hover {
+    opacity: 0.9;
+}
+
+/* =========================
+   PAGINACION PRO
+========================= */
+
+#paginacion {
+    margin-top: 30px;
+    text-align: center;
+}
+
+#paginacion button {
+    padding: 10px 16px;
+    margin: 5px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #e2e6f5;
+    color: #333;
+    transition: 0.3s ease;
+    min-width: 45px;
+}
+
+#paginacion button:hover {
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    color: white;
+}
+
+#paginacion button.activo {
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    color: white;
+}
+
+/* =========================
+   BOTON LIMPIAR
+========================= */
+
+.btn-limpiar {
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    background: #e74a3b;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-limpiar:hover {
+    background: #c0392b;
+}

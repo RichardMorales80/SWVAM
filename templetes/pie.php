@@ -66,7 +66,7 @@
         <!-- Logo Footer -->
         <div class="box">
             <figure class="logo-footer">
-                <img src="../public/imagenes/logo1.png" alt="logo de empresa">
+                <img src="../public/imagenes/logo.png" alt="logo de empresa">
             </figure>
         </div>
 

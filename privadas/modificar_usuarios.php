@@ -2,9 +2,9 @@
 session_start();
 require '../config/Conexion.php';
 
-/* 🔐 PROTECCIÓN: SOLO ADMIN */
+/* PROTECCIÓN: SOLO ADMIN */
 if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
-    header("Location: ../public/login.php");
+    header("Location: ../public/index.php");
     exit;
 }
 
@@ -33,7 +33,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <meta charset="UTF-8">
 <title>Modificar Usuarios</title>
 
-<link rel="stylesheet" href="../public/estilos/principal.css">
+<link rel="stylesheet" href="../public/estilos/encabezado.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -44,15 +44,18 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <!-- NAV -->
 <nav class="main_nav">
-<ul class="menu">
-    <li class="logo-item">
-        <img src="../public/imagenes/logo1.png" class="logo">
-    </li>
-    <li><a href="../views/administrador.php" class="main_menu_link">Atrás</a></li>
-    <li><a href="../config/cerrar_sesion.php" class="main_menu_link">Salir</a></li>
-</ul>
+    <div class="menu_toggle" id="menuToggle">☰</div>
+    <ul class="menu" id="menu">
+        <li class="logo-item">
+            <a href="#"><img src="../public/imagenes/logo.png" class="logo" alt="logo"></a>
+        </li>
+        
+        <li>
+            <a href="../views/administrador.php" class="main_menu_link">Atrâs</a>
+        </li>
+    </ul>
 </nav>
-<br><br><br><br><br><br><br><br>
+
 
 <div class="container mt-5">
 

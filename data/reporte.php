@@ -1,7 +1,8 @@
 <?php
-session_start();
-require_once '../config/Conexion.php';
+require_once __DIR__ . '/../config/Conexion.php';
+require __DIR__ . '/../config/seguridad.php';
 
+verificarRol(1);
 $pdo = Conexion::conectar();
 
 if(!isset($_SESSION['id_usuario'])){
@@ -118,10 +119,7 @@ body{
 
 
 
-<br><br><br><br><br
-    
-
-
+<br><br>
     
 
 

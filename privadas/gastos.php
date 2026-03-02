@@ -1,149 +1,55 @@
 <?php
-session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 require_once '../config/Conexion.php';
+require __DIR__ . '/../config/seguridad.php';
 
-$pdo = Conexion::conectar();
-
-$mensaje = "";
-
-/* ==========================
-   VALIDAR SESIÓN
-========================== */
+verificarRoles([1,3]);
 
 if(!isset($_SESSION['id_usuario'])){
-    header("Location: ../views/login.php");
+    header("Location: ../index.php");
     exit();
 }
 
 $id_usuario = $_SESSION['id_usuario'];
-
-/* ==========================
-   GUARDAR GASTO
-========================== */
-
-if(isset($_POST['btnaccion']) && $_POST['btnaccion'] === 'guardar'){
-
-    $concepto = trim($_POST['concepto']);
-    $total    = floatval($_POST['total']);
-    $fecha    = date('Y-m-d');
-
-    if($concepto == "" || $total <= 0){
-
-        $_SESSION['msg'] = 'error';
-
-    } else {
-
-        $sql = "INSERT INTO gastos (id_usuario, concepto, fecha, total)
-                VALUES (:id_usuario, :concepto, :fecha, :total)";
-
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->execute([
-            ':id_usuario' => $id_usuario,
-            ':concepto'   => $concepto,
-            ':fecha'      => $fecha,
-            ':total'      => $total
-        ]);
-
-        $_SESSION['msg'] = 'ok';
-    }
-
-    header("Location: gastos.php");
-    exit();
-}
-
-/* ==========================
-   MENSAJES
-========================== */
-
-if(isset($_SESSION['msg'])){
-
-    if($_SESSION['msg'] == 'ok'){
-        $mensaje = "Swal.fire({
-            icon:'success',
-            title:'Gasto guardado correctamente',
-            timer:1800,
-            showConfirmButton:false
-        })";
-    }
-
-    if($_SESSION['msg'] == 'error'){
-        $mensaje = "Swal.fire({
-            icon:'error',
-            title:'Completa todos los campos',
-            timer:1800,
-            showConfirmButton:false
-        })";
-    }
-
-    unset($_SESSION['msg']);
-}
-
-/* ==========================
-   CONSULTAR GASTOS USUARIO
-========================== */
-
-$sql = "SELECT * FROM gastos 
-        WHERE id_usuario = :id_usuario
-        ORDER BY id_gasto DESC";
-
-$stmt = $pdo->prepare($sql);
-$stmt->execute([':id_usuario' => $id_usuario]);
-$gastos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-/* ==========================
-   TOTAL GASTOS USUARIO
-========================== */
-
-$sqlTotal = "SELECT SUM(total) AS total_gastos 
-             FROM gastos 
-             WHERE id_usuario = :id_usuario";
-
-$stmtTotal = $pdo->prepare($sqlTotal);
-$stmtTotal->execute([':id_usuario' => $id_usuario]);
-$resTotal = $stmtTotal->fetch(PDO::FETCH_ASSOC);
-
-$granTotal = $resTotal['total_gastos'] ?? 0;
+$id_rol     = $_SESSION['id_rol'];
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Gastos</title>
+<title>Gestión de Gastos</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <link rel="stylesheet" href="../public/estilos/principal.css">
-</head>
+<link rel="stylesheet" href="../public/estilos/ventas.css">
+<link rel="stylesheet" href="/SWVAM/public/estilos/encabezado.css">
 
+</head>
 <body>
 
-<!-- ================= NAV ================= -->
-
+<!-- NAV -->
 <nav class="main_nav">
-<ul class="menu">
-    <li class="logo-item">
-        <img src="../public/imagenes/logo1.png" class="logo">
-    </li>
-    <li><a href="../views/administrador.php" class="main_menu_link">Atrás</a></li>
-    <li><a href="../config/cerrar_sesion.php" class="main_menu_link">Salir</a></li>
-</ul>
+    <div class="menu_toggle" id="menuToggle">☰</div>
+    <ul class="menu" id="menu">
+        <li class="logo-item">
+            <a href="#"><img src="../public/imagenes/logo.png" class="logo" alt="logo"></a>
+        </li>
+        <li>
+            <a href="../views/administrador.php" class="main_menu_link">Atrás</a>
+        </li>
+    </ul>
 </nav>
 
-<br><br><br><br><br><br><br>
+<div class="dashboard-container">
 
-<h3 class="text-center mb-4">Registro de Gastos</h3>
+<h3 class="mb-4">Gestión de Gastos</h3>
 
-<!-- ================= FORM ================= -->
+<!-- ================= FORM REGISTRO ================= -->
+<form method="post" action="/SWVAM/privadas/guardar_gasto.php" class="row g-3 mb-4">
 
-<form method="post" class="row g-3 mb-4 container">
-
-    <div class="col-md-6">
+    <div class="col-md-5">
         <input type="text"
                name="concepto"
                class="form-control"
@@ -151,7 +57,7 @@ $granTotal = $resTotal['total_gastos'] ?? 0;
                required>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
         <input type="number"
                step="0.01"
                name="total"
@@ -162,8 +68,6 @@ $granTotal = $resTotal['total_gastos'] ?? 0;
 
     <div class="col-md-2 d-grid">
         <button type="submit"
-                name="btnaccion"
-                value="guardar"
                 class="btn btn-primary">
             Guardar
         </button>
@@ -171,64 +75,122 @@ $granTotal = $resTotal['total_gastos'] ?? 0;
 
 </form>
 
+<!-- ================= FILTROS ================= -->
+<form id="filtroForm" class="filtro-form">
+
+        <div class="campo">
+            <label>Buscar</label>
+            <input type="text" name="buscar" placeholder="Concepto">
+        </div>
+
+        <div class="campo">
+            <label>Desde</label>
+            <input type="date" name="inicio">
+        </div>
+
+        <div class="campo">
+            <label>Hasta</label>
+            <input type="date" name="fin">
+        </div>
+
+        <div class="campo boton">
+            <button type="submit">Filtrar</button>
+        </div>
+        <div class="campo boton">
+    <button type="button" class="btn-limpiar" onclick="limpiarFiltros()">
+        Limpiar
+    </button>
+</div>
+
+    </form>
 <!-- ================= TABLA ================= -->
+<div class="card p-3">
+    <table class="table-pro">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Usuario</th>
+            <th>Concepto</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <?php if($id_rol == 1): ?>
+            <th>Acciones</th>
+            <?php endif; ?>
+        </tr>
+        </thead>
+        <tbody id="tablaGastos">
+        <!-- AJAX -->
+        </tbody>
+    </table>
 
-<div class="container">
-
-<table class="table table-bordered table-striped">
-
-<thead class="table-dark">
-<tr>
-    <th>ID</th>
-    <th>Concepto</th>
-    <th>Fecha</th>
-    <th>Total</th>
-</tr>
-</thead>
-
-<tbody>
-
-<?php if(count($gastos) == 0): ?>
-
-<tr>
-    <td colspan="4" class="text-center">No hay gastos registrados</td>
-</tr>
-
-<?php endif; ?>
-
-<?php foreach($gastos as $g): ?>
-
-<tr>
-    <td><?= $g['id_gasto'] ?></td>
-    <td><?= htmlspecialchars($g['concepto']) ?></td>
-    <td><?= $g['fecha'] ?></td>
-    <td>$<?= number_format($g['total'],2) ?></td>
-</tr>
-
-<?php endforeach; ?>
-
-</tbody>
-
-</table>
-
-<!-- ================= TOTAL ================= -->
-
-<div class="alert alert-info text-end fw-bold fs-5">
-    Total de gastos: $<?= number_format($granTotal,2) ?>
+    <div id="paginacion" class="text-center mt-3"></div>
 </div>
 
 </div>
 
-<!-- ================= SWEET ================= -->
-
-<?php if(!empty($mensaje)): ?>
+<!-- ================= SCRIPT AJAX ================= -->
 <script>
-<?= $mensaje ?>
+function cargarGastos(pagina = 1){
+
+    let formData = new FormData(document.getElementById("filtroForm"));
+    formData.append("pagina", pagina);
+
+    fetch("/SWVAM/privadas/gastos_data.php", {
+        method:"POST",
+        body:formData
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById("tablaGastos").innerHTML = data.tabla;
+        document.getElementById("paginacion").innerHTML = data.paginacion;
+    });
+}
+
+// Filtrar al enviar formulario
+document.getElementById("filtroForm")
+.addEventListener("submit", function(e){
+    e.preventDefault();
+    cargarGastos(1);
+});
+
+// Filtrar al escribir en buscar
+document.addEventListener("keyup", function(e){
+    if(e.target.name === "buscar"){
+        cargarGastos(1);
+    }
+});
+
+// Función eliminar gasto
+function eliminarGasto(id){
+    Swal.fire({
+        title:"¿Eliminar gasto?",
+        icon:"warning",
+        showCancelButton:true,
+        confirmButtonText:"Sí, eliminar"
+    }).then(result=>{
+        if(result.isConfirmed){
+            fetch("/SWVAM/privadas/eliminar_gasto.php",{
+                method:"POST",
+                headers:{'Content-Type':'application/x-www-form-urlencoded'},
+                body:"id="+id
+            }).then(()=>{
+                cargarGastos();
+            });
+        }
+    });
+}
+
+// Función limpiar filtros
+function limpiarFiltros(){
+    document.querySelector('input[name="buscar"]').value = '';
+    document.querySelector('input[name="desde"]').value = '';
+    document.querySelector('input[name="hasta"]').value = '';
+    cargarGastos(1);
+}
+
+// Cargar gastos al cargar página
+cargarGastos();
 </script>
-<?php endif; ?>
 
 </body>
 </html>
-
-<?php include '../templetes/pie.php'; ?>
-

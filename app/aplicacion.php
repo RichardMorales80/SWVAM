@@ -2,17 +2,13 @@
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-session_start();
-
 require_once '../global/configuracion.php';
 require_once '../config/Conexion.php';
+require __DIR__ . '/../config/seguridad.php';
+verificarRol(1,2,3);
 $pdo = Conexion::conectar();
-
-
 include '../app/caqrrito.php';
 include '../templetes/cabecera.php';
-include '../config/inactividad.php';
-
 /* ==========================
    MENSAJE DEL CARRITO
 ========================== */

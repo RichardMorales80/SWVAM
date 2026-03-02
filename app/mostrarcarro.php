@@ -1,9 +1,12 @@
 <?php
-session_start();
+
 require_once '../global/configuracion.php';
 require_once '../config/Conexion.php';
 include 'caqrrito.php';
 include '../templetes/cabecera.php';
+require __DIR__ . '/../config/seguridad.php';
+
+verificarRol(1,2,3);
 
 $pdo = Conexion::conectar();
 
@@ -119,7 +122,7 @@ Los datos de compra se enviarán a este correo
  type="submit"
  name="btnaccion"
  value="proceder">
-Proceder a pagar >>
+Enviar pedido al correo >>
 </button>
 
 </form>

@@ -50,7 +50,7 @@ body {
 
 .main_nav {
     background: white;
-    padding: 35px 80px;
+    padding: 15px 20px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, .12);
     position: relative;
     z-index: 10;

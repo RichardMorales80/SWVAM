@@ -11,22 +11,18 @@ header("Expires: 0");
 /* TIEMPO DE INACTIVIDAD (15 MIN) */
 $tiempo_inactividad = 900;
 
-if (isset($_SESSION['id_usuario'])) {
-
-    if (isset($_SESSION['ultimo_acceso'])) {
-
-        if (time() - $_SESSION['ultimo_acceso'] > $tiempo_inactividad) {
-            session_unset();
-            session_destroy();
-            header("Location: ../public/index.php?expirada=1");
-            exit();
-        }
-    }
-
-    $_SESSION['ultimo_acceso'] = time();
-
-} else {
-    header("Location: ../public/index.php");
+if (!isset($_SESSION['id_usuario'])) {
+    header("Location: /SWVAM/index.php");
     exit();
 }
-?>
+
+if (isset($_SESSION['ultimo_acceso'])) {
+    if (time() - $_SESSION['ultimo_acceso'] > $tiempo_inactividad) {
+        session_unset();
+        session_destroy();
+        header("Location: /SWVAM/index.php?expirada=1");
+        exit();
+    }
+}
+
+$_SESSION['ultimo_acceso'] = time();
