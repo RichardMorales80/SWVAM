@@ -1,14 +1,9 @@
 <?php
 require_once __DIR__ . '/../config/Conexion.php';
 require __DIR__ . '/../config/seguridad.php';
-
 verificarRol(1);
-$pdo = Conexion::conectar();
 
-if(!isset($_SESSION['id_usuario'])){
-    header("Location: ../views/login.php");
-    exit();
-}
+$pdo = Conexion::conectar();
 
 $fecha_inicio = $_GET['fecha_inicio'] ?? '';
 $fecha_fin    = $_GET['fecha_fin'] ?? '';
@@ -22,9 +17,9 @@ if($fecha_inicio && $fecha_fin){
     $params[':fin'] = $fecha_fin;
 }
 
-/* =====================
+/* =========================
    TOTALES GENERALES
-===================== */
+========================= */
 
 $sqlVentas = "SELECT COALESCE(SUM(total),0) FROM ventas $condicion";
 $stmtV = $pdo->prepare($sqlVentas);
@@ -37,50 +32,6 @@ $stmtG->execute($params);
 $totalGastos = $stmtG->fetchColumn();
 
 $balanceTotal = $totalVentas - $totalGastos;
-
-/* =====================
-   TABLA POR USUARIO
-===================== */
-
-$sqlTabla = "
-SELECT 
-    u.primer_nombre,
-    u.primer_apellido,
-
-    COALESCE(SUM(v.total),0) AS ventas,
-    COALESCE(SUM(g.total),0) AS gastos,
-
-    (COALESCE(SUM(v.total),0) - COALESCE(SUM(g.total),0)) AS balance
-
-FROM usuarios u
-
-LEFT JOIN ventas v 
-    ON u.id_usuario = v.id_usuario
-    ".($fecha_inicio && $fecha_fin ? " AND v.fecha BETWEEN :inicio AND :fin ":"")."
-
-LEFT JOIN gastos g 
-    ON u.id_usuario = g.id_usuario
-    ".($fecha_inicio && $fecha_fin ? " AND g.fecha BETWEEN :inicio AND :fin ":"")."
-
-GROUP BY u.id_usuario
-ORDER BY ventas DESC
-";
-
-$stmtT = $pdo->prepare($sqlTabla);
-$stmtT->execute($params);
-$tabla = $stmtT->fetchAll(PDO::FETCH_ASSOC);
-
-/* =====================
-   SIN DATOS
-===================== */
-
-$sinDatos = false;
-
-if($fecha_inicio && $fecha_fin){
-    if($totalVentas == 0 && $totalGastos == 0){
-        $sinDatos = true;
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -89,172 +40,252 @@ if($fecha_inicio && $fecha_fin){
 <meta charset="UTF-8">
 <title>Reporte Financiero</title>
 
-    <link rel="stylesheet" href="../public/estilos/estilos.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="../public/estilos/encabezado.css">
 
 <style>
-body{
-    background:#f4f6f9;
-    padding:40px;
-}
+body{background:#f4f6f9; padding:20px;}
+.card-hover:hover{transform:scale(1.03); transition:0.3s;}
+#contenedorMasVendidos{display:none;}
 </style>
 </head>
 
 <body>
-<header class="header">
-    <div class="container">
-        
-        <div class="logo">
-            <h1>Reporte Financiero</h1>
-        </div>
-        <nav class="menu">
-            <a href="../public/index.html">Inicio</a>
-            <a href="../config/cerrar_sesion.php">Salir</a>
-             <a href="../views/administrador.php">Atras</a>
-        </nav>
-    </div>
-</header>
-    
+    <!-- NAV -->
+<nav class="main_nav">
+    <div class="menu_toggle" id="menuToggle">☰</div>
+    <ul class="menu" id="menu">
+        <li class="logo-item">
+            <a href="#"><img src="../public/imagenes/logo.png" class="logo" alt="logo"></a>
+        </li>
+        <li>
+            <a href="../views/administrador.php" class="main_menu_link">Atrás</a>
+        </li>
+    </ul>
+</nav>
+<div class="container-fluid">
 
+<h1 class="text-center mb-4">Dashboard Financiero</h1>
 
-
-<br><br>
-    
-
-
-<h2 class="text-center fw-bold mb-4">Reporte de Ventas y Gastos</h2>
-
-<form method="GET" class="row mb-3">
-
-<div class="col-md-4">
+<!-- FILTROS -->
+<form method="GET" class="row g-2 mb-4">
+<div class="col-md-3">
 <input type="date" name="fecha_inicio" class="form-control" value="<?= $fecha_inicio ?>">
 </div>
-
-<div class="col-md-4">
+<div class="col-md-3">
 <input type="date" name="fecha_fin" class="form-control" value="<?= $fecha_fin ?>">
 </div>
-
-<div class="col-md-4 d-flex gap-2">
+<div class="col-md-6 d-flex gap-2">
 <button class="btn btn-primary">Filtrar</button>
 <a href="reporte.php" class="btn btn-secondary">Limpiar</a>
 </div>
+<div class="mb-4 d-flex gap-2">
 
+    <a href="reporte_pdf.php?fecha_inicio=<?= $fecha_inicio ?>&fecha_fin=<?= $fecha_fin ?>" 
+       class="btn btn-danger">
+       Descargar PDF
+    </a>
+
+    <a href="reporte_excel.php?fecha_inicio=<?= $fecha_inicio ?>&fecha_fin=<?= $fecha_fin ?>" 
+       class="btn btn-success">
+       Descargar Excel
+    </a>
+
+</div>
 </form>
 
-<a href="exportar_pdf.php?fecha_inicio=<?= $fecha_inicio ?>&fecha_fin=<?= $fecha_fin ?>" 
-class="btn btn-danger mb-3">
-Exportar a PDF
-</a>
-
-<?php if($sinDatos): ?>
-<div class="alert alert-warning text-center fw-bold">
-No hay información en este rango de fechas
-</div>
-<?php endif; ?>
-
+<!-- RESUMEN -->
 <div class="row text-center mb-4">
 
 <div class="col-md-4">
-<div class="alert alert-success fw-bold">
-Ventas <br>
-$<?= number_format($totalVentas,2) ?>
+<div class="card alert-success fw-bold card-hover p-3">
+<h5>Ventas</h5>
+<p class="fs-4">$<?= number_format($totalVentas,2) ?></p>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="alert alert-danger fw-bold">
-Gastos <br>
-$<?= number_format($totalGastos,2) ?>
+<div class="card alert-danger fw-bold card-hover p-3">
+<h5>Gastos</h5>
+<p class="fs-4">$<?= number_format($totalGastos,2) ?></p>
 </div>
 </div>
 
 <div class="col-md-4">
-<div class="alert <?= $balanceTotal >= 0 ? 'alert-primary':'alert-warning' ?> fw-bold">
-Balance <br>
-$<?= number_format($balanceTotal,2) ?>
+<div class="card <?= $balanceTotal>=0?'alert-primary':'alert-warning' ?> fw-bold card-hover p-3">
+<h5>Balance</h5>
+<p class="fs-4">$<?= number_format($balanceTotal,2) ?></p>
 </div>
 </div>
 
 </div>
 
+<!-- GRAFICA GENERAL -->
 <div class="card p-4 shadow mb-4">
-<canvas id="grafica"></canvas>
+<canvas id="graficaGeneral"></canvas>
 </div>
 
-<div class="card shadow p-3">
+<!-- BOTON MÁS VENDIDOS -->
+<div class="mb-3">
+<button class="btn btn-info" id="btnMasVendidos">
+Mostrar Productos Más Vendidos
+</button>
+</div>
 
-<h4 class="mb-3 text-center fw-bold">Detalle por Usuario</h4>
+<!-- CONTENEDOR MÁS VENDIDOS -->
+<div id="contenedorMasVendidos" class="card shadow p-3 mb-4">
 
-<table class="table table-bordered table-striped">
+<h4 class="mb-3 text-center fw-bold">
+Productos Más Vendidos
+</h4>
 
-<thead class="table-dark">
+<table id="tablaMasVendidos" class="table table-striped table-bordered">
+<thead>
 <tr>
-<th>Usuario</th>
-<th>Ventas</th>
-<th>Gastos</th>
-<th>Balance</th>
+<th>Producto</th>
+<th>Cantidad</th>
+<th>Precio Unitario</th>
+<th>Total</th>
 </tr>
 </thead>
-
-<tbody>
-
-<?php if(count($tabla)==0): ?>
-
+<tbody></tbody>
+<tfoot>
 <tr>
-<td colspan="4" class="text-center">No hay registros</td>
+<th colspan="3">Gran Total</th>
+<th id="granTotalProductos">$0.00</th>
 </tr>
-
-<?php endif; ?>
-
-<?php foreach($tabla as $fila): ?>
-
-<tr>
-<td><?= $fila['primer_nombre'].' '.$fila['primer_apellido'] ?></td>
-<td>$<?= number_format($fila['ventas'],2) ?></td>
-<td>$<?= number_format($fila['gastos'],2) ?></td>
-
-<td class="<?= $fila['balance']>=0?'text-success':'text-danger' ?>">
-$<?= number_format($fila['balance'],2) ?>
-</td>
-</tr>
-
-<?php endforeach; ?>
-
-</tbody>
+</tfoot>
 </table>
+
+<div class="card p-4 shadow mt-4">
+<canvas id="graficaMasVendidos"></canvas>
+</div>
+
+</div>
 
 </div>
 
 <script>
+$(document).ready(function(){
 
-new Chart(document.getElementById('grafica'),{
+/* =========================
+   GRAFICA GENERAL
+========================= */
+
+new Chart(document.getElementById('graficaGeneral'),{
     type:'bar',
     data:{
         labels:['Ventas','Gastos','Balance'],
         datasets:[{
-            label:'Monto en $',
+            label:'Monto $',
             data:[
                 <?= $totalVentas ?>,
                 <?= $totalGastos ?>,
                 <?= $balanceTotal ?>
             ],
-            backgroundColor:['#198754','#dc3545','#0d6efd']
+            backgroundColor:['#9adba9','#e19ca3','#80a7e5']
         }]
     },
     options:{
         responsive:true,
+        plugins:{legend:{display:false}},
         scales:{
             y:{
                 beginAtZero:true,
                 ticks:{
-                    callback:(v)=>'$'+v.toLocaleString()
+                    callback:function(value){
+                        return '$'+value.toLocaleString();
+                    }
                 }
             }
         }
     }
 });
 
+/* =========================
+   MÁS VENDIDOS
+========================= */
+
+$('#btnMasVendidos').click(function(){
+
+    $.ajax({
+        url: 'mas_vendidos.php',
+        type: 'GET',
+        data: {
+            fecha_inicio: '<?= $fecha_inicio ?>',
+            fecha_fin: '<?= $fecha_fin ?>'
+        },
+        dataType: 'json',
+
+        success: function(res){
+
+            if(res.productos && res.productos.length > 0){
+
+                let tbody = '';
+                let labels = [];
+                let cantidades = [];
+
+                res.productos.forEach(p => {
+
+                    tbody += `<tr>
+                        <td>${p.nombre}</td>
+                        <td>${p.cantidad}</td>
+                        <td>$${parseFloat(p.precio).toFixed(2)}</td>
+                        <td>$${parseFloat(p.total).toFixed(2)}</td>
+                    </tr>`;
+
+                    labels.push(p.nombre);
+                    cantidades.push(p.cantidad);
+                });
+
+                $('#tablaMasVendidos tbody').html(tbody);
+                $('#granTotalProductos')
+                    .text('$' + parseFloat(res.granTotal).toFixed(2));
+
+                $('#contenedorMasVendidos').slideDown();
+
+                if(window.graficaMV) window.graficaMV.destroy();
+
+                window.graficaMV = new Chart(
+                    document.getElementById('graficaMasVendidos'),
+                    {
+                        type:'bar',
+                        data:{
+                            labels:labels,
+                            datasets:[{
+                                label:'Cantidad Vendida',
+                                data:cantidades,
+                                backgroundColor:'#72a8b0'
+                            }]
+                        },
+                        options:{
+                            responsive:true,
+                            plugins:{legend:{display:false}},
+                            scales:{y:{beginAtZero:true}}
+                        }
+                    }
+                );
+
+            } else {
+                Swal.fire('Aviso','No hay productos vendidos','info');
+            }
+        },
+
+        error: function(){
+            Swal.fire('Error','No se pudieron cargar los productos','error');
+        }
+
+    });
+
+});
+
+});
 </script>
 
 </body>

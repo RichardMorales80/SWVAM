@@ -1,13 +1,11 @@
 <?php
 require_once __DIR__ . '/../config/Conexion.php';
 require __DIR__ . '/../config/seguridad.php';
-
 verificarRoles([1,3]);
 
 $pdo = Conexion::conectar();
-
+$id_rol = $_SESSION['id_rol'];
 $id_usuario = $_SESSION['id_usuario'];
-$id_rol     = $_SESSION['id_rol'];
 
 $buscar = $_POST['buscar'] ?? '';
 $inicio = $_POST['inicio'] ?? '';
@@ -20,7 +18,7 @@ $offset = ($pagina - 1) * $limite;
 $where = [];
 $params = [];
 
-/* ROL */
+/* FILTRAR POR ROL */
 if ($id_rol != 1) {
     $where[] = "id_usuario = :id_usuario";
     $params[':id_usuario'] = $id_usuario;
@@ -32,7 +30,7 @@ if (!empty($buscar)) {
     $params[':buscar'] = "%$buscar%";
 }
 
-/* FECHA */
+/* FECHAS */
 if (!empty($inicio) && !empty($fin)) {
     $where[] = "fecha BETWEEN :inicio AND :fin";
     $params[':inicio'] = $inicio . " 00:00:00";
@@ -40,7 +38,7 @@ if (!empty($inicio) && !empty($fin)) {
 }
 
 $whereSQL = "";
-if (!empty($where)) {
+if(!empty($where)){
     $whereSQL = "WHERE " . implode(" AND ", $where);
 }
 
@@ -49,25 +47,21 @@ $sqlTotalReg = "SELECT COUNT(*) as total FROM ventas $whereSQL";
 $stmtTotalReg = $pdo->prepare($sqlTotalReg);
 $stmtTotalReg->execute($params);
 $totalRegistros = $stmtTotalReg->fetch(PDO::FETCH_ASSOC)['total'];
-
 $totalPaginas = ceil($totalRegistros / $limite);
 
 /* CONSULTA PAGINADA */
-$sql = "SELECT * FROM ventas $whereSQL 
-        ORDER BY fecha DESC 
-        LIMIT $limite OFFSET $offset";
-
+$sql = "SELECT * FROM ventas $whereSQL ORDER BY fecha DESC LIMIT $limite OFFSET $offset";
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $ventas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-/* GRAN TOTAL */
+/* CALCULAR GRAN TOTAL */
 $sqlTotal = "SELECT SUM(total) as gran_total FROM ventas $whereSQL";
-$stmtGran = $pdo->prepare($sqlTotal);
-$stmtGran->execute($params);
-$granTotal = $stmtGran->fetch(PDO::FETCH_ASSOC)['gran_total'] ?? 0;
+$stmtTotal = $pdo->prepare($sqlTotal);
+$stmtTotal->execute($params);
+$granTotal = $stmtTotal->fetch(PDO::FETCH_ASSOC)['gran_total'] ?? 0;
 
-/* TABLA */
+/* GENERAR TABLA */
 ob_start();
 ?>
 
@@ -85,17 +79,17 @@ ob_start();
 </thead>
 <tbody>
 <?php if($ventas): ?>
-<?php foreach($ventas as $v): ?>
-<tr>
-    <td><?= $v['id_venta'] ?></td>
-    <td><?= $v['id_producto'] ?></td>
-    <td><?= htmlspecialchars($v['descripcion']) ?></td>
-    <td>$<?= number_format($v['precio'],2) ?></td>
-    <td><?= $v['cantidad'] ?></td>
-    <td><strong>$<?= number_format($v['total'],2) ?></strong></td>
-    <td><?= date("d/m/Y H:i", strtotime($v['fecha'])) ?></td>
-</tr>
-<?php endforeach; ?>
+    <?php foreach($ventas as $v): ?>
+    <tr>
+        <td><?= $v['id_venta'] ?></td>
+        <td><?= $v['id_producto'] ?></td>
+        <td><?= htmlspecialchars($v['descripcion']) ?></td>
+        <td>$<?= number_format($v['precio'],2) ?></td>
+        <td><?= $v['cantidad'] ?></td>
+        <td><strong>$<?= number_format($v['total'],2) ?></strong></td>
+        <td><?= date("d/m/Y H:i", strtotime($v['fecha'])) ?></td>
+    </tr>
+    <?php endforeach; ?>
 <?php else: ?>
 <tr>
     <td colspan="7">No hay resultados</td>
@@ -104,21 +98,21 @@ ob_start();
 </tbody>
 </table>
 
-<div class="total-box">
-    Gran Total: $<?= number_format($granTotal,2) ?>
-</div>
-
 <?php
 $tabla = ob_get_clean();
 
-/* PAGINACIÓN */
+/* PAGINACION */
 $paginacion = '';
-for ($i=1; $i <= $totalPaginas; $i++) {
-    $activo = ($i == $pagina) ? 'style="font-weight:bold;"' : '';
+for($i=1; $i<=$totalPaginas; $i++){
+    $activo = ($i == $pagina) ? 'class="activo"' : '';
     $paginacion .= "<button onclick='cargarVentas($i)' $activo>$i</button> ";
 }
 
+/* DEVOLVER JSON */
 echo json_encode([
     "tabla" => $tabla,
-    "paginacion" => $paginacion
+    "paginacion" => $paginacion,
+    "gran_total" => $granTotal
 ]);
+exit;
+?>

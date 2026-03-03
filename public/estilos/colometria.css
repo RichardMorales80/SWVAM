@@ -1,0 +1,54 @@
+/* ===== Colores para tarjetas y alertas ===== */
+.card-hover:hover {
+    transform: scale(1.03);
+    transition: 0.3s;
+}
+
+.alert-ventas {
+    background-color: #8ecae6;  /* azul suave */
+    color: #023047;
+}
+
+.alert-gastos {
+    background-color: #ffb703;  /* amarillo suave */
+    color: #6a4c0f;
+}
+
+.alert-balance-positivo {
+    background-color: #219ebc; /* azul medio */
+    color: #fff;
+}
+
+.alert-balance-negativo {
+    background-color: #fb8500; /* naranja intenso */
+    color: #fff;
+}
+
+/* ===== Colores para graficas ===== */
+.grafico-general-bar {
+    /* colores dinámicos vía JS, pero base suave */
+}
+
+.grafico-productos-bar {
+    /* los colores progresivos se aplican por JS */
+}
+
+/* ===== Tabla Productos Mas Vendidos ===== */
+#tablaMasVendidos table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#tablaMasVendidos th, #tablaMasVendidos td {
+    padding: 8px;
+    text-align: center;
+}
+
+#tablaMasVendidos th {
+    background-color: #023047; /* azul oscuro */
+    color: #fff;
+}
+
+#tablaMasVendidos tbody tr:nth-child(even){
+    background-color: #f1f1f1;
+}

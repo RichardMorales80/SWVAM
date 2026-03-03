@@ -76,6 +76,17 @@ $stmt->execute($params);
 $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 /* ==============================
+   CALCULAR TOTAL FILTRADO
+============================== */
+$sqlSuma = "SELECT COALESCE(SUM(g.total),0) as total_filtrado
+            FROM gastos g
+            INNER JOIN usuarios u ON g.id_usuario = u.id_usuario
+            $where";
+$stmtSuma = $pdo->prepare($sqlSuma);
+$stmtSuma->execute($params);
+$totalGastos = $stmtSuma->fetchColumn();
+
+/* ==============================
    CONSTRUCCION DE LA TABLA HTML
 ============================== */
 $tabla = "";
@@ -130,6 +141,7 @@ if($pagina < $totalPaginas){
    DEVOLVER DATOS JSON
 ============================== */
 echo json_encode([
-    "tabla"=>$tabla,
-    "paginacion"=>$paginacion
+    "tabla"      => $tabla,
+    "paginacion" => $paginacion,
+    "total"      => $totalGastos
 ]);

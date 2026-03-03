@@ -167,3 +167,20 @@
 .btn-limpiar:hover {
     background: #c0392b;
 }
+/* =========================
+   TOTAL GASTOS
+========================= */
+.total-gastos {
+    margin-top: 20px;
+    text-align: right;
+    font-size: 2.2rem;       /* tamaño grande para la cantidad */
+    font-weight: 700;         /* negrita */
+    color: #2d2324;           /* rojo llamativo */
+}
+
+.total-gastos label {
+    font-size: 1.2rem;        /* tamaño de la etiqueta */
+    font-weight: 600;
+    margin-right: 10px;
+    color: #333;
+}

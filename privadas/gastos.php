@@ -67,10 +67,7 @@ $id_rol     = $_SESSION['id_rol'];
     </div>
 
     <div class="col-md-2 d-grid">
-        <button type="submit"
-                class="btn btn-primary">
-            Guardar
-        </button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
     </div>
 
 </form>
@@ -78,31 +75,41 @@ $id_rol     = $_SESSION['id_rol'];
 <!-- ================= FILTROS ================= -->
 <form id="filtroForm" class="filtro-form">
 
-        <div class="campo">
-            <label>Buscar</label>
-            <input type="text" name="buscar" placeholder="Concepto">
-        </div>
+    <div class="campo">
+        <label>Buscar</label>
+        <input type="text" name="buscar" placeholder="Concepto">
+    </div>
 
-        <div class="campo">
-            <label>Desde</label>
-            <input type="date" name="inicio">
-        </div>
+    <div class="campo">
+        <label>Desde</label>
+        <input type="date" name="desde">
+    </div>
 
-        <div class="campo">
-            <label>Hasta</label>
-            <input type="date" name="fin">
-        </div>
+    <div class="campo">
+        <label>Hasta</label>
+        <input type="date" name="hasta">
+    </div>
 
-        <div class="campo boton">
-            <button type="submit">Filtrar</button>
-        </div>
-        <div class="campo boton">
-    <button type="button" class="btn-limpiar" onclick="limpiarFiltros()">
-        Limpiar
-    </button>
+    <!-- Botones Filtrar + Limpiar en línea -->
+    <div class="campo boton d-flex gap-2 align-items-end">
+        <button type="submit" class="btn-filtrar">Filtrar</button>
+        <button type="button" class="btn-limpiar" onclick="limpiarFiltros()">Limpiar</button>
+    </div>
+
+    <!-- Botones Exportar Excel y PDF -->
+    <div class="campo boton d-flex gap-2 align-items-end mt-2">
+        <button type="button" class="btn btn-success" onclick="exportExcel()">Exportar Excel</button>
+        <button type="button" class="btn btn-danger" onclick="exportPDF()">Exportar PDF</button>
+    </div>
+
+</form>
+
+<!-- ================= TOTAL DINÁMICO ================= -->
+<div class="total-gastos">
+    <label>Total Gastos:</label>
+    <span id="totalGastos">$0.00</span>
 </div>
 
-    </form>
 <!-- ================= TABLA ================= -->
 <div class="card p-3">
     <table class="table-pro">
@@ -128,10 +135,12 @@ $id_rol     = $_SESSION['id_rol'];
 
 </div>
 
-<!-- ================= SCRIPT AJAX ================= -->
+<!-- ================= SCRIPT AJAX Y EXPORT ================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
 <script>
 function cargarGastos(pagina = 1){
-
     let formData = new FormData(document.getElementById("filtroForm"));
     formData.append("pagina", pagina);
 
@@ -141,26 +150,37 @@ function cargarGastos(pagina = 1){
     })
     .then(res=>res.json())
     .then(data=>{
+        // Actualizar tabla
         document.getElementById("tablaGastos").innerHTML = data.tabla;
         document.getElementById("paginacion").innerHTML = data.paginacion;
+
+        // Actualizar total
+        document.getElementById("totalGastos").innerText = '$' + parseFloat(data.total).toFixed(2);
     });
 }
 
-// Filtrar al enviar formulario
-document.getElementById("filtroForm")
-.addEventListener("submit", function(e){
+// Filtrar
+document.getElementById("filtroForm").addEventListener("submit", function(e){
     e.preventDefault();
     cargarGastos(1);
 });
 
-// Filtrar al escribir en buscar
+// Filtrar mientras se escribe en buscar
 document.addEventListener("keyup", function(e){
     if(e.target.name === "buscar"){
         cargarGastos(1);
     }
 });
 
-// Función eliminar gasto
+// Limpiar filtros
+function limpiarFiltros(){
+    document.querySelector('input[name="buscar"]').value = '';
+    document.querySelector('input[name="desde"]').value = '';
+    document.querySelector('input[name="hasta"]').value = '';
+    cargarGastos(1);
+}
+
+// Eliminar gasto
 function eliminarGasto(id){
     Swal.fire({
         title:"¿Eliminar gasto?",
@@ -173,22 +193,32 @@ function eliminarGasto(id){
                 method:"POST",
                 headers:{'Content-Type':'application/x-www-form-urlencoded'},
                 body:"id="+id
-            }).then(()=>{
-                cargarGastos();
-            });
+            }).then(()=>{ cargarGastos(); });
         }
     });
 }
 
-// Función limpiar filtros
-function limpiarFiltros(){
-    document.querySelector('input[name="buscar"]').value = '';
-    document.querySelector('input[name="desde"]').value = '';
-    document.querySelector('input[name="hasta"]').value = '';
-    cargarGastos(1);
+// ================= EXPORTAR EXCEL =================
+function exportExcel(){
+    let buscar = document.querySelector('input[name="buscar"]').value;
+    let desde  = document.querySelector('input[name="desde"]').value;
+    let hasta  = document.querySelector('input[name="hasta"]').value;
+
+    let url = `/SWVAM/data/exportar_gastos_excel.php?buscar=${buscar}&desde=${desde}&hasta=${hasta}`;
+    window.location.href = url;
 }
 
-// Cargar gastos al cargar página
+// ================= EXPORTAR PDF =================
+function exportPDF(){
+    let buscar = document.querySelector('input[name="buscar"]').value;
+    let desde  = document.querySelector('input[name="desde"]').value;
+    let hasta  = document.querySelector('input[name="hasta"]').value;
+
+    let url = `/SWVAM/data/exportar_gastos_pdf.php?buscar=${buscar}&desde=${desde}&hasta=${hasta}`;
+    window.location.href = url;
+}
+
+// Cargar tabla al inicio
 cargarGastos();
 </script>
 

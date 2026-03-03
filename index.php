@@ -11,6 +11,7 @@
 <link rel="icon" href="../public/imagenes/logo.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <!-- CSS PRINCIPAL -->
 <link rel="stylesheet" href="public/estilos/encabezado.css">
 <!-- CSS MODAL REGISTRO -->
@@ -153,12 +154,16 @@
         <h2>Registro de Usuario</h2>
 
         <form id="formRegistro" class="registro form-grid" method="POST">
+            <!-- COLUMNA 1 -->
             <div>
                 <label>Nombre</label>
                 <input type="text" name="nombre" class="control" required>
 
-                <label>Apellidos</label>
-                <input type="text" name="apellidos" class="control" required>
+                <label>Primer Apellido</label>
+                <input type="text" name="apellido1" class="control" required>
+
+                <label>Segundo Apellido</label>
+                <input type="text" name="apellido2" class="control">
 
                 <label>Correo electrónico</label>
                 <input type="email" name="correo" class="control" required>
@@ -167,13 +172,31 @@
                 <input type="text" name="telefono" class="control" required>
             </div>
 
+            <!-- COLUMNA 2 -->
             <div>
-                <label>Dirección</label>
-                <input type="text" name="direccion" class="control" required>
+                <label>Calle</label>
+                <input type="text" name="calle" class="control" required>
 
-               
+                <label>Número Exterior</label>
+                <input type="text" name="numero_exterior" class="control" required>
+
+                <label>Número Interior</label>
+                <input type="text" name="numero_interior" class="control">
+
+                <label>Colonia</label>
+                <input type="text" name="colonia" class="control" required>
+
+                <label>Ciudad</label>
+                <input type="text" name="ciudad" class="control" required>
+
+                <label>Estado</label>
+                <input type="text" name="estado" class="control" required>
+
+                <label>Código Postal</label>
+                <input type="text" name="codigo_postal" class="control" required>
+
                 <div class="tooltip">
-                     <label>Contraseña</label>
+                    <label>Contraseña</label>
                     <input type="password" name="pas" id="pas" class="control" required>
                     <span class="tooltiptext">
                         - Mínimo 8 caracteres<br>
@@ -189,7 +212,7 @@
                 <input type="password" name="pasrev" id="pasrev" class="control" required>
                 <small id="feedback-confirm" class="text-danger"></small>
 
-                <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
+                <div class="g-recaptcha" data-sitekey="TU_SITE_KEY"></div>
 
                 <input type="submit" class="boton" value="Registrar">
             </div>
@@ -198,6 +221,8 @@
 </div>
 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 // MENU
 const toggle = document.getElementById("menuToggle");
@@ -222,7 +247,8 @@ window.onclick = e => { if(e.target==modalReg) { modalReg.style.display="none"; 
 
 // VALIDACIONES CLIENTE
 const nombreInput = formRegistro.nombre;
-const apellidoInput = formRegistro.apellidos;
+const apellido1Input = formRegistro.apellido1;
+const apellido2Input = formRegistro.apellido2;
 const telefonoInput = formRegistro.telefono;
 const passInput = formRegistro.pas;
 const passRevInput = formRegistro.pasrev;
@@ -230,19 +256,17 @@ const feedbackPass = document.getElementById("feedback-pass");
 const feedbackConfirm = document.getElementById("feedback-confirm");
 
 // Nombres y apellidos solo letras
-[nombreInput, apellidoInput].forEach(input => {
+[nombreInput, apellido1Input, apellido2Input].forEach(input => {
     input.addEventListener("input", () => {
         input.value = input.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g,'');
-        if(input.value.length>0) input.classList.add("valid");
-        else input.classList.remove("valid");
+        if(input.value.length>0) input.classList.add("valid"); else input.classList.remove("valid");
     });
 });
 
 // Teléfono solo números
 telefonoInput.addEventListener("input", () => {
     telefonoInput.value = telefonoInput.value.replace(/[^0-9]/g,'');
-    if(telefonoInput.value.length>0) telefonoInput.classList.add("valid");
-    else telefonoInput.classList.remove("valid");
+    if(telefonoInput.value.length>0) telefonoInput.classList.add("valid"); else telefonoInput.classList.remove("valid");
 });
 
 // Contraseña
@@ -262,7 +286,7 @@ passInput.addEventListener("input",()=>{
     if(errores.length===0) passInput.classList.add("valid"); else passInput.classList.remove("valid");
 });
 
-// Confirmación
+// Confirmación contraseña
 passRevInput.addEventListener("input",()=>{
     if(passRevInput.value===passInput.value && passRevInput.value.length>0){
         feedbackConfirm.textContent="";
@@ -272,97 +296,35 @@ passRevInput.addEventListener("input",()=>{
         passRevInput.classList.remove("valid");
     }
 });
-</script>
 
-<script>
+// ENVÍO AJAX FORM
 document.addEventListener("DOMContentLoaded", function() {
-
-    const form = document.getElementById("formRegistro");
-    const modalReg = document.getElementById("modalRegistro");
-
-    form.addEventListener("submit", function(e) {
-
+    formRegistro.addEventListener("submit", function(e) {
         e.preventDefault();
-
         let datos = new FormData(this);
-
-        fetch("public/formulario.php", {
-            method: "POST",
-            body: datos
-        })
+        fetch("public/formulario.php", { method:"POST", body:datos })
         .then(res => res.json())
         .then(respuesta => {
-
             respuesta.forEach(alerta => {
-
                 let tipo = alerta[0];
                 let mensaje = alerta[1];
-
-                if (tipo === "success") {
-
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Registro exitoso',
-                        text: mensaje,
-                        confirmButtonColor: '#3085d6',
-                        backdrop: true,
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            const swalContainer = document.querySelector('.swal2-container');
-                            if (swalContainer) {
-                                swalContainer.style.zIndex = '20000';
-                            }
-                        }
-                    }).then(() => {
-
-                        form.reset();
-                        modalReg.style.display = "none";
-                        document.body.style.overflow = "auto";
-
+                if(tipo==="success"){
+                    Swal.fire({ icon:'success', title:'Registro exitoso', text:mensaje }).then(()=>{
+                        formRegistro.reset();
+                        modalReg.style.display="none";
+                        document.body.style.overflow="auto";
                     });
-
                 } else {
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: mensaje,
-                        confirmButtonColor: '#d33',
-                        didOpen: () => {
-                            const swalContainer = document.querySelector('.swal2-container');
-                            if (swalContainer) {
-                                swalContainer.style.zIndex = '20000';
-                            }
-                        }
-                    });
-
-                }
-
-            });
-
-        })
-        .catch(err => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error del servidor',
-                text: 'Ocurrió un problema inesperado.',
-                didOpen: () => {
-                    const swalContainer = document.querySelector('.swal2-container');
-                    if (swalContainer) {
-                        swalContainer.style.zIndex = '20000';
-                    }
+                    Swal.fire({ icon:'error', title:'Error', text:mensaje });
                 }
             });
+        }).catch(err=>{
+            Swal.fire({ icon:'error', title:'Error del servidor', text:'Ocurrió un problema inesperado.' });
             console.error(err);
         });
-
     });
-
 });
 </script>
 
-
-
 </body>
 </html>
-

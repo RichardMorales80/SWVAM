@@ -181,3 +181,23 @@ body {
     visibility: visible;
     opacity: 1;
 }
+/* ================= GRID DE FORMULARIO ================= */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* 2 columnas */
+    gap: 20px;
+}
+
+.col label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.col input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
