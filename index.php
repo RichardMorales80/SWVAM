@@ -42,20 +42,20 @@
             <button id="btnLogin" class="main_menu_link">Iniciar sesión</button>
         </li>
         <li>
-            <a href="public/productos.html" class="main_menu_link">Catálogo productos</a>
+            <a href="public/productos.html" class="main_menu_link">Catálogo de productos</a>
         </li>
     </ul>
 </nav>
 
 <!-- CONTENIDO -->
 <section class="quienes-somos">
-    <h2>¿Quiénes Somos?</h2>
-    <p>
-        Somos una empresa 100% mexicana que ofrece venta de equipos,
-        servicio y capacitaciones para la industria en general.
-        Contamos con personal capacitado para la elaboración de servicios
-        en la industria en general.
-    </p>
+    <h2>¿Quiénes somos?</h2>
+<p>
+    Somos una empresa 100% mexicana que ofrece venta de equipos,
+    servicio y capacitaciones para la industria en general.
+    Contamos con personal capacitado para la elaboración de servicios
+    en la industria.
+</p>
 </section>
 
 <section class="carrusel">
@@ -79,7 +79,7 @@
         <img src="img/mision.png" class="imagenes">
         <h2 class="title">Misión</h2>
         <p class="copy">
-            Ofrecer productos y servicios de calidad a empresas de cualquier actividad
+            Ofrecer productos y servicios de calidad a empresas de cualquier actividad,
             ofreciendo siempre el mejor producto del mercado para satisfacer las necesidades del cliente.
         </p>
     </section>
@@ -97,7 +97,7 @@
         <img src="img/vision1.png" class="imagenes">
         <h2 class="title">Visión</h2>
         <p class="copy">
-            Ser líder en comercialización y producción de bienes y servicios integrales,
+            Ser líder en la comercialización y producción de bienes y servicios integrales,
             comprometida con el bienestar del país al generar empleo.
         </p>
     </section>
@@ -113,11 +113,11 @@
 <div class="zona1">
     <div class="box"><img src="public/imagenes/logo.png" class="logo-footer"></div>
     <div class="box">
-        <h2>SOBRE NOSOTROS</h2>
-        <p>
-            Somos Matthew NDT. Empresa mexicana dedicada a venta de equipos,
-            productos NDT, servicios y capacitaciones para la industria.
-        </p>
+        <h2>Sobre nosotros</h2>
+<p>
+    Somos Matthew NDT, empresa mexicana dedicada a la venta de equipos,
+    productos NDT, servicios y capacitaciones para la industria.
+</p>
     </div>
     <div class="box">
         <h2>SÍGUENOS</h2>
@@ -142,6 +142,9 @@
 <!-- MODAL LOGIN -->
 <div id="modalLogin" class="modal">
     <div class="modal-content">
+        <div style="text-align:center; margin-bottom: 15px;">
+            <img src="public/imagenes/logo.png" alt="Logo Matthew NDT" style="max-width:120px;">
+        </div>
         <span class="close" id="cerrarLogin">&times;</span>
         <iframe src="public/login.php" width="100%" height="600px" style="border:none;"></iframe>
     </div>
@@ -149,155 +152,169 @@
 
 <!-- MODAL REGISTRO -->
 <div id="modalRegistro" class="modal">
-    <div class="modal-content">
+    <div class="modal-content registro-modal-large">
         <span class="close" id="cerrarRegistro">&times;</span>
-        <h2>Registro de Usuario</h2>
 
-        <form id="formRegistro" class="registro form-grid" method="POST">
-            <!-- COLUMNA 1 -->
-            <div>
-                <label>Nombre</label>
-                <input type="text" name="nombre" class="control" required>
+        <!-- LOGO ARRIBA -->
+        <div style="text-align:center; margin-bottom: 15px;">
+            <img src="public/imagenes/logo.png" alt="Logo Matthew NDT" style="max-width:120px;">
+        </div>
 
-                <label>Primer Apellido</label>
-                <input type="text" name="apellido1" class="control" required>
+        <h2>Registro de usuario</h2>
 
-                <label>Segundo Apellido</label>
-                <input type="text" name="apellido2" class="control">
+        <form id="formRegistro" class="form-grid-3" method="POST">
 
-                <label>Correo electrónico</label>
-                <input type="email" name="correo" class="control" required>
+  <!-- COLUMNA 1 (Fila 1-5) -->
+  <div class="col">
+    <label>Nombre</label>
+    <input type="text" id="nombre" name="nombre" class="control" required data-next="apellido1">
 
-                <label>Teléfono</label>
-                <input type="text" name="telefono" class="control" required>
-            </div>
+    <label>Primer Apellido</label>
+    <input type="text" id="apellido1" name="apellido1" class="control" required data-next="apellido2">
 
-            <!-- COLUMNA 2 -->
-            <div>
-                <label>Calle</label>
-                <input type="text" name="calle" class="control" required>
+    <label>Segundo Apellido</label>
+    <input type="text" id="apellido2" name="apellido2" class="control" data-next="correo">
 
-                <label>Número Exterior</label>
-                <input type="text" name="numero_exterior" class="control" required>
+    <label>Correo electrónico</label>
+    <input type="email" id="correo" name="correo" class="control" required data-next="telefono">
 
-                <label>Número Interior</label>
-                <input type="text" name="numero_interior" class="control">
+    <label>Teléfono</label>
+    <input type="text" id="telefono" name="telefono" class="control" required data-next="calle">
+  </div>
 
-                <label>Colonia</label>
-                <input type="text" name="colonia" class="control" required>
+  <!-- COLUMNA 2 (Fila 6-10) -->
+  <div class="col">
+    <label>Calle</label>
+    <input type="text" id="calle" name="calle" class="control" required data-next="numero_exterior">
 
-                <label>Ciudad</label>
-                <input type="text" name="ciudad" class="control" required>
+    <label>Número Exterior</label>
+    <input type="text" id="numero_exterior" name="numero_exterior" class="control" required data-next="numero_interior">
 
-                <label>Estado</label>
-                <input type="text" name="estado" class="control" required>
+    <label>Número Interior</label>
+    <input type="text" id="numero_interior" name="numero_interior" class="control" data-next="colonia">
 
-                <label>Código Postal</label>
-                <input type="text" name="codigo_postal" class="control" required>
+    <label>Colonia</label>
+    <input type="text" id="colonia" name="colonia" class="control" required data-next="ciudad">
 
-                <div class="tooltip">
-                    <label>Contraseña</label>
-                    <input type="password" name="pas" id="pas" class="control" required>
-                    <span class="tooltiptext">
-                        - Mínimo 8 caracteres<br>
-                        - Al menos una mayúscula<br>
-                        - Al menos una minúscula<br>
-                        - Al menos un número<br>
-                        - Al menos un símbolo
-                    </span>
-                </div>
-                <ul id="feedback-pass" class="text-danger"></ul>
+    <label>Ciudad</label>
+    <input type="text" id="ciudad" name="ciudad" class="control" required data-next="estado">
+  </div>
 
-                <label>Confirmar contraseña</label>
-                <input type="password" name="pasrev" id="pasrev" class="control" required>
-                <small id="feedback-confirm" class="text-danger"></small>
+  <!-- COLUMNA 3 (Fila 11-14) -->
+  <div class="col">
+    <label>Estado</label>
+    <input type="text" id="estado" name="estado" class="control" required data-next="codigo_postal">
 
-                <div class="g-recaptcha" data-sitekey="TU_SITE_KEY"></div>
+    <label>Código Postal</label>
+    <input type="text" id="codigo_postal" name="codigo_postal" class="control" required data-next="pas">
 
-                <input type="submit" class="boton" value="Registrar">
-            </div>
-        </form>
-    </div>
+    <div class="tooltip">
+    <label>Contraseña</label>
+    <input type="password" name="pas" id="pas" class="control" required data-next="pasrev">
+    <span class="tooltiptext">
+        - Mínimo 8 caracteres<br>
+        - Al menos una mayúscula<br>
+        - Al menos una minúscula<br>
+        - Al menos un número<br>
+        - Al menos un símbolo
+    </span>
 </div>
+
+<ul id="feedback-pass" class="text-danger"></ul>
+
+
+    <div class="tooltip">
+    <label>Confirmar contraseña</label>
+    <input type="password" name="pasrev" id="pasrev" class="control" required>
+    <span class="tooltiptext" id="tooltip-confirm"></span>
+    </div>
+
+  <!-- SUBMIT -->
+  <div style="flex-basis:100%; margin-top:10px;">
+    <input type="submit" class="boton" value="Registrar">
+  </div>
+   <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
+ 
+
+
+
+</form>
 
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<!-- SCRIPTS MODALES Y MENÚ -->
 <script>
-// MENU
 const toggle = document.getElementById("menuToggle");
 const menu = document.getElementById("menu");
 toggle.addEventListener("click", () => menu.classList.toggle("active"));
 
-// MODALES
 const modalLogin = document.getElementById("modalLogin");
 const btnLogin = document.getElementById("btnLogin");
 const cerrarLogin = document.getElementById("cerrarLogin");
-btnLogin.onclick = () => { modalLogin.style.display="block"; document.body.style.overflow="hidden"; }
-cerrarLogin.onclick = () => { modalLogin.style.display="none"; document.body.style.overflow="auto"; }
-window.onclick = e => { if(e.target==modalLogin) { modalLogin.style.display="none"; document.body.style.overflow="auto"; } }
 
 const modalReg = document.getElementById("modalRegistro");
 const btnReg = document.getElementById("btnRegistro");
 const cerrarReg = document.getElementById("cerrarRegistro");
 const formRegistro = document.getElementById("formRegistro");
-btnReg.onclick = () => { modalReg.style.display="block"; document.body.style.overflow="hidden"; formRegistro.reset(); }
-cerrarReg.onclick = () => { modalReg.style.display="none"; document.body.style.overflow="auto"; }
-window.onclick = e => { if(e.target==modalReg) { modalReg.style.display="none"; document.body.style.overflow="auto"; } }
 
-// VALIDACIONES CLIENTE
-const nombreInput = formRegistro.nombre;
-const apellido1Input = formRegistro.apellido1;
-const apellido2Input = formRegistro.apellido2;
-const telefonoInput = formRegistro.telefono;
-const passInput = formRegistro.pas;
-const passRevInput = formRegistro.pasrev;
-const feedbackPass = document.getElementById("feedback-pass");
-const feedbackConfirm = document.getElementById("feedback-confirm");
+/* ASEGURAR QUE AL CARGAR ESTÉN CERRADOS */
+window.addEventListener("load", function() {
+    modalLogin.style.display = "none";
+    modalReg.style.display = "none";
+    document.body.style.overflow = "auto";
+});
+const inputPass = document.getElementById("pas");
+const tooltipPass = document.getElementById("tooltip-pass");
 
-// Nombres y apellidos solo letras
-[nombreInput, apellido1Input, apellido2Input].forEach(input => {
-    input.addEventListener("input", () => {
-        input.value = input.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g,'');
-        if(input.value.length>0) input.classList.add("valid"); else input.classList.remove("valid");
-    });
+/* MOSTRAR EN CELULAR AL HACER FOCUS */
+inputPass.addEventListener("focus", function(){
+    tooltipPass.style.visibility = "visible";
+    tooltipPass.style.opacity = "1";
 });
 
-// Teléfono solo números
-telefonoInput.addEventListener("input", () => {
-    telefonoInput.value = telefonoInput.value.replace(/[^0-9]/g,'');
-    if(telefonoInput.value.length>0) telefonoInput.classList.add("valid"); else telefonoInput.classList.remove("valid");
+/* OCULTAR CUANDO PIERDE EL FOCO */
+inputPass.addEventListener("blur", function(){
+    tooltipPass.style.visibility = "hidden";
+    tooltipPass.style.opacity = "0";
 });
 
-// Contraseña
-function validarPasswordJS(password){
-    const errores=[];
-    if(password.length<8) errores.push("Debe tener al menos 8 caracteres.");
-    if(!/[A-Z]/.test(password)) errores.push("Debe contener una letra mayúscula.");
-    if(!/[a-z]/.test(password)) errores.push("Debe contener una letra minúscula.");
-    if(!/[0-9]/.test(password)) errores.push("Debe contener un número.");
-    if(!/[!@#$%^&*(),.?\":{}|<>]/.test(password)) errores.push("Debe contener un símbolo especial.");
-    return errores;
-}
+/* LOGIN */
+btnLogin.onclick = () => {
+    modalLogin.style.display="block";
+    document.body.style.overflow="hidden";
+};
 
-passInput.addEventListener("input",()=>{
-    const errores=validarPasswordJS(passInput.value);
-    feedbackPass.innerHTML = errores.length ? errores.map(e=>`<li>${e}</li>`).join('') : "<li class='text-success'>Contraseña válida ✅</li>";
-    if(errores.length===0) passInput.classList.add("valid"); else passInput.classList.remove("valid");
-});
+cerrarLogin.onclick = () => {
+    modalLogin.style.display="none";
+    document.body.style.overflow="auto";
+};
 
-// Confirmación contraseña
-passRevInput.addEventListener("input",()=>{
-    if(passRevInput.value===passInput.value && passRevInput.value.length>0){
-        feedbackConfirm.textContent="";
-        passRevInput.classList.add("valid");
-    } else {
-        feedbackConfirm.textContent="Las contraseñas no coinciden.";
-        passRevInput.classList.remove("valid");
+/* REGISTRO */
+btnReg.onclick = () => {
+    modalReg.style.display="block";
+    document.body.style.overflow="hidden";
+    formRegistro.reset();
+};
+
+cerrarReg.onclick = () => {
+    modalReg.style.display="none";
+    document.body.style.overflow="auto";
+};
+
+/* CERRAR HACIENDO CLICK FUERA (UNA SOLA VEZ, NO DUPLICADO) */
+window.addEventListener("click", function(e){
+    if(e.target === modalLogin){
+        modalLogin.style.display="none";
+        document.body.style.overflow="auto";
+    }
+    if(e.target === modalReg){
+        modalReg.style.display="none";
+        document.body.style.overflow="auto";
     }
 });
 
-// ENVÍO AJAX FORM
+// ENVÍO AJAX FORM (sin validaciones, se hacen en validar_cuenta.js)
 document.addEventListener("DOMContentLoaded", function() {
     formRegistro.addEventListener("submit", function(e) {
         e.preventDefault();
@@ -325,6 +342,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+
+<!-- VALIDACIONES EXTERNAS -->
+<script src="public/validar_cuenta.js"></script>
 
 </body>
 </html>

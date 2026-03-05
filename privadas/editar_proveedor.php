@@ -22,7 +22,7 @@ $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <title>Editar Proveedores</title>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="../public/estilos/principal.css">
+<link rel="stylesheet" href="public/estilos/encabezado.css">
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -31,10 +31,15 @@ $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
 <!-- ===== MENU ===== -->
-<ul class="menu">
-    <li><a href="../views/administrador.php">Atrás</a></li>
+<!-- NAV -->
+<nav class="main_nav">
+    <div class="menu_toggle" id="menuToggle">☰</div>
+    <ul class="menu" id="menu">
+        <li><a href="../views/administrador.php">Atrás</a></li>
     <li><a href="../config/cerrar_sesion.php">Salir</a></li>
-</ul>
+
+    </ul>
+</nav>
 
 <br><br><br>
 

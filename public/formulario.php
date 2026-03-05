@@ -15,15 +15,22 @@ $alertas = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    /* ===== SANEAR ===== */
-    $nombre     = limpiar($_POST['nombre'] ?? '');
-    $apellido   = limpiar($_POST['apellidos'] ?? '');
-    $correo     = limpiar($_POST['correo'] ?? '');
-    $telefono   = limpiar($_POST['telefono'] ?? '');
-    $direccion  = limpiar($_POST['direccion'] ?? '');
-    $pass       = $_POST['pas'] ?? '';
-    $passrev    = $_POST['pasrev'] ?? '';
-    $captcha    = $_POST['g-recaptcha-response'] ?? '';
+    /* ===== SANEAR TODOS LOS CAMPOS ===== */
+    $nombre          = limpiar($_POST['nombre'] ?? '');
+    $apellido1       = limpiar($_POST['apellido1'] ?? '');
+    $apellido2       = limpiar($_POST['apellido2'] ?? '');
+    $correo          = limpiar($_POST['correo'] ?? '');
+    $telefono        = limpiar($_POST['telefono'] ?? '');
+    $calle           = limpiar($_POST['calle'] ?? '');
+    $numero_exterior = limpiar($_POST['numero_exterior'] ?? '');
+    $numero_interior = limpiar($_POST['numero_interior'] ?? '');
+    $colonia         = limpiar($_POST['colonia'] ?? '');
+    $ciudad          = limpiar($_POST['ciudad'] ?? '');
+    $estado          = limpiar($_POST['estado'] ?? '');
+    $codigo_postal   = limpiar($_POST['codigo_postal'] ?? '');
+    $pass            = $_POST['pas'] ?? '';
+    $passrev         = $_POST['pasrev'] ?? '';
+    $captcha         = $_POST['g-recaptcha-response'] ?? '';
 
     $errores = [];
 
@@ -31,8 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $nombre))
         $errores[] = "El nombre solo debe contener letras.";
 
-    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $apellido))
-        $errores[] = "Los apellidos solo deben contener letras.";
+    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $apellido1))
+        $errores[] = "El primer apellido solo debe contener letras.";
+
+    if (!empty($apellido2) && !preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $apellido2))
+        $errores[] = "El segundo apellido solo debe contener letras.";
 
     if (!filter_var($correo, FILTER_VALIDATE_EMAIL))
         $errores[] = "Correo electrónico inválido.";
@@ -40,6 +50,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!preg_match('/^[0-9]{7,14}$/', $telefono))
         $errores[] = "El teléfono debe tener entre 7 y 14 dígitos.";
 
+    if (!preg_match('/^[0-9]+$/', $numero_exterior))
+        $errores[] = "Número exterior inválido.";
+
+    if (!empty($numero_interior) && !preg_match('/^[0-9]+$/', $numero_interior))
+        $errores[] = "Número interior inválido.";
+
+    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $colonia))
+        $errores[] = "Colonia solo debe contener letras.";
+
+    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $ciudad))
+        $errores[] = "Ciudad solo debe contener letras.";
+
+    if (!preg_match('/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/', $estado))
+        $errores[] = "Estado solo debe contener letras.";
+
+    if (!preg_match('/^[0-9]{4,10}$/', $codigo_postal))
+        $errores[] = "Código postal inválido.";
+
+    // Contraseña
     if (
         strlen($pass) < 8 ||
         !preg_match('/[A-Z]/', $pass) ||
@@ -64,35 +93,70 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     /* ===== INSERTAR EN BD ===== */
-    if (empty($errores)) {
-        try {
-            $db = Conexion::conectar();
-            $existe = $db->prepare("SELECT id_usuario FROM usuarios WHERE correo = ?");
-            $existe->execute([$correo]);
+if (empty($errores)) {
+    try {
+        $db = Conexion::conectar();
+        $db->beginTransaction();
 
-            if ($existe->rowCount() > 0) {
-                $alertas[] = ['error', 'Ya existe un usuario con ese correo'];
-            } else {
-                $hash = password_hash($pass, PASSWORD_DEFAULT);
+        // Verificar si correo ya existe
+        $existe = $db->prepare("SELECT id_usuario FROM usuarios WHERE correo = ?");
+        $existe->execute([$correo]);
 
-                $insert = $db->prepare("INSERT INTO usuarios
-                    (primer_nombre, primer_apellido, correo, telefono, lugar_residencia, password, id_rol)
-                    VALUES (?, ?, ?, ?, ?, ?, 2)");
-                $insert->execute([$nombre, $apellido, $correo, $telefono, $direccion, $hash]);
+        if ($existe->rowCount() > 0) {
+            $alertas[] = ['error', 'Ya existe un usuario con ese correo'];
+        } else {
 
-                $alertas[] = ['success', 'Usuario registrado correctamente'];
-            }
-        } catch (PDOException $e) {
-            $alertas[] = ['error', $e->getMessage()];
+            /* 1️⃣ INSERTAR DIRECCIÓN */
+            $stmtDireccion = $db->prepare("
+                INSERT INTO direcciones
+                (calle, numero_exterior, numero_interior, colonia, ciudad, estado, codigo_postal, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+            ");
+
+            $stmtDireccion->execute([
+                $calle,
+                $numero_exterior,
+                $numero_interior,
+                $colonia,
+                $ciudad,
+                $estado,
+                $codigo_postal
+            ]);
+
+            // Obtener id generado
+            $id_direccion = $db->lastInsertId();
+
+            /* 2️⃣ INSERTAR USUARIO */
+            $hash = password_hash($pass, PASSWORD_DEFAULT);
+
+            $stmtUsuario = $db->prepare("
+                INSERT INTO usuarios
+                (primer_nombre, primer_apellido, segundo_apellido, correo, telefono, id_direccion, password, id_rol, created_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 2, NOW())
+            ");
+
+            $stmtUsuario->execute([
+                $nombre,
+                $apellido1,
+                $apellido2,
+                $correo,
+                $telefono,
+                $id_direccion,
+                $hash
+            ]);
+
+            $db->commit();
+
+            $alertas[] = ['success', 'Usuario registrado correctamente'];
         }
-    } else {
-        foreach ($errores as $e) {
-            $alertas[] = ['error', $e];
-        }
+
+    } catch (PDOException $e) {
+        $db->rollBack();
+        $alertas[] = ['error', $e->getMessage()];
     }
 }
+}
+
 header('Content-Type: application/json');
 echo json_encode($alertas);
 exit();
-
-?>
