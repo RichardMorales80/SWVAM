@@ -8,7 +8,7 @@ header('Content-Type: application/json');
 try {
 
     $pdo = Conexion::conectar();
-
+    
     $fecha_inicio = $_GET['fecha_inicio'] ?? '';
     $fecha_fin    = $_GET['fecha_fin'] ?? '';
 

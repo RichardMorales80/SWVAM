@@ -9,7 +9,6 @@ require __DIR__ . '/../config/seguridad.php';
 verificarRol(1,2,3);
 
 $pdo = Conexion::conectar();
-
 $id_usuario = $_SESSION['id_usuario'] ?? null;
 
 if(!$id_usuario){
@@ -142,3 +141,38 @@ No hay ningún producto en el carrito...
 <?php endif; ?>
 
 <?php include '../templetes/pie.php'; ?>
+<!-- ================= SEGURIDAD BOTON ATRAS ================= -->
+
+<script>
+
+let salirConfirmado = false;
+
+window.addEventListener("popstate", function () {
+
+Swal.fire({
+title: "¿Quieres salir del panel?",
+text: "Se cerrará tu sesión por seguridad.",
+icon: "warning",
+showCancelButton: true,
+confirmButtonText: "Sí, salir",
+cancelButtonText: "Cancelar"
+}).then((result) => {
+
+if (result.isConfirmed) {
+
+salirConfirmado = true;
+window.location.href = "../config/cerrar_sesion.php";
+
+}else{
+
+history.pushState(null, null, location.href);
+
+}
+
+});
+
+});
+
+history.pushState(null, null, location.href);
+
+</script>

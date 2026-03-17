@@ -1,297 +1,576 @@
 /* ===============================
    ESTILOS GENERALES
 ================================ */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #ecf0f1;
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#ecf0f1;
 }
 
 /* ===============================
-   DASHBOARD
+   LOGO
 ================================ */
-.dashboard {
-  display: flex;
-  height: 100vh;
+
+.logo-container{
+text-align:center;
+margin-bottom:20px;
+}
+
+.logo{
+width:120px;
 }
 
 /* ===============================
-   MENÚ LATERAL
+   SIDEBAR APP
 ================================ */
-.sidebar {
-  width: 220px;
-  background: #2c3e50;
-  color: #fff;
-  padding: 20px;
+
+.sidebar-app{
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background: #aba9a9;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(132, 127, 127, 0.2);
+    z-index: 1000;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+.sidebar-app nav{
+margin-top:40px;
+display:flex;
+flex-direction:column;
+gap:15px;
 }
 
-.sidebar h2 {
-  margin-top: 0;
-  font-size: 18px;
-  text-align: center;
+.sidebar-app nav a{
+color:#151617;
+text-decoration:none;
+display:flex;
+align-items:center;
+gap:10px;
+padding:10px;
+border-radius:6px;
+transition:.2s;
+}
+.sidebar-app nav a i{
+width:22px;
+text-align:center;
+font-size:16px;
+color:#1a91f3; /* color del icono */
 }
 
-.sidebar nav a {
-  display: block;
-  color: #fff;
-  text-decoration: none;
-  padding: 10px;
-  margin: 5px 0;
-  border-radius: 4px;
+.sidebar-app nav a:hover{
+background:#37474f;
 }
 
-.sidebar nav a:hover {
-  background: #34495e;
+
+.sidebar-app .salir{
+color:#dc2626;
+}
+
+
+/* ===============================
+   TOPBAR
+================================ */
+
+.topbar{
+position:fixed;
+top:0;
+left:220px;
+right:0;
+height:80px;
+background:white;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 40px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+z-index:900;
+}
+
+.topbar-left h4{
+margin:0;
+font-size:26px;
+font-weight:600;
+color:#263238;
+}
+
+.topbar-user{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.usuario-nombre{
+font-size:16px;
+font-weight:500;
+}
+
+.avatar{
+width:45px;
+height:45px;
+border-radius:50%;
+object-fit:cover;
+border:2px solid #eee;
 }
 
 /* ===============================
-   CONTENIDO PRINCIPAL
+   CONTENIDO
 ================================ */
-.main-content {
-  flex: 1;
-  background: #ecf0f1;
-  padding: 20px;
-  overflow-y: auto;
 
-  /* CENTRAR TODO */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  position: relative;
+.main-content{
+margin-left:300px;
+margin-top:80px;
+padding:20px;
+max-width:1100px;
 }
 
-/* Marca de agua */
-.main-content::before {
-  content: "";
-  position: absolute;
-  width: 1200px;
-  height: 1200px;
-  background: url('../imagenes/logo.png') no-repeat center;
-  background-size: contain;
-  opacity: 0.07;
-  z-index: 0;
+.catalogo-container{
+max-width:1200px;
+margin:auto;
 }
 
-/* Asegurar que el texto quede encima */
-.header,
-.content {
-  position: relative;
-  z-index: 1;
-}
-
-.header {
-  background: transparent;
-  border: none;
-}
-
-.user-info h1 {
-  font-size: 32px;
-  margin-bottom: 15px;
-}
-
-.user-info p {
-  font-size: 20px;
-  margin: 5px 0;
-}
-
-.content h2 {
-  margin-top: 30px;
-  font-size: 28px;
+.catalogo-container .row{
+display:flex;
+flex-wrap:wrap;
+justify-content:flex-start;
 }
 
 /* ===============================
-   MODAL GENERAL
+   MARCA DE AGUA
 ================================ */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 2000;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  overflow-y: auto;
+
+.main-content::before{
+content:"";
+position:absolute;
+width:1000px;
+height:1000px;
+background:url('../imagenes/logo.png') no-repeat center;
+background-size:contain;
+opacity:0.05;
+z-index:1;
+pointer-events:none;
 }
 
 /* ===============================
-   CONTENIDO MODAL
+   TARJETAS
 ================================ */
-.modal-contenido {
-  background-color: #f8f9ff;
-  margin: 5% auto;
-  border: 2px solid #6c63ff;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 900px;
-  padding: 30px 40px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  animation: fadeIn 0.3s ease-in-out;
+
+.card{
+background:white;
+padding:25px;
+border-radius:12px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+margin-top:20px;
+margin-left:auto;
+margin-right:auto;
+z-index:3;
 }
 
-/* ===============================
-   BOTÓN CERRAR MODAL
-================================ */
-.cerrar {
-  color: #333;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
+.card-form{
+max-width:480px;
 }
 
-.cerrar:hover {
-  color: #6c63ff;
+.card-table{
+max-width:1000px;
 }
-
+.graficas-row .col-md-6{
+padding-left:15px;
+padding-right:15px;
+}
 /* ===============================
    FORMULARIOS
 ================================ */
-.formulario-modal h2 {
-  text-align: center;
-  color: #3c3c7a;
-  margin-bottom: 15px;
+
+.form-group{
+margin-bottom:20px;
 }
 
-.formulario-modal form {
-  display: flex;
-  justify-content: space-between;
-  gap: 40px;
-  flex-wrap: wrap;
+label{
+display:block;
+font-weight:bold;
+margin-bottom:5px;
 }
 
-.form-columna {
-  flex: 1;
-  min-width: 300px;
+.form-control{
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #ccc;
+font-size:15px;
 }
 
-.form-group {
-  margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-input.form-control {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #aaa;
-  border-radius: 8px;
-  font-size: 16px;
-  transition: border-color 0.3s ease;
-}
-
-input.form-control:focus {
-  border-color: #6c63ff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(108, 99, 255, 0.3);
-}
-
-/* ===============================
-   ERRORES
-================================ */
-.error {
-  color: #dc3545;
-  font-size: 0.85em;
-  margin-top: 3px;
-  display: block;
-}
-
-.is-invalid {
-  border: 2px solid #dc3545 !important;
-  background-color: #fff5f5;
+.form-control:focus{
+border-color:#5c6bc0;
+outline:none;
+box-shadow:0 0 6px rgba(92,107,192,0.25);
 }
 
 /* ===============================
    BOTONES
 ================================ */
-.btn.btn-primary {
-  width: 200%;
-  background-color: #6c63ff;
-  border: none;
-  padding: 12px;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+
+.btn-sistema{
+padding:10px 16px;
+border-radius:8px;
+border:none;
+font-size:14px;
+cursor:pointer;
+text-decoration:none;
+display:inline-block;
+margin:2px;
 }
 
-.btn.btn-primary:hover {
-  background-color: #574bdf;
+.btn-guardar{
+background:#4CAF50;
+color:white;
 }
 
-.btn-primary:disabled {
-  background-color: #aaa;
-  cursor: not-allowed;
+.btn-guardar:hover{
+background:#43a047;
 }
 
-/* BOTÓN ABRIR MODAL */
-.btn-abrir {
-  background-color: #6c63ff;
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  padding: 12px 20px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: block;
-  margin: 180px auto 40px;
+.btn-editar{
+background:#646468;
+color:white;
 }
 
-.btn-abrir:hover {
-  background-color: #574de3;
+.btn-editar:hover{
+background:#3f51b5;
+}
+
+.btn-eliminar{
+background:#e57373;
+color:white;
+}
+
+.btn-eliminar:hover{
+background:#d32f2f;
+}
+
+/* ===============================
+   TABLAS
+================================ */
+
+.tabla-sistema{
+width:100%;
+border-collapse:separate;
+border-spacing:0;
+background:white;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+margin:auto;
+}
+
+/* HEADER */
+
+.tabla-sistema thead{
+background:#37474f;
+color:white;
+}
+
+.tabla-sistema th{
+padding:16px;
+text-align:left;
+font-weight:600;
+font-size:15px;
+}
+
+/* FILAS */
+
+.tabla-sistema td{
+padding:16px;
+border-bottom:1px solid #eee;
+font-size:14px;
+color:#333;
+}
+
+/* HOVER */
+
+.tabla-sistema tbody tr{
+transition:0.2s;
+}
+
+.tabla-sistema tbody tr:hover{
+background:#f7f9fc;
+transform:scale(1.002);
+}
+/* ===============================
+   ESTADOS
+================================ */
+
+.estado-activo{
+color:green;
+font-weight:bold;
+}
+
+.estado-inactivo{
+color:red;
+font-weight:bold;
+}
+
+/* ===============================
+   ACCIONES
+================================ */
+
+.acciones{
+display:flex;
+gap:5px;
+}
+
+/* ===============================
+   MODAL
+================================ */
+
+.modal{
+display:none;
+position:fixed;
+z-index:2000;
+inset:0;
+background-color:rgba(0,0,0,0.6);
+}
+
+.modal-contenido{
+background:white;
+margin:5% auto;
+border-radius:15px;
+width:90%;
+max-width:600px;
+padding:30px;
+box-shadow:0 6px 20px rgba(0,0,0,0.25);
+}
+
+.cerrar{
+float:right;
+font-size:28px;
+cursor:pointer;
+}
+
+/* ===============================
+   GRID FORMULARIO MODAL
+================================ */
+
+.form-grid-3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-bottom:15px;
+}
+
+.form-grid-3 input,
+.form-grid-3 select{
+width:100%;
+padding:10px;
+border-radius:6px;
+border:1px solid #d1d5db;
+background:#F9FAFB;
+font-size:14px;
+}
+
+.form-grid-3 input:focus,
+.form-grid-3 select:focus{
+outline:none;
+border-color:#9CA3AF;
+background:white;
+}
+
+/* ===============================
+   HEADER USUARIO
+================================ */
+
+.user-header{
+max-width:1100px;
+background:white;
+padding:18px 25px;
+border-radius:12px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+margin-bottom:30px;
+}
+
+.user-info{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.user-avatar{
+width:50px;
+height:50px;
+border-radius:50%;
+object-fit:cover;
+}
+
+/* ===============================
+   PRODUCTOS
+================================ */
+
+.card-producto{
+transition:.2s;
+}
+
+.card-producto:hover{
+transform:translateY(-4px);
+box-shadow:0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* ===============================
+   PAGINACION
+================================ */
+
+.paginacion-container{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+margin-top:30px;
+}
+
+#paginacion button,
+.pag-btn{
+background:#F9FAFB;
+border:1px solid #E5E7EB;
+padding:6px 12px;
+border-radius:6px;
+cursor:pointer;
+}
+
+#paginacion button:hover,
+.pag-btn:hover{
+background:#F3F4F6;
+}
+
+#paginacion button.activo{
+background:#E5E7EB;
+font-weight:bold;
 }
 
 /* ===============================
    RESPONSIVE
 ================================ */
-@media (max-width: 768px) {
-  .dashboard {
-    flex-direction: column;
-  }
 
-  .sidebar {
-    width: 100%;
-    text-align: center;
-  }
+@media(max-width:768px){
 
-  .sidebar nav a {
-    display: inline-block;
-    margin: 5px;
-  }
-
-  .main-content {
-    padding: 10px;
-  }
-
-  .formulario-modal form {
-    flex-direction: column;
-  }
-
-  .modal-contenido {
-    width: 95%;
-    margin-top: 15%;
-  }
+.sidebar-app{
+width:100%;
+height:auto;
+position:relative;
 }
 
+.topbar{
+left:0;
+}
+
+.main-content{
+margin-left:0;
+margin-top:120px;
+}
+
+}
 /* ===============================
-   ANIMACIÓN
+   CATALOGO PRODUCTOS
 ================================ */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+
+.catalogo-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+gap:30px;
+margin-top:30px;
+}
+
+/* PRODUCTO */
+
+.producto-item{
+background:white;
+padding:18px;
+border-radius:10px;
+box-shadow:0 6px 18px rgba(0,0,0,0.08);
+display:flex;
+flex-direction:column;
+transition:0.25s;
+}
+
+.producto-item:hover{
+transform:translateY(-5px);
+box-shadow:0 12px 28px rgba(0,0,0,0.15);
+}
+
+/* IMAGEN */
+
+.producto-img{
+width:100%;
+height:200px;
+object-fit:contain;
+margin-bottom:10px;
+}
+
+/* TITULO */
+
+.producto-titulo{
+font-size:18px;
+font-weight:600;
+margin-bottom:5px;
+}
+
+/* PRECIO */
+
+.producto-precio{
+color:#2e7d32;
+font-size:20px;
+font-weight:bold;
+}
+
+/* DESCRIPCION */
+
+.producto-desc{
+font-size:14px;
+color:#666;
+margin-bottom:8px;
+}
+
+/* STOCK */
+
+.producto-stock{
+font-size:14px;
+margin-bottom:10px;
+}
+
+/* INPUT */
+
+.cantidad{
+width:100%;
+padding:8px;
+border-radius:6px;
+border:1px solid #ccc;
+margin-bottom:10px;
+}
+
+/* BOTON */
+
+.btn-agregar{
+background:#1976d2;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.btn-agregar:hover{
+background:#1565c0;
+}
+
+/* SIN STOCK */
+
+.btn-sinstock{
+background:#e53935;
+color:white;
+border:none;
+padding:10px;
+border-radius:6px;
 }

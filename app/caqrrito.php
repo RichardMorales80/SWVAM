@@ -57,7 +57,7 @@ if (isset($_POST['btnaccion'])) {
                     "UPDATE carrito SET cantidad=? WHERE id_usuario=? AND id_producto=?"
                 );
                 $update->execute([$nuevaCantidad, $id_usuario, $ID]);
-                $mensaje = "Cantidad actualizada";
+                $_SESSION['mensaje_carrito'] = "Cantidad actualizada en el carrito";
 
             } else {
                 // Insertar nuevo producto
@@ -66,7 +66,7 @@ if (isset($_POST['btnaccion'])) {
                      VALUES (?,?,?,?,?)"
                 );
                 $insert->execute([$id_usuario, $ID, $DESCRIPCION, $PRECIO, $CANTIDAD]);
-                $mensaje = "Producto agregado";
+                $_SESSION['mensaje_carrito'] = "Producto agregado correctamente al carrito";
             }
 
             break;

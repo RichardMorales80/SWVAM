@@ -34,65 +34,58 @@ switch ($idRol) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Matthew NDT</title>
-
+<link rel="stylesheet" href="../public/estilos/estilos.css">
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <!-- jQuery y Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"></script>
 
-<style>
-body {
-    padding-top:120px; /* Espacio para navbar fija */
-}
-</style>
+
+
+
+
 
 </head>
 <body class="bg-light">
 
-<!-- ============================
-     NAVBAR
-============================ -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+<!-- ================= SIDEBAR ================= -->
 
-    <a class="navbar-brand" href="<?= $paginaPrincipal ?>">
-        <img src="../public/imagenes/logo.png" width="90" height="90" alt="Logo">
-    </a>
+<aside class="sidebar-app">
 
-    <button class="navbar-toggler" data-toggle="collapse" data-target="#my-nav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<div class="logo-container">
+<a href="<?= $paginaPrincipal ?>">
+<img src="../public/imagenes/logo.png" width="90" alt="Logo">
+</a>
+</div>
 
-    <div id="my-nav" class="collapse navbar-collapse">
-        <ul class="nav nav-pills nav-fill">
+<nav>
 
-            <li class="nav-item">
-                <a class="nav-link" href="<?= $paginaPrincipal ?>">Inicio</a>
-            </li>
+<a href="<?= $paginaPrincipal ?>">
+<i class="bi bi-house-door"></i> Inicio
+</a>
 
-            <li class="nav-item">
-                <a class="nav-link" href="<?= $paginaPrincipal ?>">Atrás</a>
-            </li>
+<a href="<?= $paginaPrincipal ?>">
+<a href="../views/administrador.php">
+            ⬅ Atrás
+        </a>
+</a>
 
-            <li class="nav-item">
-                <a class="nav-link" href="../app/mostrarcarro.php">
-                    Carrito (<span id="contadorCarrito">0</span>)
-                </a>
-            </li>
 
-            <li class="nav-item">
-                <a class="nav-link text-danger" href="../config/cerrar_sesion.php">
-                    Salir
-                </a>
-            </li>
+<a href="../app/mostrarcarro.php">
+<i class="bi bi-cart3"></i> Carrito
+(<span id="contadorCarrito">0</span>)
+</a>
 
-        </ul>
-    </div>
+<a href="../config/cerrar_sesion.php" class="salir">
+<i class="bi bi-box-arrow-right"></i> Salir
+</a>
+
 </nav>
 
-<div class="container">
+</aside>
+<div class="main-content">
 
 <!-- ============================
      SCRIPT PARA ACTUALIZAR CONTADOR DE CARRITO

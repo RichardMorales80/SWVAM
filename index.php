@@ -16,7 +16,8 @@
 <link rel="stylesheet" href="public/estilos/encabezado.css">
 <!-- CSS MODAL REGISTRO -->
 <link rel="stylesheet" href="public/estilos/registro.css">
-
+<link rel="stylesheet" href="public/estilos/estilos.css">
+<link rel="stylesheet" href="public/estilos/login.css">
 </head>
 
 <body>
@@ -140,209 +141,49 @@
 </a>
 
 <!-- MODAL LOGIN -->
-<div id="modalLogin" class="modal">
-    <div class="modal-content">
-        <div style="text-align:center; margin-bottom: 15px;">
-            <img src="public/imagenes/logo.png" alt="Logo Matthew NDT" style="max-width:120px;">
-        </div>
-        <span class="close" id="cerrarLogin">&times;</span>
-        <iframe src="public/login.php" width="100%" height="600px" style="border:none;"></iframe>
-    </div>
+<div id="modalLogin" class="modal modal-login">
+
+<div class="modal-content login-modal">
+
+<span class="close" id="cerrarLogin">&times;</span>
+
+<iframe src="public/login.php" class="login-frame" scrolling="no"></iframe>
+
 </div>
 
-<!-- MODAL REGISTRO -->
-<div id="modalRegistro" class="modal">
-    <div class="modal-content registro-modal-large">
-        <span class="close" id="cerrarRegistro">&times;</span>
-
-        <!-- LOGO ARRIBA -->
-        <div style="text-align:center; margin-bottom: 15px;">
-            <img src="public/imagenes/logo.png" alt="Logo Matthew NDT" style="max-width:120px;">
-        </div>
-
-        <h2>Registro de usuario</h2>
-
-        <form id="formRegistro" class="form-grid-3" method="POST">
-
-  <!-- COLUMNA 1 (Fila 1-5) -->
-  <div class="col">
-    <label>Nombre</label>
-    <input type="text" id="nombre" name="nombre" class="control" required data-next="apellido1">
-
-    <label>Primer Apellido</label>
-    <input type="text" id="apellido1" name="apellido1" class="control" required data-next="apellido2">
-
-    <label>Segundo Apellido</label>
-    <input type="text" id="apellido2" name="apellido2" class="control" data-next="correo">
-
-    <label>Correo electrónico</label>
-    <input type="email" id="correo" name="correo" class="control" required data-next="telefono">
-
-    <label>Teléfono</label>
-    <input type="text" id="telefono" name="telefono" class="control" required data-next="calle">
-  </div>
-
-  <!-- COLUMNA 2 (Fila 6-10) -->
-  <div class="col">
-    <label>Calle</label>
-    <input type="text" id="calle" name="calle" class="control" required data-next="numero_exterior">
-
-    <label>Número Exterior</label>
-    <input type="text" id="numero_exterior" name="numero_exterior" class="control" required data-next="numero_interior">
-
-    <label>Número Interior</label>
-    <input type="text" id="numero_interior" name="numero_interior" class="control" data-next="colonia">
-
-    <label>Colonia</label>
-    <input type="text" id="colonia" name="colonia" class="control" required data-next="ciudad">
-
-    <label>Ciudad</label>
-    <input type="text" id="ciudad" name="ciudad" class="control" required data-next="estado">
-  </div>
-
-  <!-- COLUMNA 3 (Fila 11-14) -->
-  <div class="col">
-    <label>Estado</label>
-    <input type="text" id="estado" name="estado" class="control" required data-next="codigo_postal">
-
-    <label>Código Postal</label>
-    <input type="text" id="codigo_postal" name="codigo_postal" class="control" required data-next="pas">
-
-    <div class="tooltip">
-    <label>Contraseña</label>
-    <input type="password" name="pas" id="pas" class="control" required data-next="pasrev">
-    <span class="tooltiptext">
-        - Mínimo 8 caracteres<br>
-        - Al menos una mayúscula<br>
-        - Al menos una minúscula<br>
-        - Al menos un número<br>
-        - Al menos un símbolo
-    </span>
 </div>
-
-<ul id="feedback-pass" class="text-danger"></ul>
-
-
-    <div class="tooltip">
-    <label>Confirmar contraseña</label>
-    <input type="password" name="pasrev" id="pasrev" class="control" required>
-    <span class="tooltiptext" id="tooltip-confirm"></span>
-    </div>
-
-  <!-- SUBMIT -->
-  <div style="flex-basis:100%; margin-top:10px;">
-    <input type="submit" class="boton" value="Registrar">
-  </div>
-   <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
- 
-
-
-
-</form>
-
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<!-- SCRIPTS MODALES Y MENÚ -->
 <script>
-const toggle = document.getElementById("menuToggle");
-const menu = document.getElementById("menu");
-toggle.addEventListener("click", () => menu.classList.toggle("active"));
+document.addEventListener("DOMContentLoaded", function () {
+    const btnLogin = document.getElementById("btnLogin");
+    const modalLogin = document.getElementById("modalLogin");
+    const cerrarLogin = document.getElementById("cerrarLogin");
 
-const modalLogin = document.getElementById("modalLogin");
-const btnLogin = document.getElementById("btnLogin");
-const cerrarLogin = document.getElementById("cerrarLogin");
-
-const modalReg = document.getElementById("modalRegistro");
-const btnReg = document.getElementById("btnRegistro");
-const cerrarReg = document.getElementById("cerrarRegistro");
-const formRegistro = document.getElementById("formRegistro");
-
-/* ASEGURAR QUE AL CARGAR ESTÉN CERRADOS */
-window.addEventListener("load", function() {
-    modalLogin.style.display = "none";
-    modalReg.style.display = "none";
-    document.body.style.overflow = "auto";
-});
-const inputPass = document.getElementById("pas");
-const tooltipPass = document.getElementById("tooltip-pass");
-
-/* MOSTRAR EN CELULAR AL HACER FOCUS */
-inputPass.addEventListener("focus", function(){
-    tooltipPass.style.visibility = "visible";
-    tooltipPass.style.opacity = "1";
-});
-
-/* OCULTAR CUANDO PIERDE EL FOCO */
-inputPass.addEventListener("blur", function(){
-    tooltipPass.style.visibility = "hidden";
-    tooltipPass.style.opacity = "0";
-});
-
-/* LOGIN */
-btnLogin.onclick = () => {
-    modalLogin.style.display="block";
-    document.body.style.overflow="hidden";
-};
-
-cerrarLogin.onclick = () => {
-    modalLogin.style.display="none";
-    document.body.style.overflow="auto";
-};
-
-/* REGISTRO */
-btnReg.onclick = () => {
-    modalReg.style.display="block";
-    document.body.style.overflow="hidden";
-    formRegistro.reset();
-};
-
-cerrarReg.onclick = () => {
-    modalReg.style.display="none";
-    document.body.style.overflow="auto";
-};
-
-/* CERRAR HACIENDO CLICK FUERA (UNA SOLA VEZ, NO DUPLICADO) */
-window.addEventListener("click", function(e){
-    if(e.target === modalLogin){
-        modalLogin.style.display="none";
-        document.body.style.overflow="auto";
-    }
-    if(e.target === modalReg){
-        modalReg.style.display="none";
-        document.body.style.overflow="auto";
-    }
-});
-
-// ENVÍO AJAX FORM (sin validaciones, se hacen en validar_cuenta.js)
-document.addEventListener("DOMContentLoaded", function() {
-    formRegistro.addEventListener("submit", function(e) {
-        e.preventDefault();
-        let datos = new FormData(this);
-        fetch("public/formulario.php", { method:"POST", body:datos })
-        .then(res => res.json())
-        .then(respuesta => {
-            respuesta.forEach(alerta => {
-                let tipo = alerta[0];
-                let mensaje = alerta[1];
-                if(tipo==="success"){
-                    Swal.fire({ icon:'success', title:'Registro exitoso', text:mensaje }).then(()=>{
-                        formRegistro.reset();
-                        modalReg.style.display="none";
-                        document.body.style.overflow="auto";
-                    });
-                } else {
-                    Swal.fire({ icon:'error', title:'Error', text:mensaje });
-                }
-            });
-        }).catch(err=>{
-            Swal.fire({ icon:'error', title:'Error del servidor', text:'Ocurrió un problema inesperado.' });
-            console.error(err);
+    if (btnLogin && modalLogin) {
+        btnLogin.addEventListener("click", function () {
+            modalLogin.classList.add("mostrar");
+            document.body.style.overflow = "hidden";
         });
+    }
+
+    if (cerrarLogin && modalLogin) {
+        cerrarLogin.addEventListener("click", function () {
+            modalLogin.classList.remove("mostrar");
+            document.body.style.overflow = "auto";
+        });
+    }
+
+    window.addEventListener("click", function (e) {
+        if (e.target === modalLogin) {
+            modalLogin.classList.remove("mostrar");
+            document.body.style.overflow = "auto";
+        }
     });
 });
 </script>
-
+<?php
+$rutaBase = "";
+include("views/modal_registro_usuario.php");
+?>
 <!-- VALIDACIONES EXTERNAS -->
 <script src="public/validar_cuenta.js"></script>
 

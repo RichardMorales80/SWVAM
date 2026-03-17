@@ -4,12 +4,11 @@ require '../config/Conexion.php';
 
 /* ===== PROTECCIÓN ===== */
 if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
-    header("Location: ../public/login.php");
+    header("Location: ../public/index.php");
     exit;
 }
 
 $db = Conexion::conectar();
-
 /* ===== CONSULTA ===== */
 $stmt = $db->query("SELECT * FROM proveedores ORDER BY estado DESC, id_proveedor DESC");
 $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -21,35 +20,29 @@ $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <meta charset="UTF-8">
 <title>Editar Proveedores</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="public/estilos/encabezado.css">
-
+<link rel="stylesheet" href="../public/estilos/estilos.css">
+<link rel="stylesheet" href="../public/estilos/encabezado.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
 
-<!-- ===== MENU ===== -->
-<!-- NAV -->
-<nav class="main_nav">
-    <div class="menu_toggle" id="menuToggle">☰</div>
-    <ul class="menu" id="menu">
-        <li><a href="../views/administrador.php">Atrás</a></li>
-    <li><a href="../config/cerrar_sesion.php">Salir</a></li>
+<?php
+$tipoMenu = "simple";
+include("../views/navbar.php");
+?>
 
-    </ul>
-</nav>
+<div class="main-content">
 
-<br><br><br>
+<h1>Proveedores</h1>
 
-<div class="container mt-5">
+<div class="card card-table">
 
-<h2 class="mb-3">Proveedores</h2>
+<table class="tabla-sistema">
 
-<table class="table table-bordered table-hover align-middle">
-
-<thead class="table-dark">
+<thead>
 <tr>
     <th>ID</th>
     <th>Nombre</th>
@@ -81,27 +74,27 @@ $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <td>
 <?php if($p['estado']==1): ?>
-<span class="badge bg-success">Activo</span>
+<span style="color:green;font-weight:bold;">Activo</span>
 <?php else: ?>
-<span class="badge bg-danger">Inactivo</span>
+<span style="color:red;font-weight:bold;">Inactivo</span>
 <?php endif; ?>
 </td>
 
 <td>
 
-<button type="button" class="btn btn-primary btn-sm editBtn">
+<button class="btn-sistema btn-editar editBtn">
 Modificar
 </button>
 
 <?php if($p['estado']==1): ?>
 
-<button type="button" class="btn btn-danger btn-sm estadoBtn" data-estado="0">
+<button class="btn-sistema btn-eliminar estadoBtn" data-estado="0">
 Inactivar
 </button>
 
 <?php else: ?>
 
-<button type="button" class="btn btn-success btn-sm estadoBtn" data-estado="1">
+<button class="btn-sistema btn-guardar estadoBtn" data-estado="1">
 Activar
 </button>
 
@@ -118,54 +111,63 @@ Activar
 
 </div>
 
-<!-- ================= MODAL ================= -->
-
-<div class="modal fade" id="modalProveedor">
-<div class="modal-dialog">
-<div class="modal-content">
-
-<div class="modal-header">
-<h5 class="modal-title">Modificar proveedor</h5>
-<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 
-<div class="modal-body">
+<!-- ================= MODAL ================= -->
+
+<div class="modal" id="modalProveedor">
+
+<div class="modal-contenido">
+
+<span class="cerrar">&times;</span>
+
+<h2>Modificar proveedor</h2>
 
 <form id="formProveedor">
 
 <input type="hidden" name="id" id="prov_id">
 
 <label>Nombre</label>
-<input type="text" name="nombre" id="prov_nombre" class="form-control mb-2" required>
+<input type="text" name="nombre" id="prov_nombre" class="form-control" required>
 
 <label>Correo</label>
-<input type="email" name="correo" id="prov_correo" class="form-control mb-2" required>
+<input type="email" name="correo" id="prov_correo" class="form-control" required>
 
 <label>Teléfono</label>
 <input type="text" name="telefono" id="prov_telefono"
-class="form-control mb-2"
+class="form-control"
 oninput="this.value=this.value.replace(/[^0-9]/g,'')"
 required>
 
 <label>Dirección</label>
-<input type="text" name="direccion" id="prov_direccion" class="form-control mb-3" required>
+<input type="text" name="direccion" id="prov_direccion" class="form-control" required>
 
-<button class="btn btn-success w-100">
+<button class="btn-sistema btn-guardar">
 Guardar cambios
 </button>
 
 </form>
 
 </div>
-</div>
-</div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 
+/* ===== MODAL ===== */
+
+const modal = document.getElementById("modalProveedor");
+const cerrar = document.querySelector(".cerrar");
+
+cerrar.onclick = () => modal.style.display="none";
+
+window.onclick = (e)=>{
+if(e.target==modal){
+modal.style.display="none";
+}
+}
+
 /* ===== ABRIR MODAL ===== */
+
 $('.editBtn').click(function(){
 
  let tr = $(this).closest('tr');
@@ -176,32 +178,41 @@ $('.editBtn').click(function(){
  $('#prov_telefono').val(tr.data('telefono'));
  $('#prov_direccion').val(tr.data('direccion'));
 
- new bootstrap.Modal(document.getElementById('modalProveedor')).show();
+ modal.style.display="block";
+
 });
 
-/* ===== GUARDAR CAMBIOS ===== */
+/* ===== GUARDAR ===== */
+
 $('#formProveedor').submit(function(e){
 
  e.preventDefault();
 
  $.ajax({
+
    url:'../privadas/update_proveedor.php',
    type:'POST',
    data: $(this).serialize(),
 
    success:function(){
+
      Swal.fire('Éxito','Proveedor actualizado','success')
      .then(()=>location.reload());
+
    },
 
    error:function(){
+
      Swal.fire('Error','No se pudo actualizar','error');
+
    }
+
  });
 
 });
 
 /* ===== ACTIVAR / INACTIVAR ===== */
+
 $('.estadoBtn').click(function(){
 
  let tr = $(this).closest('tr');
@@ -233,6 +244,41 @@ $('.estadoBtn').click(function(){
  });
 
 });
+
+</script>
+<!-- ================= SEGURIDAD BOTON ATRAS ================= -->
+
+<script>
+
+let salirConfirmado = false;
+
+window.addEventListener("popstate", function () {
+
+Swal.fire({
+title: "¿Quieres salir del panel?",
+text: "Se cerrará tu sesión por seguridad.",
+icon: "warning",
+showCancelButton: true,
+confirmButtonText: "Sí, salir",
+cancelButtonText: "Cancelar"
+}).then((result) => {
+
+if (result.isConfirmed) {
+
+salirConfirmado = true;
+window.location.href = "../config/cerrar_sesion.php";
+
+}else{
+
+history.pushState(null, null, location.href);
+
+}
+
+});
+
+});
+
+history.pushState(null, null, location.href);
 
 </script>
 

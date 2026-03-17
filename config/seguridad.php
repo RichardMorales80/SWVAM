@@ -1,6 +1,10 @@
 <?php
 
-// Cargar control de sesión e inactividad
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Cargar control de inactividad
 require __DIR__ . '/inactividad.php';
 
 /**

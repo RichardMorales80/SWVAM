@@ -1,0 +1,272 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    background:#f4f6f9;
+    overflow-x:hidden;
+}
+
+.layout{
+    display:flex;
+    min-height:100vh;
+}
+
+.sidebar{
+    width:260px;
+    background: #575656;
+    color:#fff;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    padding:20px 15px;
+    box-shadow:2px 0 10px rgba(0,0,0,0.15);
+}
+
+.sidebar h2{
+    text-align:center;
+    margin-bottom:30px;
+    font-size:22px;
+    letter-spacing:1px;
+}
+
+.sidebar .menu{
+    list-style:none;
+}
+
+.sidebar .menu li{
+    margin:12px 0;
+}
+
+.sidebar .menu li a{
+    display:block;
+    text-decoration:none;
+    color:#fff;
+    padding:12px 15px;
+    border-radius:10px;
+    transition:0.3s ease;
+    font-size:15px;
+}
+
+.sidebar .menu li a:hover,
+.sidebar .menu li a.active{
+    background:rgba(255,255,255,0.18);
+}
+
+.main{
+    margin-left:260px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    padding-top:90px;
+}
+
+.topbar{
+    height:70px;
+    background:#fff;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0 25px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    position:fixed;
+    top:0;
+    left:260px;
+    right:0;
+    z-index:1000;
+}
+
+.topbar .titulo{
+    font-size:22px;
+    font-weight:bold;
+    color:#1e3c72;
+}
+
+.usuario-box{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:#f8f9fb;
+    padding:8px 14px;
+    border-radius:30px;
+    border:1px solid #e5e7eb;
+}
+
+.usuario-box img{
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid #2a5298;
+}
+
+.usuario-info{
+    display:flex;
+    flex-direction:column;
+    line-height:1.1;
+}
+
+.usuario-info .nombre{
+    font-weight:600;
+    color:#222;
+    font-size:14px;
+}
+
+.usuario-info .rol{
+    font-size:12px;
+    color:#666;
+}
+
+.content{
+    padding:25px;
+}
+
+.cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:20px;
+    margin-bottom:30px;
+}
+
+.card{
+    background:#fff;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 8px 18px rgba(0,0,0,0.08);
+    transition:transform 0.2s ease;
+}
+
+.card:hover{
+    transform:translateY(-4px);
+}
+
+.card h3{
+    color:#555;
+    font-size:16px;
+    margin-bottom:10px;
+}
+
+.card p{
+    font-size:28px;
+    font-weight:bold;
+    color:#1e3c72;
+}
+
+.seccion{
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    box-shadow:0 8px 18px rgba(0,0,0,0.08);
+    margin-bottom:25px;
+}
+
+.seccion h3{
+    margin-bottom:15px;
+    color:#1e3c72;
+}
+
+.accesos{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:20px;
+}
+
+.acceso-card{
+    background:#f8fafc;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+    transition:0.3s ease;
+}
+
+.acceso-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 8px 18px rgba(0,0,0,0.08);
+}
+
+.acceso-card h4{
+    color:#1e3c72;
+    margin-bottom:10px;
+    font-size:18px;
+}
+
+.acceso-card p{
+    color:#666;
+    font-size:14px;
+    margin-bottom:15px;
+}
+
+.btn-ir{
+    display:inline-block;
+    text-decoration:none;
+    background:#737374;
+    color:#fff;
+    padding:10px 18px;
+    border-radius:10px;
+    transition:0.3s ease;
+    font-size:14px;
+}
+
+.btn-ir:hover{
+    background:#2a5298;
+}
+
+.chart-container{
+    width:100%;
+    max-width:500px;
+    margin:auto;
+}
+
+@media (max-width: 768px){
+    .sidebar{
+        width:220px;
+    }
+
+    .main{
+        margin-left:220px;
+        padding-top:90px;
+    }
+
+    .topbar{
+        left:220px;
+        right:0;
+        padding:0 15px;
+    }
+
+    .topbar .titulo{
+        font-size:18px;
+    }
+}
+
+@media (max-width: 600px){
+    .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+    }
+
+    .main{
+        margin-left:0;
+        padding-top:0;
+    }
+
+    .layout{
+        flex-direction:column;
+    }
+
+    .topbar{
+        position:relative;
+        left:0;
+        right:0;
+        flex-direction:column;
+        height:auto;
+        padding:15px;
+        gap:10px;
+    }
+}
