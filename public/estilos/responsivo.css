@@ -1,0 +1,849 @@
+/* =========================================
+   RESPONSIVE GLOBAL
+========================================= */
+
+@media only screen and (max-width:768px){
+
+    /* ===== BODY ===== */
+
+    body{
+        overflow-x:hidden !important;
+    }
+
+    /* ===== SIDEBAR ARRIBA ===== */
+
+    .sidebar-app{
+        position:relative !important;
+        top:0 !important;
+        left:0 !important;
+
+        width:100% !important;
+        height:auto !important;
+        min-height:auto !important;
+
+        padding:10px !important;
+
+        display:block !important;
+
+        overflow:visible !important;
+    }
+
+    /* ===== MENU HORIZONTAL ===== */
+
+    .sidebar-app nav{
+        display:flex !important;
+        flex-direction:row !important;
+
+        flex-wrap:wrap !important;
+
+        justify-content:center !important;
+
+        gap:8px !important;
+
+        margin-top:10px !important;
+    }
+
+    .sidebar-app nav a{
+        min-width:140px !important;
+
+        justify-content:center !important;
+
+        padding:10px !important;
+
+        background:#d8d8d8 !important;
+
+        border-radius:8px !important;
+    }
+
+    /* ===== TOPBAR ===== */
+
+    .topbar{
+        position:relative !important;
+
+        left:0 !important;
+
+        width:100% !important;
+
+        height:auto !important;
+
+        margin:0 !important;
+
+        padding:15px !important;
+
+        flex-direction:column !important;
+
+        gap:10px !important;
+    }
+
+    /* ===== CONTENIDO ===== */
+
+    .main-content{
+        margin-left:0 !important;
+
+        margin-top:0 !important;
+
+        width:100% !important;
+
+        max-width:100% !important;
+
+        padding:10px !important;
+    }
+
+    /* ===== TABLAS ===== */
+
+    .table-responsive{
+        overflow-x:auto !important;
+    }
+
+    .tabla-sistema{
+        min-width:900px !important;
+    }
+
+    /* ===== FORMULARIOS ===== */
+
+    .form-grid-3{
+        grid-template-columns:1fr !important;
+    }
+
+    .filtros-usuarios{
+        flex-direction:column !important;
+    }
+
+    .filtros-usuarios input,
+    .filtros-usuarios select,
+    .filtros-usuarios button{
+        width:100% !important;
+    }
+
+}
+/* =========================================
+   FIX LAYOUT MOVIL
+========================================= */
+
+@media only screen and (max-width:768px){
+
+    .layout{
+        display:block !important;
+    }
+
+    .dashboard-admin{
+        margin-left:0 !important;
+        width:100% !important;
+    }
+
+    .sidebar-app{
+        position:relative !important;
+        width:100% !important;
+        height:auto !important;
+        min-height:auto !important;
+    }
+
+}
+/* =========================================
+   RESPONSIVE ADMIN
+========================================= */
+
+@media only screen and (max-width:768px){
+
+    /* ===== LAYOUT ===== */
+
+    .layout{
+        display:block !important;
+    }
+
+    /* ===== SIDEBAR ===== */
+
+    .sidebar-app{
+        position:relative !important;
+
+        width:100% !important;
+        height:auto !important;
+        min-height:auto !important;
+
+        top:0 !important;
+        left:0 !important;
+
+        padding:10px !important;
+
+        overflow:visible !important;
+    }
+
+    /* ===== MENU ===== */
+
+    .sidebar-app nav{
+        display:flex !important;
+
+        flex-direction:row !important;
+
+        flex-wrap:wrap !important;
+
+        justify-content:center !important;
+
+        gap:8px !important;
+    }
+
+    .sidebar-app nav a{
+        min-width:140px !important;
+
+        justify-content:center !important;
+
+        padding:10px !important;
+    }
+
+    /* ===== CONTENIDO ===== */
+
+    .dashboard-admin{
+        width:100% !important;
+
+        margin-left:0 !important;
+
+        padding:10px !important;
+    }
+
+    .main-content{
+        width:100% !important;
+
+        margin-left:0 !important;
+
+        padding:0 !important;
+    }
+
+    /* ===== TOPBAR ===== */
+
+    .topbar{
+        flex-direction:column !important;
+
+        align-items:flex-start !important;
+
+        gap:10px !important;
+    }
+
+    /* ===== GRAFICAS ===== */
+
+    .graficas-row{
+        display:flex !important;
+
+        flex-direction:column !important;
+
+        gap:15px !important;
+    }
+
+    .graficas-row .col{
+        width:100% !important;
+    }
+
+    /* ===== CARDS ===== */
+
+    .cards-row{
+        display:flex !important;
+
+        flex-direction:column !important;
+
+        gap:10px !important;
+    }
+
+    .card-mini{
+        width:100% !important;
+    }
+
+    /* ===== TABLAS ===== */
+
+    .tabla-full{
+        overflow-x:auto !important;
+    }
+
+    .tabla-sistema{
+        min-width:700px !important;
+    }
+
+}
+/* =========================================
+   TABLAS RESPONSIVE
+========================================= */
+
+@media screen and (max-width:768px){
+
+    .ocultar-mobile{
+        display:none !important;
+    }
+
+    .tabla-sistema{
+
+        width:100% !important;
+
+        min-width:100% !important;
+    }
+
+    .tabla-sistema th,
+    .tabla-sistema td{
+
+        padding:8px !important;
+
+        font-size:12px !important;
+
+        white-space:nowrap;
+    }
+
+    .acciones-tabla{
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:5px;
+    }
+
+    .acciones-tabla button{
+
+        width:100% !important;
+
+        font-size:11px !important;
+
+        padding:6px !important;
+    }
+}
+/* =========================================
+   TABLA USUARIOS MOBILE
+========================================= */
+
+@media screen and (max-width:768px){
+
+    .ocultar-mobile{
+        display:none !important;
+    }
+
+    .tabla-sistema{
+        width:100% !important;
+        min-width:100% !important;
+    }
+
+    .tabla-sistema th,
+    .tabla-sistema td{
+
+        font-size:12px !important;
+
+        padding:8px !important;
+
+        white-space:nowrap;
+    }
+
+    .acciones-tabla{
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:5px;
+
+        min-width:120px;
+    }
+
+    .acciones-tabla button{
+
+        width:100% !important;
+
+        font-size:11px !important;
+
+        padding:6px !important;
+    }
+}
+/* =========================================
+   PRODUCTOS MOBILE
+========================================= */
+
+@media screen and (max-width:768px){
+
+    .ocultar-mobile{
+        display:none !important;
+    }
+
+    #productosTable{
+
+        width:100% !important;
+
+        min-width:100% !important;
+    }
+
+    #productosTable th,
+    #productosTable td{
+
+        padding:8px !important;
+
+        font-size:12px !important;
+
+        vertical-align:middle;
+    }
+
+    .img-producto{
+
+        width:50px !important;
+
+        height:auto !important;
+
+        border-radius:6px;
+    }
+
+    .acciones-tabla{
+
+        display:flex;
+
+        flex-direction:column;
+
+        gap:5px;
+    }
+
+    .acciones-tabla button{
+
+        width:100% !important;
+
+        font-size:11px !important;
+
+        padding:6px !important;
+    }
+}
+/* =========================================
+   GASTOS RESPONSIVO
+========================================= */
+
+@media screen and (max-width:768px){
+
+    .card-table{
+
+        overflow:hidden !important;
+    }
+
+    .tabla-sistema{
+
+        width:100% !important;
+
+        min-width:100% !important;
+
+        table-layout:fixed !important;
+
+        border-collapse:collapse;
+    }
+
+    .tabla-sistema th,
+    .tabla-sistema td{
+
+        padding:4px 2px !important;
+
+        font-size:9px !important;
+
+        white-space:normal !important;
+
+        word-break:break-word !important;
+
+        text-align:center !important;
+
+        line-height:1.1 !important;
+    }
+
+    .tabla-sistema th{
+
+        font-size:10px !important;
+    }
+
+    .btn-sistema{
+
+        padding:3px 5px !important;
+
+        font-size:8px !important;
+
+        border-radius:4px !important;
+    }
+
+    .pagination .page-link{
+
+        padding:3px 6px !important;
+
+        font-size:10px !important;
+    }
+
+    .card-form{
+
+        padding:10px !important;
+    }
+
+    .card-form .form-control{
+
+        font-size:12px !important;
+
+        padding:8px !important;
+    }
+
+    .card-form button{
+
+        width:100% !important;
+
+        margin-top:5px !important;
+    }
+
+    .total-gastos{
+
+        text-align:center;
+
+        font-size:13px !important;
+    }
+}
+/* =========================================
+   FACTURAS RESPONSIVO COMPACTO
+========================================= */
+
+@media screen and (max-width:768px){
+
+    .card-table{
+
+        overflow:hidden !important;
+    }
+
+    .tabla-sistema{
+
+        width:100% !important;
+
+        min-width:100% !important;
+
+        table-layout:fixed !important;
+
+        border-collapse:collapse !important;
+    }
+
+    .tabla-sistema th,
+    .tabla-sistema td{
+
+        padding:4px 2px !important;
+
+        font-size:9px !important;
+
+        line-height:1.1 !important;
+
+        text-align:center !important;
+
+        word-break:break-word !important;
+
+        white-space:normal !important;
+    }
+
+    .tabla-sistema th{
+
+        font-size:10px !important;
+    }
+
+    .btn-sistema{
+
+        padding:3px 5px !important;
+
+        font-size:8px !important;
+
+        border-radius:4px !important;
+
+        display:inline-block !important;
+
+        margin:1px !important;
+    }
+
+    .paginacion-container{
+
+        display:flex;
+
+        justify-content:center;
+
+        flex-wrap:wrap;
+
+        gap:4px;
+
+        margin-top:10px;
+    }
+
+    .pagination a,
+    .pagination span{
+
+        font-size:10px !important;
+
+        padding:4px 6px !important;
+    }
+
+    .total-gastos{
+
+        text-align:center;
+
+        margin:15px 0 !important;
+    }
+
+    .total-gastos label{
+
+        font-size:14px !important;
+    }
+
+    .total-gastos span{
+
+        font-size:16px !important;
+
+        font-weight:bold;
+    }
+
+    .filtro-form{
+
+        display:flex !important;
+
+        flex-direction:column !important;
+
+        gap:8px !important;
+    }
+
+    .filtro-form .form-control{
+
+        font-size:12px !important;
+
+        padding:8px !important;
+    }
+
+    .filtro-form button,
+    .filtro-form a{
+
+        width:100% !important;
+
+        text-align:center !important;
+    }
+}
+
+/* =========================================
+   VENTAS RESPONSIVO COMPACTO
+========================================= */
+
+@media screen and (max-width:768px){
+
+    .table-pro{
+
+        width:100% !important;
+
+        table-layout:fixed !important;
+
+        border-collapse:collapse !important;
+    }
+
+    .table-pro th,
+    .table-pro td{
+
+        padding:3px 2px !important;
+
+        font-size:8px !important;
+
+        line-height:1.1 !important;
+
+        text-align:center !important;
+
+        word-break:break-word !important;
+
+        white-space:normal !important;
+    }
+
+    .table-pro th{
+
+        font-size:9px !important;
+    }
+
+    /* DESCRIPCION */
+    .table-pro td:nth-child(3){
+
+        max-width:70px !important;
+
+        overflow:hidden !important;
+    }
+
+    /* FECHA */
+    .table-pro td:nth-child(7){
+
+        font-size:7px !important;
+
+        line-height:1 !important;
+    }
+
+    /* BOTONES */
+    .btn-sistema{
+
+        padding:2px 4px !important;
+
+        font-size:7px !important;
+
+        border-radius:4px !important;
+    }
+
+    /* FORMULARIO */
+    .filtro-form{
+
+        display:flex !important;
+
+        flex-direction:column !important;
+
+        gap:8px !important;
+    }
+
+    .filtro-form input{
+
+        font-size:12px !important;
+
+        padding:8px !important;
+    }
+
+    .filtro-form button{
+
+        width:100% !important;
+    }
+
+    /* TOTAL */
+    .total-gastos{
+
+        text-align:center !important;
+
+        padding:10px !important;
+    }
+
+    .total-gastos label{
+
+        font-size:16px !important;
+    }
+
+    .total-gastos span{
+
+        font-size:18px !important;
+
+        font-weight:bold;
+    }
+
+    /* PAGINACION */
+    #paginacion{
+
+        display:flex !important;
+
+        justify-content:center !important;
+
+        flex-wrap:wrap !important;
+
+        gap:4px !important;
+
+        margin-top:10px !important;
+    }
+
+    #paginacion button{
+
+        font-size:9px !important;
+
+        padding:4px 6px !important;
+    }
+}/* =========================================
+   PANEL ADMIN RESPONSIVO COMPACTO
+========================================= */
+
+@media screen and (max-width:768px){
+
+    /* CARDS */
+    .cards-row{
+
+        display:grid !important;
+
+        grid-template-columns:1fr 1fr !important;
+
+        gap:8px !important;
+    }
+
+    .card-mini{
+
+        padding:10px 5px !important;
+
+        text-align:center !important;
+    }
+
+    .card-mini h5{
+
+        font-size:10px !important;
+
+        margin-bottom:5px !important;
+    }
+
+    .card-mini p{
+
+        font-size:12px !important;
+
+        margin:0 !important;
+    }
+
+    /* TABLA */
+    .tabla-full{
+
+        width:100% !important;
+
+        overflow:hidden !important;
+    }
+
+    .tabla-sistema{
+
+        width:100% !important;
+
+        table-layout:fixed !important;
+
+        border-collapse:collapse !important;
+    }
+
+    .tabla-sistema th,
+    .tabla-sistema td{
+
+        padding:3px 2px !important;
+
+        font-size:8px !important;
+
+        line-height:1.1 !important;
+
+        text-align:center !important;
+
+        word-break:break-word !important;
+
+        white-space:normal !important;
+    }
+
+    .tabla-sistema th{
+
+        font-size:9px !important;
+    }
+
+    /* ACCION */
+    .tabla-sistema td:nth-child(3){
+
+        font-size:7px !important;
+    }
+
+    /* FECHA */
+    .tabla-sistema td:nth-child(4){
+
+        font-size:7px !important;
+
+        line-height:1 !important;
+    }
+
+    /* PAGINACION */
+    .btn-sistema{
+
+        padding:3px 6px !important;
+
+        font-size:8px !important;
+    }
+
+    /* TITULOS */
+    .catalogo-container h3{
+
+        font-size:16px !important;
+
+        text-align:center !important;
+    }
+
+    .card-table h5{
+
+        font-size:14px !important;
+    }
+
+    /* TOPBAR */
+    .topbar h2{
+
+        font-size:18px !important;
+    }
+}

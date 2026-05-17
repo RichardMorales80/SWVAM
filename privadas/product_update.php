@@ -11,7 +11,7 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     $descripcion = trim($_POST['descripcion']);
     $cantidad = $_POST['cantidad'];
 
-    // 👇 si no llega estado, queda activo
+    //  si no llega estado, queda activo
     $estado = isset($_POST['estado']) ? $_POST['estado'] : 1;
 
     /* ==== IMAGEN ACTUAL ==== */

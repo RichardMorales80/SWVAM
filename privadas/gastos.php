@@ -1,4 +1,6 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 require __DIR__ . '/../config/seguridad.php';
 require_once __DIR__ . '/../config/Conexion.php';
@@ -21,12 +23,14 @@ include("../views/navbar.php");
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestión de Gastos</title>
-
+<link rel="icon" href="../public/imagenes/logo.png">
 <link rel="stylesheet" href="../public/estilos/estilos.css">
 <link rel="stylesheet" href="../public/estilos/principal.css">
 <link rel="stylesheet" href="../public/estilos/ventas.css">
 <link rel="stylesheet" href="../public/estilos/encabezado.css">
+<link rel="stylesheet" href="../public/estilos/responsivo.css?v=99999">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -44,12 +48,25 @@ Swal.fire({
 </script>
 <?php endif; ?>
 
-<?php if(isset($_GET['error']) && $_GET['error'] == 1): ?>
+<?php if(isset($_GET['error']) && $_GET['error'] == 3): ?>
 <script>
 Swal.fire({
-    icon: 'warning',
-    title: 'Datos incompletos',
-    text: 'Debes capturar un concepto y un total válido'
+    icon: 'error',
+    title: 'Límite de gastos excedido',
+    html: `
+        <b>No se puede registrar el gasto</b><br><br>
+        Se ha superado el límite permitido.<br><br>
+        Exceso: <b>$<?= number_format($_GET['exceso'] ?? 0,2) ?></b>
+    `,
+    confirmButtonText: 'Entendido'
+}).then(() => {
+
+    window.history.replaceState(
+        {},
+        document.title,
+        window.location.pathname
+    );
+
 });
 </script>
 <?php endif; ?>
@@ -82,10 +99,14 @@ Swal.fire({
 
     <div class="catalogo-container">
 
-        <h2>Gestión de Gastos</h2>
+    
+        <div class="total-gastos">
+            <label>Total Gastos:</label>
+            <span id="totalGastos">$0.00</span>
+        </div>
 
         <div class="card card-form">
-            <form method="post" action="/SWVAM/privadas/guardar_gasto.php">
+            <form method="post" action="/privadas/guardar_gasto.php">
                 <div class="form-group">
                     <label>Concepto</label>
                     <input type="text" name="concepto" class="form-control" required>
@@ -100,9 +121,7 @@ Swal.fire({
                     Guardar Gasto
                 </button>
             </form>
-        </div>
-
-        <div class="card">
+            
             <form id="filtroForm" class="filtro-form">
 
                 <div class="form-group">
@@ -124,27 +143,27 @@ Swal.fire({
                     Filtrar
                 </button>
 
-                <button type="button" class="btn-sistema" onclick="limpiarFiltros()">
+                <button type="button" class="btn-sistema btn-eliminar" onclick="limpiarFiltros()">
                     Limpiar
                 </button>
 
                 <?php if($id_rol == 1): ?>
-                    <button type="button" class="btn-sistema btn-guardar" onclick="exportExcel()">
+                    <button type="button" class="btn-sistema btn-guardar"onclick="exportExcel()">
                         Exportar Excel
                     </button>
 
-                    <button type="button" class="btn-sistema btn-eliminar" onclick="exportPDF()">
+                    <button type="button" class="btn-sistema btn-editar" onclick="exportPDF()">
                         Exportar PDF
                     </button>
                 <?php endif; ?>
 
             </form>
-        </div>
+        
+        
+</div>
+        
 
-        <div class="total-gastos">
-            <label>Total Gastos:</label>
-            <span id="totalGastos">$0.00</span>
-        </div>
+        
 
         <div class="card card-table">
             <table class="tabla-sistema">
@@ -180,7 +199,7 @@ function cargarGastos(pagina = 1){
     let formData = new FormData(document.getElementById("filtroForm"));
     formData.append("pagina", pagina);
 
-    fetch("/SWVAM/privadas/gastos_data.php", {
+    fetch("/privadas/gastos_data.php", {
         method: "POST",
         body: formData
     })
@@ -246,18 +265,58 @@ function eliminarGasto(id){
 
     Swal.fire({
         title: "¿Eliminar gasto?",
+        text: "Esta acción no se puede deshacer",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonText: "Sí, eliminar"
-    }).then(result => {
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+
         if(result.isConfirmed){
-            fetch("/SWVAM/privadas/eliminar_gasto.php", {
+
+            fetch("eliminar_gasto.php", {
                 method: "POST",
-                headers: {'Content-Type':'application/x-www-form-urlencoded'},
-                body: "id=" + id
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: "id=" + encodeURIComponent(id)
             })
-            .then(() => {
-                cargarGastos(1);
+
+            .then(response => response.text())
+
+            .then(data => {
+
+                console.log(data);
+
+                if(data.trim() === "ok"){
+
+                    Swal.fire({
+                        icon: "success",
+                        title: "Eliminado",
+                        text: "El gasto fue eliminado correctamente"
+                    });
+
+                    cargarGastos(1);
+
+                } else {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: data
+                    });
+                }
+            })
+
+            .catch(error => {
+
+                console.error(error);
+
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: "No se pudo conectar con el servidor"
+                });
             });
         }
     });
@@ -279,7 +338,7 @@ function exportExcel(){
     let hasta = document.querySelector('input[name="hasta"]').value;
 
     window.location.href =
-    `/SWVAM/data/exportar_gastos_excel.php?buscar=${encodeURIComponent(buscar)}&desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`;
+    `/data/exportar_gastos_excel.php?buscar=${encodeURIComponent(buscar)}&desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`;
 }
 
 function exportPDF(){
@@ -297,7 +356,7 @@ function exportPDF(){
     let hasta = document.querySelector('input[name="hasta"]').value;
 
     window.location.href =
-    `/SWVAM/data/exportar_gastos_pdf.php?buscar=${encodeURIComponent(buscar)}&desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`;
+    `/data/exportar_gastos_pdf.php?buscar=${encodeURIComponent(buscar)}&desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`;
 }
 
 /* CARGAR AUTOMATICAMENTE AL ENTRAR */
@@ -306,26 +365,10 @@ cargarGastos(1);
 
 <script>
 
-function exportPDF(){
-    if(idRol !== 1){
-        Swal.fire({
-            icon: "warning",
-            title: "Acceso denegado",
-            text: "No tienes permiso para exportar gastos."
-        });
-        return;
-    }
 
-    let buscar = document.querySelector('input[name="buscar"]').value;
-    let desde = document.querySelector('input[name="desde"]').value;
-    let hasta = document.querySelector('input[name="hasta"]').value;
-
-    window.location.href =
-    `/SWVAM/data/exportar_gastos_pdf.php?buscar=${encodeURIComponent(buscar)}&desde=${encodeURIComponent(desde)}&hasta=${encodeURIComponent(hasta)}`;
-}
 
 /* VISTA INICIAL */
-mostrarMensajeInicial();
+//mostrarMensajeInicial();
 </script>
 
 <script>
@@ -350,6 +393,26 @@ window.addEventListener("popstate", function () {
 });
 
 history.pushState(null, null, location.href);
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let hoy = new Date().toISOString().split("T")[0];
+    let hasta = document.querySelector('input[name="hasta"]');
+
+    if(hasta){
+        // Limitar calendario
+        hasta.setAttribute("max", hoy);
+
+        // Evitar que escriban fecha futura manualmente
+        hasta.addEventListener("change", function(){
+            if(this.value > hoy){
+                this.value = hoy;
+            }
+        });
+    }
+
+});
 </script>
 
 </body>

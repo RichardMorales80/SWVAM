@@ -49,7 +49,7 @@ body {
 /* ================= NAV ================= */
 
 .main_nav {
-    background: white;
+    background: #ccc;
     padding: 15px 20px;
     box-shadow: 0 3px 10px rgba(0, 0, 0, .12);
     position: relative;
@@ -73,7 +73,7 @@ body {
 }
 
 .main_menu_link {
-    background: #7b1e1e;
+    background: #9ca3af;
     color: white;
     padding: 18px 38px;
     border-radius: 10px;
@@ -124,7 +124,7 @@ padding:30px;
 /* ================= SECCIONES ================= */
 
 section {
-    padding: 100px 80px;
+    padding: 0px 80px;
 }
 
 /* ================= QUIENES SOMOS ================= */
@@ -144,47 +144,58 @@ section {
     font-size: 28px;
     line-height: 1.7;
 }
-
-/* ================= CARRUSEL ================= */
+/* ================= CARRUSEL CORREGIDO ================= */
 
 .carrusel {
+    width: 100%;
     overflow: hidden;
-    padding: 80px 0;
+    padding: 20px 0; 
+    margin-top: 10px;
 }
 
+/* CONTENEDOR */
+.slider{
+    width: 100%;
+    overflow: hidden;
+}
+
+/* LISTA */
 .fotos {
     display: flex;
+    gap: 20px;
     list-style: none;
-    animation: scroll 35s linear infinite;
     padding: 0;
     margin: 0;
+    animation: scroll 35s linear infinite;
 }
 
+/* ITEM */
 .fotos li {
-    margin: 0 25px;
+    flex: 0 0 auto; 
 }
 
+/* IMÁGENES */
 .fotos img {
-    width: 260px;
+    width: 220px; 
     border-radius: 18px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
     transition: 0.4s;
 }
 
+/* HOVER */
 .fotos img:hover {
-    transform: scale(1.88);
+    transform: scale(1.2); 
 }
 
+/* ANIMACIÓN */
 @keyframes scroll {
     from {
         transform: translateX(0);
     }
-
     to {
         transform: translateX(-50%);
     }
 }
-
 /* ================= VALORES ================= */
 
 .cuerpo {
@@ -221,289 +232,503 @@ section {
     font-size: 17px;
 }
 
-/* ================= FOOTER ================= */
+/* ================= RESET GENERAL ================= */
 
-.pie_pagina {
-    background: #111;
-    color: rgb(23, 6, 6);
-    padding: 80px 60px 30px;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
-.zona1 {
-    display: flex;
-    justify-content: space-between;
-    gap: 50px;
-    flex-wrap: wrap;
+body{
+    overflow-x:hidden;
+    background:#f5f6fa;
+    font-family:Arial, Helvetica, sans-serif;
+    min-height:100vh;
 }
 
-.box {
-    flex: 1;
-    min-width: 250px;
+/* ================= NAVBAR ================= */
+
+.main_nav{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 60px;
+
+    background:white;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:999;
+
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
 }
 
-.logo-footer img {
-    width: 220px;
+.logo{
+
+    width:220px;
 }
 
-.pie_pagina h2 {
-    color: #7b1e1e;
+/* ================= MENU ================= */
+
+.menu{
+
+    display:flex;
+
+    list-style:none;
+
+    gap:15px;
 }
 
-.pie_pagina p {
-    color: #ddd;
+.main_menu_link{
+
+    text-decoration:none;
+
+    color:#333;
+
+    font-weight:bold;
+
+    padding:10px 18px;
+
+    border-radius:8px;
+
+    transition:.3s;
 }
 
-.red-social a {
-    font-size: 26px;
-    margin-right: 18px;
-    color: white;
+.main_menu_link:hover{
+
+    background:#8B0000;
+
+    color:white;
 }
 
-.red-social a:hover {
-    color: #7b1e1e;
+/* ================= HAMBURGUESA ================= */
+
+.menu_toggle{
+
+    display:none;
+
+    font-size:30px;
+
+    cursor:pointer;
 }
 
-.zona2 {
-    margin-top: 50px;
-    text-align: center;
-    color: #aaa;
+/* ================= SECCIONES ================= */
+
+section{
+
+    padding:90px 60px;
 }
 
-/* ================= MOVIL ================= */
+/* ================= TARJETAS ================= */
 
-@media (max-width: 768px) {
+.section{
 
-    .main_nav {
-        padding: 25px 30px;
-    }
+    background:white;
 
-    .menu_toggle {
-        display: block;
-    }
+    border-radius:20px;
 
-    .menu {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: 140px;
-        left: 0;
-        width: 100%;
-        background: rgb(67, 63, 63);
-        padding: 45px 0;
-        gap: 35px;
-        align-items: center;
-    }
+    padding:30px;
 
-    .menu.active {
-        display: flex;
-    }
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
 
-    .main_menu_link {
-        width: 92%;
-        padding: 22px 0;
-        font-size: 21px;
-        margin: 0;
-        text-align: center;
-    }
-
-    .logo {
-        width: 190px;
-        margin-bottom: 20px;
-    }
-
-    section {
-        padding: 70px 25px;
-    }
-
-    .fotos img {
-        width: 180px;
-    }
-
-    .section {
-        width: 100%;
-        max-width: 360px;
-    }
-
-    .zona1 {
-        flex-direction: column;
-        text-align: center;
-    }
+    transition:.3s;
 }
 
-.whatsapp-float {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    width: 65px;
-    height: 65px;
-    z-index: 9999;
-    animation: pulse 2s infinite;
+.section:hover{
+
+    transform:translateY(-6px);
 }
 
-.whatsapp-float img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+/* ================= IMAGENES ================= */
+
+.fotos{
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:20px;
 }
 
-/* ANIMACION */
+.fotos img{
 
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
+    width:220px;
 
-    50% {
-        transform: scale(1.12);
-    }
-
-    100% {
-        transform: scale(1);
-    }
+    border-radius:14px;
 }
 
-/* ================================
-   FOOTER CON OLA INTEGRADA
-================================ */
-
-.wave-container {
-    width: 100%;
-    overflow: hidden;
-}
-
-.wave {
-    width: 100%;
-    height: 150px;
-    display: block;
-}
-
-.wave path {
-    fill: #7b1e1e;
-}
-
-/* Pie de página */
-/* Pie de página */
-.pie_pagina {
-    background-color: #222;
-    color: #c06161;
-    font-family: Arial, sans-serif;
-    position: relative;
-    margin-top: 50px;
-}
-
-/* Ola animada */
-.wave-container {
-    position: relative;
-    width: 100%;
-    height: 120px;
-    overflow: hidden;
-}
-
-.wave {
-    width: 200%;
-    /* más ancho para animación */
-    height: 100%;
-    animation: moveWave 8s linear infinite;
-}
-
-.wave path {
-    fill: #8B0000;
-    /* rojo vino */
-}
-
-/* Animación */
-@keyframes moveWave {
-    0% {
-        transform: translateX(0);
-    }
-
-    100% {
-        transform: translateX(-50%);
-    }
-}
-
-/* Zona principal */
-.zona1 {
-    display: flex;
-    justify-content: space-around;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    padding: 20px;
-}
-
-.box {
-    flex: 1;
-    min-width: 250px;
-    margin: 15px;
-}
-
-.logo-footer {
-    max-width: 280px;
-}
-
-/* Títulos */
-.box h2 {
-    color: #8B0000;
-    /* rojo vino */
-    margin-bottom: 10px;
-}
-
-/* Texto */
-.box p {
-    font-size: 17px;
-    line-height: 1.5;
-}
-
-/* Redes sociales */
-.red-social {
-    display: flex;
-    gap: 15px;
-    margin-top: 10px;
-}
-
-.red-social a {
-    font-size: 20px;
-    color: #545252;
-    transition: color 0.3s ease;
-}
-
-.red-social a:hover {
-    color: #8B0000;
-    /* rojo vino al pasar el mouse */
-}
-
-/* Zona inferior */
-.zona2 {
-    text-align: center;
-    background-color: #111;
-    padding: 10px;
-    font-size: 13px;
-    border-top: 1px solid #333;
-}
-
+/* ================= FORM LOGIN ================= */
 
 .form-login{
-display:flex;
-flex-direction:column;
-gap:12px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
 }
 
 .form-login input{
-padding:12px;
-border-radius:8px;
-border:1px solid #ccc;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
 }
 
 .form-login button{
-background:#8B0000;
-color:white;
-border:none;
-padding:12px;
-border-radius:8px;
-cursor:pointer;
+
+    background:#8B0000;
+
+    color:white;
+
+    border:none;
+
+    padding:12px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    transition:.3s;
 }
 
 .form-login button:hover{
-background:#6d0000;
+
+    background:#6d0000;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+
+.pie_pagina{
+
+    background:#eef2f5;
+
+    margin-top:50px;
+
+    position:relative;
+}
+
+/* ================= OLA ================= */
+
+.wave-container{
+
+    width:100%;
+
+    overflow:hidden;
+
+    line-height:0;
+}
+
+.wave{
+
+    width:100%;
+
+    height:120px;
+
+    display:block;
+}
+
+.wave path{
+
+    fill:#8B0000;
+}
+
+/* ================= CONTENIDO ================= */
+
+.zona1{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    flex-wrap:wrap;
+
+    gap:40px;
+
+    padding:40px 50px;
+}
+
+/* ================= CAJAS ================= */
+
+.box{
+
+    flex:1;
+
+    min-width:250px;
+}
+
+/* ================= LOGO ================= */
+
+.logo-footer{
+
+    width:260px;
+
+    max-width:100%;
+}
+
+/* ================= TITULOS ================= */
+
+.box h2{
+
+    color:#8B0000;
+
+    margin-bottom:15px;
+
+    font-size:35px;
+}
+
+/* ================= TEXTO ================= */
+
+.box p{
+
+    color:#222;
+
+    line-height:1.7;
+
+    font-size:18px;
+}
+
+/* ================= REDES ================= */
+
+.red-social{
+
+    display:flex;
+
+    gap:22px;
+
+    margin-top:20px;
+}
+
+.red-social a{
+
+    font-size:34px;
+
+    color:#555;
+
+    transition:.3s;
+}
+
+.red-social a:hover{
+
+    color:#8B0000;
+
+    transform:translateY(-4px);
+}
+
+/* ================= DERECHOS ================= */
+
+.zona2{
+
+    width:100%;
+
+    text-align:center;
+
+    padding:25px;
+
+    background:#111;
+}
+
+.zona2 small{
+
+    color:white;
+
+    font-size:15px;
+}
+
+/* ================= WHATSAPP ================= */
+
+.whatsapp-float{
+
+    position:fixed;
+
+    bottom:20px;
+
+    right:20px;
+
+    z-index:9999;
+
+    animation:pulse 2s infinite;
+}
+
+.whatsapp-float img{
+
+    width:65px;
+
+    height:65px;
+
+    border-radius:50%;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+}
+
+/* ================= ANIMACION ================= */
+
+@keyframes pulse{
+
+    0%{
+        transform:scale(1);
+    }
+
+    50%{
+        transform:scale(1.1);
+    }
+
+    100%{
+        transform:scale(1);
+    }
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media(max-width:768px){
+
+    /* NAV */
+
+    .main_nav{
+
+        padding:20px;
+    }
+
+    .logo{
+
+        width:170px;
+    }
+
+    .menu_toggle{
+
+        display:block;
+
+        color:#374151;
+    }
+
+    .menu{
+
+        display:none;
+
+        flex-direction:column;
+
+        align-items:center;
+
+        gap:15px;
+
+        position:absolute;
+
+        top:90px;
+
+        left:0;
+
+        width:100%;
+
+        background:#f3f4f6;
+
+        padding:25px 0;
+    }
+
+    .menu.activo{
+
+        display:flex;
+    }
+
+    .menu li{
+
+        width:100%;
+
+        display:flex;
+
+        justify-content:center;
+    }
+
+    .main_menu_link{
+
+        width:90%;
+
+        max-width:280px;
+
+        text-align:center;
+    }
+
+    /* SECCIONES */
+
+    section{
+
+        padding:60px 20px;
+    }
+
+    /* TARJETAS */
+
+    .section{
+
+        width:100%;
+    }
+
+    /* IMAGENES */
+
+    .fotos img{
+
+        width:170px;
+    }
+
+    /* FOOTER */
+
+    .zona1{
+
+        flex-direction:column;
+
+        text-align:center;
+
+        padding:35px 20px;
+    }
+
+    .red-social{
+
+        justify-content:center;
+    }
+
+    .box h2{
+
+        font-size:28px;
+    }
+
+    .box p{
+
+        font-size:16px;
+    }
+
+    .logo-footer{
+
+        width:220px;
+    }
+
+    .zona2{
+
+        padding:18px;
+    }
+
+    /* WHATSAPP */
+
+    .whatsapp-float img{
+
+        width:58px;
+
+        height:58px;
+    }
 }

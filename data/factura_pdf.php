@@ -1,30 +1,44 @@
 <?php
+
+ob_start();
+
+ini_set('display_errors', 0);
+error_reporting(0);
+
 require_once __DIR__ . '/../config/Conexion.php';
-require_once $_SERVER['DOCUMENT_ROOT'].'/SWVAM/public/librerias/fpdf186/fpdf.php';
+require_once __DIR__ . '/../public/librerias/fpdf186/fpdf.php';
 
 $pdo = Conexion::conectar();
 
-$id = $_GET['id'] ?? 0;
+/* =========================
+   VALIDAR ID
+========================= */
 
-if(!$id){
-    die("Factura no válida");
+$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+if($id <= 0){
+    die('Factura no valida');
 }
 
 /* =========================
-   DATOS FACTURA
+   FACTURA
 ========================= */
 
 $sql = "SELECT 
 f.id_factura,
 f.fecha,
 f.id_venta,
-f.rfc,
-f.razon_social,
-v.total,
-CONCAT(u.primer_nombre,' ',u.primer_apellido) AS cliente
+IFNULL(f.rfc,'') AS rfc,
+IFNULL(f.razon_social,'') AS razon_social,
+CONCAT(
+IFNULL(u.primer_nombre,''),' ',
+IFNULL(u.primer_apellido,'')
+) AS cliente
 FROM facturas f
-LEFT JOIN ventas v ON v.id_venta = f.id_venta
-LEFT JOIN usuarios u ON u.id_usuario = v.id_usuario
+LEFT JOIN ventas v 
+ON v.id_venta = f.id_venta
+LEFT JOIN usuarios u 
+ON u.id_usuario = v.id_usuario
 WHERE f.id_factura = ?";
 
 $stmt = $pdo->prepare($sql);
@@ -33,15 +47,19 @@ $stmt->execute([$id]);
 $factura = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if(!$factura){
-    die("Factura no encontrada");
+    die('Factura no encontrada');
 }
 
 /* =========================
    DETALLE
 ========================= */
 
-$sqlDetalle = "SELECT descripcion, cantidad, precio, total
-FROM ventas
+$sqlDetalle = "SELECT 
+IFNULL(descripcion,'') AS descripcion,
+IFNULL(cantidad,0) AS cantidad,
+IFNULL(precio,0) AS precio,
+IFNULL(total,0) AS total
+FROM detalle_venta
 WHERE id_venta = ?";
 
 $stmt = $pdo->prepare($sqlDetalle);
@@ -56,7 +74,8 @@ $detalle = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $subtotal = 0;
 
 foreach($detalle as $d){
-    $subtotal += $d['total'];
+
+    $subtotal += floatval($d['total']);
 }
 
 $iva = $subtotal * 0.16;
@@ -69,134 +88,323 @@ $total = $subtotal + $iva;
 $pdf = new FPDF();
 $pdf->AddPage();
 
-/* ===== LOGO ===== */
-$pdf->Image($_SERVER['DOCUMENT_ROOT'].'/SWVAM/public/imagenes/logo.png',10,10,30);
+$pdf->SetMargins(15,15,15);
 
-/* ===== EMPRESA ===== */
-$pdf->SetFont('Arial','B',14);
-$pdf->Cell(0,8,'MATTHEW NDT',0,1,'R');
+/* =========================
+   HEADER COLOR GRIS CLARO
+========================= */
 
-$pdf->SetFont('Arial','',10);
-$pdf->Cell(0,5,'Technology & Solutions',0,1,'R');
-$pdf->Cell(0,5,'RFC: XAXX010101000',0,1,'R');
-$pdf->Cell(0,5,'Estado de Mexico, Mexico',0,1,'R');
+$pdf->SetFillColor(245,245,245);
+$pdf->Rect(0,0,220,40,'F');
+/* =========================
+   LOGO
+========================= */
 
-$pdf->Ln(15);
+$logo = __DIR__ . '/../public/imagenes/logo.png';
 
-/* ===== DATOS FACTURA ===== */
+if(file_exists($logo)){
 
-$pdf->SetFont('Arial','B',12);
-$pdf->Cell(100,8,'Factura #: '.$factura['id_factura'],0,0);
-$pdf->Cell(0,8,'Fecha: '.$factura['fecha'],0,1);
+    $pdf->Image($logo,15,8,25);
+}
 
-$pdf->Cell(100,8,'Cliente: '.$factura['cliente'],0,1);
-$pdf->Cell(100,8,'RFC: '.$factura['rfc'],0,1);
-$pdf->Cell(100,8,'Razon Social: '.$factura['razon_social'],0,1);
-
-$pdf->Ln(5);
-
-/* ===== TABLA HEADER ===== */
-
-$pdf->SetFillColor(40,40,40);
-$pdf->SetTextColor(255,255,255);
-$pdf->SetFont('Arial','B',11);
-
-$pdf->Cell(80,8,'Producto',1,0,'C',true);
-$pdf->Cell(25,8,'Cant.',1,0,'C',true);
-$pdf->Cell(40,8,'Precio',1,0,'C',true);
-$pdf->Cell(45,8,'Importe',1,1,'C',true);
-
-/* ===== TABLA BODY ===== */
+/* =========================
+   TITULO
+========================= */
 
 $pdf->SetTextColor(0,0,0);
+
+$pdf->SetFont('Arial','B',20);
+
+$pdf->SetXY(120,10);
+
+$pdf->Cell(75,8,'FACTURA',0,1,'R');
+
+$pdf->SetFont('Arial','',10);
+
+$pdf->SetX(120);
+
+$pdf->Cell(
+75,
+5,
+'Folio: FAC-'.str_pad($factura['id_factura'],5,'0',STR_PAD_LEFT),
+0,
+1,
+'R'
+);
+
+$pdf->SetX(120);
+
+$pdf->Cell(
+75,
+5,
+'Fecha: '.$factura['fecha'],
+0,
+1,
+'R'
+);
+
+$pdf->SetX(120);
+
+$pdf->Cell(
+75,
+5,
+'Estado: PAGADA',
+0,
+1,
+'R'
+);
+
+$pdf->Ln(10);
+
+/* =========================
+   EMPRESA
+========================= */
+
+$pdf->SetTextColor(0,0,0);
+
+$pdf->SetFont('Arial','B',14);
+
+$pdf->Cell(0,7,'MATTHEW NDT',0,1);
+
+$pdf->SetFont('Arial','',10);
+
+$pdf->Cell(0,5,'Technology & Solutions',0,1);
+$pdf->Cell(0,5,'RFC: XAXX010101000',0,1);
+$pdf->Cell(0,5,'Coacalco, Estado de Mexico',0,1);
+$pdf->Cell(0,5,'Telefono: 55 1234 5678',0,1);
+$pdf->Cell(0,5,'Correo: contacto@matthewndt.com',0,1);
+
+$pdf->Ln(8);
+
+/* =========================
+   CLIENTE
+========================= */
+
+$pdf->SetFillColor(240,240,240);
+
+$pdf->SetFont('Arial','B',11);
+
+$pdf->Cell(
+0,
+8,
+'DATOS DEL CLIENTE',
+0,
+1,
+'L',
+true
+);
+
+$pdf->SetFont('Arial','',10);
+
+$pdf->Cell(40,7,'Cliente:',0,0);
+$pdf->Cell(100,7,$factura['cliente'],0,1);
+
+$pdf->Cell(40,7,'RFC:',0,0);
+$pdf->Cell(100,7,$factura['rfc'],0,1);
+
+$pdf->Cell(40,7,'Razon Social:',0,0);
+$pdf->Cell(100,7,$factura['razon_social'],0,1);
+
+$pdf->Cell(40,7,'Metodo Pago:',0,0);
+$pdf->Cell(100,7,'Tarjeta',0,1);
+
+$pdf->Cell(40,7,'Uso CFDI:',0,0);
+$pdf->Cell(100,7,'G03 - Gastos en general',0,1);
+
+$pdf->Ln(10);
+
+/* =========================
+   TABLA
+========================= */
+
+$pdf->SetFillColor(33,37,41);
+
+$pdf->SetTextColor(255,255,255);
+
+$pdf->SetFont('Arial','B',11);
+
+$pdf->Cell(75,10,'Descripcion',1,0,'C',true);
+$pdf->Cell(25,10,'Cantidad',1,0,'C',true);
+$pdf->Cell(40,10,'Precio',1,0,'C',true);
+$pdf->Cell(45,10,'Importe',1,1,'C',true);
+
+$pdf->SetTextColor(0,0,0);
+
 $pdf->SetFont('Arial','',10);
 
 foreach($detalle as $d){
 
-    $pdf->Cell(80,8,$d['descripcion'],1);
-    $pdf->Cell(25,8,$d['cantidad'],1,0,'C');
-    $pdf->Cell(40,8,'$'.number_format($d['precio'],2),1,0,'R');
-    $pdf->Cell(45,8,'$'.number_format($d['total'],2),1,1,'R');
+    $pdf->Cell(
+    75,
+    10,
+    $d['descripcion'],
+    1
+    );
+
+    $pdf->Cell(
+    25,
+    10,
+    $d['cantidad'],
+    1,
+    0,
+    'C'
+    );
+
+    $pdf->Cell(
+    40,
+    10,
+    '$'.number_format($d['precio'],2),
+    1,
+    0,
+    'R'
+    );
+
+    $pdf->Cell(
+    45,
+    10,
+    '$'.number_format($d['total'],2),
+    1,
+    1,
+    'R'
+    );
 }
 
-/* ===== TOTALES ===== */
+/* =========================
+   TOTALES
+========================= */
 
-$pdf->Ln(5);
+$pdf->Ln(8);
+
+$pdf->SetX(110);
 
 $pdf->SetFont('Arial','B',11);
 
-$pdf->Cell(145,8,'Subtotal',1,0,'R');
-$pdf->Cell(45,8,'$'.number_format($subtotal,2),1,1,'R');
+$pdf->Cell(45,8,'Subtotal',1,0,'R');
 
-$pdf->Cell(145,8,'IVA (16%)',1,0,'R');
-$pdf->Cell(45,8,'$'.number_format($iva,2),1,1,'R');
+$pdf->Cell(
+35,
+8,
+'$'.number_format($subtotal,2),
+1,
+1,
+'R'
+);
 
-$pdf->Cell(145,10,'TOTAL',1,0,'R');
-$pdf->Cell(45,10,'$'.number_format($total,2),1,1,'R');
+$pdf->SetX(110);
 
+$pdf->Cell(45,8,'IVA (16%)',1,0,'R');
 
-/* ===== QR SEGURO FINAL ===== */
+$pdf->Cell(
+35,
+8,
+'$'.number_format($iva,2),
+1,
+1,
+'R'
+);
 
-$qrTexto = "Factura ".$factura['id_factura']." Total $".$total;
+$pdf->SetX(110);
 
-$qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=".urlencode($qrTexto);
+$pdf->SetFillColor(33,37,41);
 
-$rutaQR = __DIR__ . "/../facturas_generadas/qr/";
-$archivoQR = $rutaQR . "QR_".$factura['id_factura'].".png";
+$pdf->SetTextColor(255,255,255);
 
-/* CREAR CARPETA */
-if(!file_exists($rutaQR)){
-    mkdir($rutaQR,0777,true);
-}
+$pdf->Cell(
+45,
+10,
+'TOTAL',
+1,
+0,
+'R',
+true
+);
 
-/* GENERAR SOLO SI NO EXISTE */
-if(!file_exists($archivoQR)){
+$pdf->Cell(
+35,
+10,
+'$'.number_format($total,2),
+1,
+1,
+'R',
+true
+);
 
-    $qrImagen = @file_get_contents($qrUrl);
-
-    /* VALIDAR QUE SEA IMAGEN REAL */
-    if($qrImagen !== false && strlen($qrImagen) > 100){
-
-        file_put_contents($archivoQR, $qrImagen);
-
-    }else{
-
-        /* FALLBACK: NO USAR QR */
-        $archivoQR = null;
-    }
-}
-
-/* VALIDAR ARCHIVO FINAL */
-if($archivoQR && file_exists($archivoQR) && filesize($archivoQR) > 100){
-
-    $pdf->Ln(5);
-    $pdf->Image($archivoQR,10,$pdf->GetY(),30);
-
-
-}
-/* ===== FOOTER ===== */
-
-$pdf->Ln(25);
-$pdf->SetFont('Arial','I',9);
-$pdf->Cell(0,5,'Este documento es una representacion impresa de una factura.',0,1,'C');
-$pdf->Cell(0,5,'Gracias por su preferencia.',0,1,'C');
+$pdf->SetTextColor(0,0,0);
 
 /* =========================
-   GUARDAR PDF EN SERVIDOR
+   QR
 ========================= */
 
-$ruta = __DIR__ . "/../facturas_generadas/";
+$qrLocal = __DIR__ . '/../public/imagenes/qr_demo.jpg';
 
-if(!file_exists($ruta)){
-    mkdir($ruta,0777,true);
+if(file_exists($qrLocal)){
+
+    $pdf->Image(
+    $qrLocal,
+    15,
+    $pdf->GetY()+10,
+    25,
+    25
+    );
 }
 
-$nombreArchivo = "FACTURA_".$factura['id_factura'].".pdf";
-
-$pdf->Output("F", $ruta.$nombreArchivo);
-
 /* =========================
-   MOSTRAR PDF
+   UUID
 ========================= */
 
-$pdf->Output("I",$nombreArchivo);
+$pdf->SetY($pdf->GetY()+10);
+
+$pdf->SetX(50);
+
+$pdf->SetFont('Arial','',8);
+
+$texto =
+'UUID: '.strtoupper(uniqid())."\n".
+'Este documento es una representacion impresa de un CFDI.'."\n".
+'Emitido por MATTHEW NDT Technology & Solutions.';
+
+$pdf->MultiCell(
+140,
+5,
+$texto,
+0,
+'L'
+);
+
+/* =========================
+   PIE
+========================= */
+
+$pdf->Ln(10);
+
+$pdf->SetFont('Arial','I',8);
+
+$pdf->Cell(
+0,
+5,
+'Gracias por su compra',
+0,
+1,
+'C'
+);
+
+/* =========================
+   LIMPIAR BUFFER
+========================= */
+
+while (ob_get_level()) {
+    ob_end_clean();
+}
+
+/* =========================
+   OUTPUT
+========================= */
+
+$pdf->Output(
+'I',
+'Factura_'.$factura['id_factura'].'.pdf'
+);
+
+exit;
+
+?>

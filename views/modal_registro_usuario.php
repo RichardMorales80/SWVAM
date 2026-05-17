@@ -1,298 +1,308 @@
 <?php
 $rutaBase = $rutaBase ?? "";
 ?>
-
 <div id="modalRegistro" class="modal">
+
     <div class="modal-content registro-modal-large">
+
         <span class="close" id="cerrarRegistro">&times;</span>
 
+        <!--  LOGO -->
         <div style="text-align:center; margin-bottom:15px;">
-            <img src="<?= $rutaBase ?>public/imagenes/logo.png" alt="Logo Matthew NDT" style="max-width:120px;">
+            <img src="<?= $rutaBase ?>public/imagenes/logo.png" 
+                 alt="Logo empresa" 
+                 style="max-width:120px;">
         </div>
 
-        <h2>Registro de usuario</h2>
+        <form id="formRegistro" class="form-grid-3">
 
-        <form id="formRegistro" class="form-grid-3" method="POST">
+            <input type="hidden" name="modo" value="<?= $modo ?>">
 
+            <!-- COLUMNA 1 -->
             <div class="col">
                 <label>Nombre</label>
-                <input type="text" id="nombre" name="nombre" class="control" required data-next="apellido1">
+                <input type="text" id="nombre" name="nombre" class="control">
 
                 <label>Primer Apellido</label>
-                <input type="text" id="apellido1" name="apellido1" class="control" required data-next="apellido2">
+                <input type="text" id="apellido1" name="apellido1" class="control">
 
                 <label>Segundo Apellido</label>
-                <input type="text" id="apellido2" name="apellido2" class="control" data-next="correo">
+                <input type="text" id="apellido2" name="apellido2" class="control">
 
-                <label>Correo electrónico</label>
-                <input type="email" id="correo" name="correo" class="control" required data-next="telefono">
+                <label>Correo</label>
+                <input type="email" id="correo" name="correo" class="control">
 
                 <label>Teléfono</label>
-                <input type="text" id="telefono" name="telefono" class="control" required data-next="codigo_postal">
+                <input type="text" id="telefono" name="telefono" class="control">
             </div>
 
+            <!-- COLUMNA 2 -->
             <div class="col">
                 <label>Código Postal</label>
-                <input type="text" id="codigo_postal" name="codigo_postal" class="control" maxlength="5" required data-next="colonia">
+                <input type="text" id="codigo_postal" name="codigo_postal" class="control">
 
                 <label>Colonia</label>
-                <select id="colonia" name="colonia" class="control" required data-next="ciudad">
-                    <option value="">Seleccione una colonia</option>
+                <select id="colonia" name="colonia" class="control">
+                    <option value="">Seleccione</option>
                 </select>
 
                 <label>Ciudad</label>
-                <input type="text" id="ciudad" name="ciudad" class="control" readonly required data-next="estado">
+                <input type="text" id="ciudad" class="control" readonly>
 
                 <label>Estado</label>
-                <input type="text" id="estado" name="estado" class="control" readonly required data-next="calle">
+                <input type="text" id="estado" class="control" readonly>
 
                 <label>Calle</label>
-                <input type="text" id="calle" name="calle" class="control" required data-next="numero_exterior">
+                <input type="text" id="calle" name="calle" class="control">
             </div>
 
+            <!-- COLUMNA 3 -->
             <div class="col">
                 <label>Número Exterior</label>
-                <input type="text" id="numero_exterior" name="numero_exterior" class="control" required data-next="numero_interior">
+                <input type="text" id="numero_exterior" name="numero_exterior" class="control">
 
                 <label>Número Interior</label>
-                <input type="text" id="numero_interior" name="numero_interior" class="control" data-next="pas">
+                <input type="text" id="numero_interior" name="numero_interior" class="control">
 
-                <div class="tooltip">
-                    <label>Contraseña</label>
-                    <input type="password" name="pas" id="pas" class="control" required data-next="pasrev">
-                    <span class="tooltiptext" id="tooltip-pass">
-                        - Mínimo 8 caracteres<br>
-                        - Al menos una mayúscula<br>
-                        - Al menos una minúscula<br>
-                        - Al menos un número<br>
-                        - Al menos un símbolo
-                    </span>
+                <label>Contraseña</label>
+                <input type="password" id="pas" name="pas" class="control">
+
+                <div id="tooltip-pass" class="tooltip-box">
+                    Mínimo 8 caracteres, mayúscula, número y símbolo
                 </div>
 
-                <ul id="feedback-pass" class="text-danger"></ul>
+                <label>Confirmar contraseña</label>
+                <input type="password" id="pasrev" name="pasrev" class="control">
 
-                <div class="tooltip">
-                    <label>Confirmar contraseña</label>
-                    <input type="password" name="pasrev" id="pasrev" class="control" required>
-                    <span class="tooltiptext" id="tooltip-confirm"></span>
+                <!-- CAPTCHA -->
+                <div style="flex-basis:100%; margin-top:10px;">
+                    <div class="g-recaptcha" data-sitekey="6LfDwd8rAAAAAO5jGdE_f9Es4QHlAH9KOzJWN7aK"></div>	
                 </div>
-            </div>
 
-            <div style="flex-basis:100%; margin-top:10px;">
-                <input type="submit" class="boton" value="Registrar">
-            </div>
+                <div style="flex-basis:100%; margin-top:10px;">
+                    <button type="submit" class="boton" id="btnSubmit">
+                        <span id="textoBtn">Registrar</span>
+                        <span id="loaderBtn" style="display:none;">⏳ Guardando...</span>
+                    </button>
+                </div>
 
-            <div style="flex-basis:100%; margin-top:10px;">
-                <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
+                <div id="mensajeForm" style="margin-top:10px;"></div>
             </div>
 
         </form>
-    </div>
-</div>
 
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const modalReg = document.getElementById("modalRegistro");
-    const btnReg = document.getElementById("btnAbrirRegistro") || document.getElementById("btnRegistro");
-    const cerrarReg = document.getElementById("cerrarRegistro");
-    const formRegistro = document.getElementById("formRegistro");
+document.addEventListener("DOMContentLoaded", function(){
 
-    const codigoPostal = document.getElementById("codigo_postal");
-    const estado = document.getElementById("estado");
-    const ciudad = document.getElementById("ciudad");
-    const colonia = document.getElementById("colonia");
+const modal = document.getElementById("modalRegistro");
+const btn = document.getElementById("btnAbrirRegistro");
+const cerrar = document.getElementById("cerrarRegistro");
 
-    const inputPass = document.getElementById("pas");
-    const tooltipPass = document.getElementById("tooltip-pass");
+const form = document.getElementById("formRegistro");
+const btnSubmit = document.getElementById("btnSubmit");
+const textoBtn = document.getElementById("textoBtn");
+const loaderBtn = document.getElementById("loaderBtn");
+const mensaje = document.getElementById("mensajeForm");
 
-    function limpiarDireccionCP() {
-        if (estado) estado.value = "";
-        if (ciudad) ciudad.value = "";
-        if (colonia) {
-            colonia.innerHTML = '<option value="">Seleccione una colonia</option>';
+const pass = document.getElementById("pas");
+const tooltip = document.getElementById("tooltip-pass");
+
+const codigoPostal = document.getElementById("codigo_postal");
+const estado = document.getElementById("estado");
+const ciudad = document.getElementById("ciudad");
+const colonia = document.getElementById("colonia");
+
+
+// ===== TOOLTIP =====
+if(pass && tooltip){
+    pass.addEventListener("focus", ()=> tooltip.style.display="block");
+    pass.addEventListener("blur", ()=> tooltip.style.display="none");
+}
+
+
+// ===== LIMPIAR DIRECCIÓN =====
+function limpiarDireccion(){
+    if(estado) estado.value="";
+    if(ciudad) ciudad.value="";
+    if(colonia) colonia.innerHTML='<option value="">Seleccione</option>';
+}
+
+
+codigoPostal?.addEventListener("input", function(){
+
+    let cp = this.value.replace(/\D/g,"");
+    this.value = cp;
+
+    //  LIMPIAR MENSAJE CUANDO ESCRIBE
+    if(mensaje) mensaje.innerHTML = "";
+
+    limpiarDireccion();
+
+    if(cp.length !== 5) return;
+
+    fetch("<?= $rutaBase ?>public/buscar_cp.php",{
+        method:"POST",
+        body:new URLSearchParams({codigo_postal:cp})
+    })
+    .then(r=>r.json())
+    .then(data=>{
+
+        if(!data.success){
+
+            mensaje.innerHTML = `<div class="mensaje-error">
+                Código postal no encontrado
+            </div>`;
+
+            limpiarDireccion();
+            return;
         }
-    }
 
-    function resetFormularioCompleto() {
-        if (formRegistro) {
-            formRegistro.reset();
-        }
+        if(estado) estado.value = data.estado;
+        if(ciudad) ciudad.value = data.ciudad;
 
-        limpiarDireccionCP();
+        if(colonia){
+            colonia.innerHTML='<option value="">Seleccione</option>';
 
-        document.querySelectorAll("#formRegistro input, #formRegistro select").forEach(campo => {
-            campo.classList.remove("valid", "invalid");
-        });
-
-        const tooltipConfirm = document.getElementById("tooltip-confirm");
-        if (tooltipConfirm) {
-            tooltipConfirm.innerHTML = "";
-            tooltipConfirm.style.visibility = "hidden";
-            tooltipConfirm.style.opacity = "0";
-        }
-
-        if (tooltipPass) {
-            tooltipPass.style.visibility = "hidden";
-            tooltipPass.style.opacity = "0";
-        }
-
-        const feedbackPass = document.getElementById("feedback-pass");
-        if (feedbackPass) {
-            feedbackPass.innerHTML = "";
-        }
-
-        if (typeof grecaptcha !== "undefined") {
-            grecaptcha.reset();
-        }
-    }
-
-    function cerrarModalRegistro() {
-        resetFormularioCompleto();
-        if (modalReg) modalReg.style.display = "none";
-        document.body.style.overflow = "auto";
-    }
-
-    function abrirModalRegistro() {
-        resetFormularioCompleto();
-        if (modalReg) modalReg.style.display = "block";
-        document.body.style.overflow = "hidden";
-    }
-
-    if (modalReg) {
-        modalReg.style.display = "none";
-    }
-
-    if (btnReg) {
-        btnReg.addEventListener("click", function () {
-            abrirModalRegistro();
-        });
-    }
-
-    if (cerrarReg) {
-        cerrarReg.addEventListener("click", function () {
-            cerrarModalRegistro();
-        });
-    }
-
-    window.addEventListener("click", function (e) {
-        if (e.target === modalReg) {
-            cerrarModalRegistro();
+            data.colonias.forEach(c=>{
+                let op = document.createElement("option");
+                op.value = c;
+                op.textContent = c;
+                colonia.appendChild(op);
+            });
         }
     });
+});
 
-    if (inputPass && tooltipPass) {
-        inputPass.addEventListener("focus", function () {
-            tooltipPass.style.visibility = "visible";
-            tooltipPass.style.opacity = "1";
-        });
 
-        inputPass.addEventListener("blur", function () {
-            tooltipPass.style.visibility = "hidden";
-            tooltipPass.style.opacity = "0";
-        });
+// ===== RESET =====
+function resetForm(){
+    if(form) form.reset();
+    limpiarDireccion();
+
+    document.querySelectorAll("#formRegistro input").forEach(i=>{
+        i.classList.remove("valid","invalid");
+    });
+
+    if(mensaje) mensaje.innerHTML="";
+
+    if(typeof grecaptcha !== "undefined"){
+        grecaptcha.reset();
+    }
+}
+
+
+// ===== ABRIR MODAL =====
+btn?.addEventListener("click", ()=>{
+    if(modal) modal.classList.add("mostrar");
+});
+
+
+// ===== CERRAR =====
+function cerrarModal(){
+    if(modal) modal.classList.remove("mostrar");
+    resetForm();
+}
+
+cerrar?.addEventListener("click", cerrarModal);
+
+modal?.addEventListener("click", (e)=>{
+    if(e.target === modal) cerrarModal();
+});
+
+
+// ===== SUBMIT =====
+form?.addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    if(mensaje) mensaje.innerHTML="";
+
+    if(typeof grecaptcha === "undefined" || grecaptcha.getResponse() === ""){
+        mensaje.innerHTML = `<div class="mensaje-error">Confirma el captcha</div>`;
+        return;
     }
 
-    if (codigoPostal) {
-        codigoPostal.addEventListener("input", function () {
-            let cp = this.value.replace(/\D/g, "");
-            this.value = cp;
-
-            limpiarDireccionCP();
-
-            if (cp.length !== 5) {
-                return;
-            }
-
-            const datos = new FormData();
-            datos.append("codigo_postal", cp);
-
-            fetch("<?= $rutaBase ?>public/buscar_cp.php", {
-                method: "POST",
-                body: datos
-            })
-            .then(res => res.json())
-            .then(respuesta => {
-                if (!respuesta.success) {
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Código postal no encontrado",
-                        text: respuesta.message || "No se encontró información para ese código postal."
-                    });
-                    return;
-                }
-
-                if (estado) estado.value = respuesta.estado || "";
-                if (ciudad) ciudad.value = respuesta.ciudad || "";
-
-                if (colonia) {
-                    colonia.innerHTML = '<option value="">Seleccione una colonia</option>';
-
-                    if (respuesta.colonias && respuesta.colonias.length > 0) {
-                        respuesta.colonias.forEach(nombreColonia => {
-                            const option = document.createElement("option");
-                            option.value = nombreColonia;
-                            option.textContent = nombreColonia;
-                            colonia.appendChild(option);
-                        });
-                    }
-                }
-            })
-            .catch(error => {
-                console.error("Error al buscar código postal:", error);
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: "No se pudo consultar el código postal."
-                });
-            });
-        });
+    // VALIDAR COLONIA
+    if(colonia.value === ""){
+        mensaje.innerHTML = `<div class="mensaje-error">
+            Selecciona una colonia válida
+        </div>`;
+        return;
     }
 
-    if (formRegistro) {
-        formRegistro.addEventListener("submit", function (e) {
-            e.preventDefault();
+    btnSubmit.disabled = true;
+    textoBtn.style.display = "none";
+    loaderBtn.style.display = "inline";
 
-            let datos = new FormData(this);
+    try{
 
-            fetch("<?= $rutaBase ?>public/formulario.php", {
-                method: "POST",
-                body: datos
-            })
-            .then(res => res.json())
-            .then(respuesta => {
-                respuesta.forEach(alerta => {
-                    let tipo = alerta[0];
-                    let mensaje = alerta[1];
+        const datos = new FormData(form);
 
-                    if (tipo === "success") {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Registro exitoso",
-                            text: mensaje
-                        }).then(() => {
-                            cerrarModalRegistro();
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: mensaje
-                        });
-                    }
-                });
-            })
-            .catch(err => {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error del servidor",
-                    text: "Ocurrió un problema inesperado."
-                });
-                console.error(err);
-            });
+        const res = await fetch("<?= $rutaBase ?>public/formulario.php", {
+            method: "POST",
+            body: datos
         });
+
+        let respuesta;
+
+        try{
+            respuesta = await res.json();
+        }catch(e){
+            console.error("Error servidor");
+            mensaje.innerHTML = `<div class="mensaje-error">Error interno del servidor</div>`;
+            return;
+        }
+
+        let errores = respuesta.filter(r => r[0] === "error");
+        let success = respuesta.find(r => r[0] === "success");
+
+        if(errores.length > 0){
+
+            mensaje.innerHTML = `<div class="mensaje-error">
+                ${errores.map(e => `<div>• ${e[1]}</div>`).join("")}
+            </div>`;
+
+        } 
+        else if(success){
+
+            cerrarModal();
+
+//  FORZAR OCULTAR MODAL COMPLETAMENTE
+const modal = document.getElementById("modalRegistro");
+if(modal){
+    modal.style.display = "none";
+}
+
+cerrarModal();
+
+setTimeout(() => {
+    Swal.fire({
+        icon: 'success',
+        title: 'Registro exitoso',
+        text: success[1],
+        confirmButtonColor: '#3085d6',
+        backdrop: true
+    }).then(() => {
+        location.reload(); //  ACTUALIZA AUTOMÁTICAMENTE LA TABLA SIN RECARGAR LA PAGINA
+    });
+}, 400);
+
+        }
+
+    }catch(err){
+        console.error(err);
+        mensaje.innerHTML = `<div class="mensaje-error">Error al enviar</div>`;
     }
+
+    btnSubmit.disabled = false;
+    textoBtn.style.display = "inline";
+    loaderBtn.style.display = "none";
+});
+
 });
 </script>

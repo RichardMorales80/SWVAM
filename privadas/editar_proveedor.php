@@ -1,16 +1,21 @@
 <?php
 session_start();
 require '../config/Conexion.php';
+require __DIR__ . '/../config/seguridad.php';
 
-/* ===== PROTECCIÓN ===== */
-if (!isset($_SESSION['id_usuario']) || $_SESSION['id_rol'] != 1) {
-    header("Location: ../public/index.php");
-    exit;
-}
+verificarRoles([1]);
 
+$titulo = "Gestión de Proveedores";
+$tipoMenu = "admin";
+include("../views/navbar.php");
+
+/* ===== CONEXION ===== */
 $db = Conexion::conectar();
-/* ===== CONSULTA ===== */
-$stmt = $db->query("SELECT * FROM proveedores ORDER BY estado DESC, id_proveedor DESC");
+
+/* ===== DATOS ===== */
+$sql = "SELECT * FROM proveedores";
+$stmt = $db->prepare($sql);
+$stmt->execute();
 $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -18,267 +23,330 @@ $proveedores = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Editar Proveedores</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modificar Proveedores</title>
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="../public/estilos/ventas.css">
 <link rel="stylesheet" href="../public/estilos/estilos.css">
-<link rel="stylesheet" href="../public/estilos/encabezado.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.min.js"></script>
+<link rel="stylesheet" href="../public/estilos/registro.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/responsivo.css?v=99999">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
 
-<?php
-$tipoMenu = "simple";
-include("../views/navbar.php");
-?>
+<div class="topbar">
+    <h4><?= $titulo ?></h4>
+</div>
 
 <div class="main-content">
+    <div class="card p-3">
 
-<h1>Proveedores</h1>
+        <h5>Listado de Proveedores</h5>
 
-<div class="card card-table">
+        <!-- FILTROS -->
+        <div class="filtros-usuarios">
+            <input type="text" id="busqueda" placeholder="Buscar proveedor">
 
-<table class="tabla-sistema">
+            <select id="filtroEstado">
+                <option value="todos">Todos</option>
+                <option value="activos">Activos</option>
+                <option value="inactivos">Inactivos</option>
+            </select>
 
-<thead>
-<tr>
-    <th>ID</th>
-    <th>Nombre</th>
-    <th>Correo</th>
-    <th>Teléfono</th>
-    <th>Dirección</th>
-    <th>Estado</th>
-    <th>Acciones</th>
-</tr>
-</thead>
+            <button id="limpiar" class="btn-sistema btn-editar">Limpiar</button>
+        </div>
 
-<tbody>
+        <table class="tabla-sistema" id="tablaProveedores">
 
-<?php foreach($proveedores as $p): ?>
+    <thead>
+        <tr>
 
-<tr
- data-id="<?= $p['id_proveedor'] ?>"
- data-nombre="<?= htmlspecialchars($p['nombre'],ENT_QUOTES) ?>"
- data-correo="<?= htmlspecialchars($p['correo'],ENT_QUOTES) ?>"
- data-telefono="<?= $p['telefono'] ?>"
- data-direccion="<?= htmlspecialchars($p['direccion'],ENT_QUOTES) ?>"
->
+            <th>ID</th>
 
-<td><?= $p['id_proveedor'] ?></td>
-<td><?= htmlspecialchars($p['nombre']) ?></td>
-<td><?= htmlspecialchars($p['correo']) ?></td>
-<td><?= $p['telefono'] ?></td>
-<td><?= htmlspecialchars($p['direccion']) ?></td>
+            <th>Nombre</th>
 
-<td>
-<?php if($p['estado']==1): ?>
-<span style="color:green;font-weight:bold;">Activo</span>
-<?php else: ?>
-<span style="color:red;font-weight:bold;">Inactivo</span>
-<?php endif; ?>
-</td>
+            <th class="ocultar-mobile">Correo</th>
 
-<td>
+            <th class="ocultar-mobile">Teléfono</th>
 
-<button class="btn-sistema btn-editar editBtn">
-Modificar
-</button>
+            <th class="ocultar-mobile">Dirección</th>
 
-<?php if($p['estado']==1): ?>
+            <th class="ocultar-mobile">Estado</th>
 
-<button class="btn-sistema btn-eliminar estadoBtn" data-estado="0">
-Inactivar
-</button>
+            <th>Acciones</th>
 
-<?php else: ?>
+        </tr>
+    </thead>
 
-<button class="btn-sistema btn-guardar estadoBtn" data-estado="1">
-Activar
-</button>
+    <tbody>
 
-<?php endif; ?>
+        <?php foreach($proveedores as $p): ?>
 
-</td>
+        <tr data-busqueda="<?= strtolower($p['nombre'].' '.$p['correo'].' '.$p['telefono'].' '.$p['direccion']) ?>">
 
-</tr>
+            <td>
+                <?= $p['id_proveedor'] ?>
+            </td>
 
-<?php endforeach; ?>
+            <td>
+                <?= htmlspecialchars($p['nombre']) ?>
+            </td>
 
-</tbody>
+            <td class="ocultar-mobile">
+                <?= htmlspecialchars($p['correo']) ?>
+            </td>
+
+            <td class="ocultar-mobile">
+                <?= $p['telefono'] ?>
+            </td>
+
+            <td class="ocultar-mobile">
+                <?= htmlspecialchars($p['direccion']) ?>
+            </td>
+
+            <td class="estado ocultar-mobile">
+                <?= $p['estado'] == 1 ? 'activo' : 'inactivo' ?>
+            </td>
+
+            <td>
+
+                <div class="acciones-tabla">
+
+                    <button
+                        class="btn-sistema btn-editar editBtn"
+
+                        data-id="<?= $p['id_proveedor'] ?>"
+
+                        data-nombre="<?= htmlspecialchars($p['nombre']) ?>"
+
+                        data-correo="<?= htmlspecialchars($p['correo']) ?>"
+
+                        data-telefono="<?= $p['telefono'] ?>"
+
+                        data-direccion="<?= htmlspecialchars($p['direccion']) ?>">
+                        Modificar
+                    </button>
+
+                    <button
+                        class="btn-sistema btn-eliminar toggleEstado"
+
+                        data-id="<?= $p['id_proveedor'] ?>">
+                        <?= $p['estado'] == 1 ? 'Desactivar' : 'Activar' ?>
+                    </button>
+
+                </div>
+
+            </td>
+
+        </tr>
+
+        <?php endforeach; ?>
+
+    </tbody>
+
 </table>
+            
+        <nav>
+          <ul id="paginacion" class="pagination justify-content-center"></ul>
+       </nav>
 
+    </div>
 </div>
 
+<!-- MODAL -->
+<div class="modal fade" id="modalEditar">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Modificar Proveedor</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form action="../privadas/update_proveedor.php" method="POST">
+                <div class="modal-body">
+
+                    <input type="hidden" name="id" id="edit_id">
+
+                    <label>Nombre</label>
+                    <input type="text" name="nombre" id="edit_nombre" class="form-control" required>
+
+                    <label>Correo</label>
+                    <input type="email" name="correo" id="edit_correo" class="form-control" required>
+
+                    <label>Teléfono</label>
+                    <input type="text" name="telefono" id="edit_telefono" class="form-control" required>
+
+                    <label>Dirección</label>
+                    <input type="text" name="direccion" id="edit_direccion" class="form-control" required>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">
+                        Guardar cambios
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
 </div>
 
-<!-- ================= MODAL ================= -->
-
-<div class="modal" id="modalProveedor">
-
-<div class="modal-contenido">
-
-<span class="cerrar">&times;</span>
-
-<h2>Modificar proveedor</h2>
-
-<form id="formProveedor">
-
-<input type="hidden" name="id" id="prov_id">
-
-<label>Nombre</label>
-<input type="text" name="nombre" id="prov_nombre" class="form-control" required>
-
-<label>Correo</label>
-<input type="email" name="correo" id="prov_correo" class="form-control" required>
-
-<label>Teléfono</label>
-<input type="text" name="telefono" id="prov_telefono"
-class="form-control"
-oninput="this.value=this.value.replace(/[^0-9]/g,'')"
-required>
-
-<label>Dirección</label>
-<input type="text" name="direccion" id="prov_direccion" class="form-control" required>
-
-<button class="btn-sistema btn-guardar">
-Guardar cambios
-</button>
-
-</form>
-
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
 
-/* ===== MODAL ===== */
-
-const modal = document.getElementById("modalProveedor");
-const cerrar = document.querySelector(".cerrar");
-
-cerrar.onclick = () => modal.style.display="none";
-
-window.onclick = (e)=>{
-if(e.target==modal){
-modal.style.display="none";
-}
-}
-
-/* ===== ABRIR MODAL ===== */
-
+// ===== MODAL =====
 $('.editBtn').click(function(){
 
- let tr = $(this).closest('tr');
+    $('#edit_id').val($(this).data('id'));
+    $('#edit_nombre').val($(this).data('nombre'));
+    $('#edit_correo').val($(this).data('correo'));
+    $('#edit_telefono').val($(this).data('telefono'));
+    $('#edit_direccion').val($(this).data('direccion'));
 
- $('#prov_id').val(tr.data('id'));
- $('#prov_nombre').val(tr.data('nombre'));
- $('#prov_correo').val(tr.data('correo'));
- $('#prov_telefono').val(tr.data('telefono'));
- $('#prov_direccion').val(tr.data('direccion'));
+    new bootstrap.Modal(document.getElementById('modalEditar')).show();
+});
 
- modal.style.display="block";
+
+$('.toggleEstado').click(function(){
+
+    let id = $(this).data('id');
+
+    Swal.fire({
+        title: '¿Cambiar estado?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí'
+    }).then(result => {
+
+        if(result.isConfirmed){
+
+            fetch('../privadas/estado_proveedor.php',{
+                method:'POST',
+                body:new URLSearchParams({id:id})
+            })
+            .then(res=>res.text())
+            .then(text=>{
+                try{
+                    return JSON.parse(text);
+                }catch(e){
+                    console.error("Respuesta inválida:", text);
+                    throw new Error("No es JSON");
+                }
+            })
+            .then(data => {
+
+                //  VALIDAR RESPUESTA
+                if(data.success){
+
+                    Swal.fire({
+                        icon:'success',
+                        title:'Estado actualizado'
+                    }).then(()=>{
+                        location.reload();
+                    });
+
+                }else{
+
+                    Swal.fire({
+                        icon:'error',
+                        title:'Error',
+                        text: data.error || 'No se pudo actualizar'
+                    });
+
+                }
+
+            })
+            .catch(err=>{
+                console.error(err);
+
+                Swal.fire({
+                    icon:'error',
+                    title:'Error servidor'
+                });
+            });
+
+        }
+
+    });
 
 });
 
-/* ===== GUARDAR ===== */
 
-$('#formProveedor').submit(function(e){
+let filasPorPagina = 5;
+let paginaActual = 1;
 
- e.preventDefault();
+function showPage(pagina = 1){
 
- $.ajax({
+    paginaActual = pagina;
 
-   url:'../privadas/update_proveedor.php',
-   type:'POST',
-   data: $(this).serialize(),
+    const texto = $('#busqueda').val().toLowerCase();
+    const filtro = $('#filtroEstado').val();
 
-   success:function(){
+    let filas = $('#tablaProveedores tbody tr');
 
-     Swal.fire('Éxito','Proveedor actualizado','success')
-     .then(()=>location.reload());
+    // FILTRAR
+    let visibles = filas.filter(function(){
 
-   },
+        let fila = $(this).data('busqueda');
+        let estado = $(this).find('.estado').text().trim().toLowerCase();
 
-   error:function(){
+        let visible = fila.includes(texto);
 
-     Swal.fire('Error','No se pudo actualizar','error');
+        if(filtro === 'activos') visible = visible && estado === 'activo';
+        if(filtro === 'inactivos') visible = visible && estado === 'inactivo';
 
-   }
+        return visible;
+    });
 
- });
+    //  OCULTAR TODAS
+    filas.hide();
 
-});
+    //  PAGINAR
+    let inicio = (pagina - 1) * filasPorPagina;
+    let fin = inicio + filasPorPagina;
 
-/* ===== ACTIVAR / INACTIVAR ===== */
+    visibles.slice(inicio, fin).show();
 
-$('.estadoBtn').click(function(){
-
- let tr = $(this).closest('tr');
- let id = tr.data('id');
- let estado = $(this).data('estado');
-
- Swal.fire({
-   title:'¿Seguro?',
-   text: estado==0 ? 'Se inactivará el proveedor' : 'Se activará el proveedor',
-   icon:'warning',
-   showCancelButton:true,
-   confirmButtonText:'Sí'
- }).then((r)=>{
-
-   if(r.isConfirmed){
-
-     $.post('../privadas/proveedor_estado.php',{
-       id:id,
-       estado:estado
-     },function(){
-
-        Swal.fire('Listo','Estado actualizado','success')
-        .then(()=>location.reload());
-
-     });
-
-   }
-
- });
-
-});
-
-</script>
-<!-- ================= SEGURIDAD BOTON ATRAS ================= -->
-
-<script>
-
-let salirConfirmado = false;
-
-window.addEventListener("popstate", function () {
-
-Swal.fire({
-title: "¿Quieres salir del panel?",
-text: "Se cerrará tu sesión por seguridad.",
-icon: "warning",
-showCancelButton: true,
-confirmButtonText: "Sí, salir",
-cancelButtonText: "Cancelar"
-}).then((result) => {
-
-if (result.isConfirmed) {
-
-salirConfirmado = true;
-window.location.href = "../config/cerrar_sesion.php";
-
-}else{
-
-history.pushState(null, null, location.href);
-
+    //  BOTONES
+    generarPaginacion(visibles.length);
 }
 
+
+function generarPaginacion(total){
+
+    let totalPaginas = Math.ceil(total / filasPorPagina);
+    let html = '';
+
+    for(let i = 1; i <= totalPaginas; i++){
+
+        html += `<button class="btn-pag ${i===paginaActual?'activo':''}" 
+                    onclick="showPage(${i})">
+                    ${i}
+                </button>`;
+    }
+
+    $('#paginacion').html(html);
+}
+
+
+// ===== EVENTOS =====
+$('#busqueda').on('keyup', () => showPage(1));
+$('#filtroEstado').on('change', () => showPage(1));
+
+$('#limpiar').click(function(){
+    $('#busqueda').val('');
+    $('#filtroEstado').val('todos');
+    showPage(1);
 });
 
-});
-
-history.pushState(null, null, location.href);
+// ===== INICIAL =====
+showPage(1);
 
 </script>
 

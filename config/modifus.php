@@ -1,4 +1,6 @@
 <?php
+//var_dump($_POST);
+//exit;
 require '../config/Conexion.php';
 require __DIR__ . '/../config/seguridad.php';
 
@@ -81,7 +83,7 @@ if (empty($id_usuario) || empty($primer_nombre) || empty($primer_apellido) || em
                         id_rol           = :id_rol
                 ";
 
-                if (!empty($password) && !empty($confirmar_password)) {
+                if (!empty($password)){
                     $hash = password_hash($password, PASSWORD_DEFAULT);
                     $sql .= ", password = :password";
                 }
@@ -102,6 +104,13 @@ if (empty($id_usuario) || empty($primer_nombre) || empty($primer_apellido) || em
                 }
 
                 $stmt->execute();
+                if($stmt->rowCount() > 0){
+                     $mensaje = 'Usuario actualizado correctamente';
+                      $tipo = 'success';
+                       }else{
+                        $mensaje = 'No se realizaron cambios';
+                         $tipo = 'info';
+                          }
 
                 /* ===== ACTUALIZAR DIRECCIÓN ===== */
                 if ($id_direccion > 0) {

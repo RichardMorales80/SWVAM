@@ -17,19 +17,16 @@ $titulo = ($id_rol == 1) ? "Ventas Generales" : "Mis Compras";
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= $titulo ?></title>
-
-<link rel="stylesheet" href="../public/estilos/estilos.css">
-<link rel="stylesheet" href="../public/estilos/principal.css">
-<link rel="stylesheet" href="../public/estilos/ventas.css">
-<link rel="stylesheet" href="../public/estilos/encabezado.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-
+<link rel="stylesheet" href="/public/estilos/estilos.css">
+<link rel="stylesheet" href="/public/estilos/principal.css">
+<link rel="stylesheet" href="/public/estilos/ventas.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/responsivo.css?v=99999">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-
 <!-- ================= TOPBAR ================= -->
 
 <div class="topbar">
@@ -50,50 +47,46 @@ $titulo = ($id_rol == 1) ? "Ventas Generales" : "Mis Compras";
 
 </div>
 
-<!-- ================= CONTENIDO ================= -->
-
 <div class="main-content">
 
-<div class="catalogo-container">
-
-<h2><?= $titulo ?></h2>
+<br><br><br><br>
 
 <!-- ================= FILTROS ================= -->
 
-<div class="card">
+<div class="filtro-container">
 
-<form id="filtroForm">
+<form id="filtroForm" class="filtro-form">
 
-<div class="form-group">
+<div class="campo">
 <label>Buscar</label>
-<input type="text" name="buscar" class="form-control" placeholder="Descripción o producto">
+<input type="text" name="buscar" placeholder="Producto">
 </div>
 
-<div class="form-group">
+<div class="campo">
 <label>Desde</label>
-<input type="date" name="inicio" class="form-control">
+<input type="date" name="inicio">
 </div>
 
-<div class="form-group">
+<div class="campo">
 <label>Hasta</label>
-<input type="date" name="fin" class="form-control">
+<input type="date" name="fin">
 </div>
 
-<button type="submit" class="btn-sistema btn-editar">
-Filtrar
-</button>
+<div class="campo boton">
+<button class="btn-sistema btn-editar" type="submit">Filtrar</button>
+</div>
 
-<button type="button" class="btn-sistema" onclick="limpiarFiltros()">
-Limpiar
-</button>
+<div class="campo boton">
+<button type="button" class="btn-sistema btn-eliminar"  onclick="limpiarFiltros()">Limpiar</button>
+</div>
 
-<button type="button" class="btn-sistema btn-guardar" onclick="exportExcel()">
-Exportar Excel
-</button>
+<div class="campo boton">
+<button type="button"  class="btn-sistema btn-guardar" onclick="exportExcel()">Excel</button>
+</div>
 
-<button type="button" class="btn-sistema btn-eliminar" onclick="exportPDF()">
-Exportar PDF
-</button>
+<div class="campo boton">
+<button type="button" class="btn-sistema btn-editar" onclick="exportPDF()">PDF</button>
+</div>
 
 </form>
 
@@ -101,140 +94,126 @@ Exportar PDF
 
 <!-- ================= TOTAL ================= -->
 
-<div class="card">
-
-<div class="total-gastos">
-
+<div class="card total-gastos">
 <label>Gran Total:</label>
 <span id="granTotalVentas">$0.00</span>
-
 </div>
 
-</div>
+<div class="card">
 
-</div>
+<div style="overflow-x:auto;">
 
-</div>
-<!-- ================= TABLA ================= -->
-
-<div class="card card-table">
-
-<table class="tabla-sistema">
-
+<table class="table-pro">
 <thead>
-
 <tr>
-<th>ID</th>
-<th>Usuario</th>
-<th>Producto</th>
-<th>Fecha</th>
-<th>Total</th>
+    <th>ID</th>
+    <th>Producto</th>
+    <th>Descripción</th>
+    <th>Precio</th>
+    <th>Cantidad</th>
+    <th>Total</th>
+    <th>Fecha</th>
+    <th>Estado</th>
+    <th>Acción</th>
 </tr>
-
 </thead>
 
-<tbody id="tablaVentas">
-</tbody>
+<tbody id="tablaVentas"></tbody>
 
 </table>
 
-<div id="paginacion" class="paginacion-container"></div>
-
 </div>
 
+<div id="paginacion"></div>
 
-
-
-
+</div>
 <!-- ================= SCRIPT ================= -->
 
 <script>
 
-let paginaActual = 1;
-
 function cargarVentas(pagina = 1){
 
-paginaActual = pagina;
+    let formData = new FormData(document.getElementById("filtroForm"));
+    formData.append("pagina", pagina);
 
-let formData = new FormData(document.getElementById("filtroForm"));
-formData.append("pagina", pagina);
+    fetch("../data/ventas_data.php",{
+        method:"POST",
+        body:formData
+    })
+    .then(res=>res.json())
+    .then(data=>{
 
-fetch("../data/ventas_data.php",{
-method:"POST",
-body:formData
-})
+        document.getElementById("tablaVentas").innerHTML = data.tabla;
+        document.getElementById("paginacion").innerHTML = data.paginacion;
 
-.then(res=>res.json())
+        document.getElementById("granTotalVentas").textContent =
+        "$" + parseFloat(data.gran_total).toLocaleString('es-MX',{minimumFractionDigits:2});
 
-.then(data=>{
-
-document.getElementById("tablaVentas").innerHTML = data.tabla;
-document.getElementById("paginacion").innerHTML = data.paginacion;
-
-const totalSpan = document.getElementById("granTotalVentas");
-
-if(totalSpan && data.gran_total !== undefined){
-
-totalSpan.textContent = "$" + parseFloat(data.gran_total)
-.toLocaleString('es-MX',{minimumFractionDigits:2});
+    });
 
 }
 
+
+// ===== VALIDACIÓN DE FECHAS =====
+document.addEventListener("DOMContentLoaded", () => {
+
+    let hoy = new Date().toISOString().split("T")[0];
+
+    let inicio = document.querySelector('input[name="inicio"]');
+    let fin = document.querySelector('input[name="fin"]');
+
+    // Limitar fechas futuras
+    if(inicio) inicio.setAttribute("max", hoy);
+    if(fin) fin.setAttribute("max", hoy);
+
+    // Evitar fechas manuales futuras
+    function validarFechas(){
+
+        if(inicio.value > hoy){
+            inicio.value = hoy;
+        }
+
+        if(fin.value > hoy){
+            fin.value = hoy;
+        }
+
+        // Evitar que fin sea menor que inicio
+        if(fin.value && inicio.value && fin.value < inicio.value){
+            fin.value = inicio.value;
+        }
+    }
+
+    inicio?.addEventListener("change", validarFechas);
+    fin?.addEventListener("change", validarFechas);
+
 });
 
-}
 
-/* FILTRAR */
-
-document.getElementById("filtroForm")
-.addEventListener("submit",function(e){
-
-e.preventDefault();
-cargarVentas(1);
-
+// ===== FILTRO =====
+document.getElementById("filtroForm").addEventListener("submit",function(e){
+    e.preventDefault();
+    cargarVentas();
 });
 
-/* FILTRO EN TIEMPO REAL */
 
-document.addEventListener("keyup",function(e){
-
-if(e.target.name==="buscar"){
-cargarVentas(1);
-}
-
-});
-
-/* LIMPIAR */
-
+// ===== LIMPIAR =====
 function limpiarFiltros(){
-
-document.getElementById("filtroForm").reset();
-cargarVentas(1);
-
+    document.getElementById("filtroForm").reset();
+    cargarVentas();
 }
 
-/* EXPORTAR */
 
+// ===== EXPORTAR =====
 function exportExcel(){
-
-let buscar=document.querySelector('input[name="buscar"]').value;
-let inicio=document.querySelector('input[name="inicio"]').value;
-let fin=document.querySelector('input[name="fin"]').value;
-
-window.location.href=`../privadas/exportar_ventas_excel.php?buscar=${buscar}&inicio=${inicio}&fin=${fin}`;
-
+    window.location.href="../privadas/exportar_ventas_excel.php";
 }
 
 function exportPDF(){
-
-let buscar=document.querySelector('input[name="buscar"]').value;
-let inicio=document.querySelector('input[name="inicio"]').value;
-let fin=document.querySelector('input[name="fin"]').value;
-
-window.location.href=`../privadas/exportar_ventas_pdf.php?buscar=${buscar}&inicio=${inicio}&fin=${fin}`;
-
+    window.location.href="../privadas/exportar_ventas_pdf.php";
 }
 
+
+// ===== INICIAL =====
 cargarVentas();
 
 </script>

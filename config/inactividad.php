@@ -12,12 +12,12 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 header("Expires: 0");
 
-/* TIEMPO DE INACTIVIDAD (15 MIN) */
-$tiempo_inactividad = 900;
+/* TIEMPO DE INACTIVIDAD (900 segundos / 60= 15 MIN) */
+$tiempo_inactividad = 1200;
 
 /* SI NO HAY SESION */
 if (!isset($_SESSION['id_usuario'])) {
-    header("Location: /SWVAM/index.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -57,7 +57,7 @@ if (isset($_SESSION['ultimo_acceso'])) {
         session_unset();
         session_destroy();
 
-        header("Location: /SWVAM/index.php?expirada=1");
+        header("Location: /index.php?expirada=1");
         exit();
     }
 }

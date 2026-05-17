@@ -45,16 +45,16 @@ $offset = ($pagina - 1) * $porPagina;
 ========================= */
 
 $sqlBase = "FROM facturas f
-LEFT JOIN ventas v ON v.id_venta = f.id_venta
-LEFT JOIN usuarios u ON u.id_usuario = v.id_usuario
-WHERE 1=1";
+INNER JOIN ventas v ON v.id_venta = f.id_venta
+INNER JOIN usuarios u ON u.id_usuario = v.id_usuario
+WHERE v.estado_pago = 'pagado'";
 
 $params = [];
 
 /* SOLO CLIENTE */
 if($id_rol == 2){
-    $sqlBase .= " AND v.id_usuario = ?";
-    $params[] = $id_usuario; 
+ $sqlBase .= " AND v.id_usuario = ?";
+$params[] = $id_usuario; 
 }
 
 /* BUSQUEDA */
@@ -111,12 +111,13 @@ $totalGeneral = $stmtTotalDinero->fetchColumn();
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?= $titulo ?></title>
 
 <link rel="stylesheet" href="../public/estilos/estilos.css">
 <link rel="stylesheet" href="../public/estilos/encabezado.css">
 <link rel="stylesheet" href="../public/estilos/ventas.css">
-
+<link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/responsivo.css?v=99999">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -139,9 +140,7 @@ $totalGeneral = $stmtTotalDinero->fetchColumn();
 <div class="main-content">
 <div class="catalogo-container">
 
-<h2><?= $titulo ?></h2>
-
-<!-- ================= FILTROS ================= -->
+<br><br><br><br>
 
 <div class="card">
 <form method="GET" class="filtro-form">
@@ -163,7 +162,10 @@ $totalGeneral = $stmtTotalDinero->fetchColumn();
 
 <button class="btn-sistema btn-editar">Filtrar</button>
 
-
+<!-- BOTÓN LIMPIAR -->
+<a href="facturas.php" class="btn-sistema btn-eliminar">
+    Limpiar
+</a>
 
 </form>
 </div>
@@ -209,7 +211,13 @@ $totalGeneral = $stmtTotalDinero->fetchColumn();
 class="btn-sistema btn-editar" target="_blank">
 PDF
 </a>
+<a href="../data/detalle_factura.php?id=<?= $f['id_factura'] ?>" 
+class="btn-sistema" target="_blank">
+Ver
+</a>
+
 </td>
+
 
 </tr>
 
@@ -251,6 +259,58 @@ Siguiente
 
 </div>
 </div>
+<!-- ================= SEGURIDAD BOTON ATRAS ================= -->
 
+<script>
+
+let salirConfirmado = false;
+
+window.addEventListener("popstate", function () {
+
+Swal.fire({
+title: "¿Quieres salir del panel?",
+text: "Se cerrará tu sesión por seguridad.",
+icon: "warning",
+showCancelButton: true,
+confirmButtonText: "Sí, salir",
+cancelButtonText: "Cancelar"
+}).then((result) => {
+
+if (result.isConfirmed) {
+
+salirConfirmado = true;
+window.location.href = "../config/cerrar_sesion.php";
+
+}else{
+
+history.pushState(null, null, location.href);
+
+}
+
+});
+
+});
+
+history.pushState(null, null, location.href);
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    let hoy = new Date().toISOString().split("T")[0];
+    let hasta = document.querySelector('input[name="hasta"]');
+
+    if(hasta){
+        hasta.setAttribute("max", hoy);
+
+        hasta.addEventListener("change", function(){
+            if(this.value > hoy){
+                this.value = hoy;
+            }
+        });
+    }
+
+});
+</script>
 </body>
 </html>

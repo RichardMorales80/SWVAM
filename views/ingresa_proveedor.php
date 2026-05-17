@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$nombre = $_SESSION['nombre'] ?? 'Usuario';
 require '../config/Conexion.php';
 require '../config/validaciones.php';
 require __DIR__ . '/../config/seguridad.php';
@@ -12,10 +12,11 @@ include("../views/navbar.php");
 
 $db = Conexion::conectar();
 
+
 $alertas = [];
 
-// Inicializar variables
-$nombre = '';
+// Inicializar variables 
+$nombreForm = '';
 $correo = '';
 $telefono = '';
 $direccion = '';
@@ -81,6 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ingresar Proveedor</title>
 
 <link rel="stylesheet" href="../public/estilos/estilos.css">
@@ -93,19 +95,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-    <div class="topbar-left">
-        <h4>Ingreso de Proveedores</h4>
+<!-- ================= TOPBAR ================= -->
+    <div class="topbar">
+        <div class="topbar-left">
+            <h2>Panel de Administración</h2>
+        </div>
+
+        <div class="topbar-user">
+            <span class="usuario-nombre">
+                <?= $nombre ?>
+            </span>
+
+            <img src="../public/imagenes/avatar.png" class="avatar">
+        </div>
     </div>
 
-    <div class="topbar-user">
-        <span class="usuario-nombre">
-            <?= $_SESSION['nombre_usuario'] ?? 'Usuario' ?>
-        </span>
-        <img src="../public/imagenes/avatar.png" class="avatar" alt="Avatar">
-    </div>
-</div>
 
 <div class="main-content">
     <div class="form-container">
@@ -126,7 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+"
                         title="El nombre solo puede contener letras y espacios"
                         oninput="this.value=this.value.replace(/[^A-Za-zÁÉÍÓÚáéíóúÑñ\s]/g,'')"
-                        value="<?= htmlspecialchars($nombre ?? '') ?>">
+                        value="<?= htmlspecialchars($nombreForm ?? '') ?>"
                 </div>
 
                 <div class="form-group">
@@ -158,16 +162,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <div class="form-group">
-                    <label>Dirección</label>
-                    <input 
-                        type="text" 
-                        id="direccion"
-                        name="direccion" 
-                        class="form-control"
-                        placeholder="Dirección del proveedor"
-                        required
-                        value="<?= htmlspecialchars($direccion ?? '') ?>">
-                </div>
+    <label>País</label>
+    <select 
+        id="direccion"
+        name="direccion" 
+        class="form-control"
+        required
+    >
+        <option value="">Seleccione país</option>
+
+        <option value="Alemania" <?= ($direccion ?? '') == 'Alemania' ? 'selected' : '' ?>>Alemania</option>
+        <option value="Argentina" <?= ($direccion ?? '') == 'Argentina' ? 'selected' : '' ?>>Argentina</option>
+        <option value="Brasil" <?= ($direccion ?? '') == 'Brasil' ? 'selected' : '' ?>>Brasil</option>
+        <option value="China" <?= ($direccion ?? '') == 'China' ? 'selected' : '' ?>>China</option>
+        <option value="Estados Unidos" <?= ($direccion ?? '') == 'Estados Unidos' ? 'selected' : '' ?>>Estados Unidos</option>
+        <option value="Japón" <?= ($direccion ?? '') == 'Japón' ? 'selected' : '' ?>>Japón</option>
+        <option value="México" <?= ($direccion ?? '') == 'México' ? 'selected' : '' ?>>México</option>
+        <option value="Reino Unido" <?= ($direccion ?? '') == 'Reino Unido' ? 'selected' : '' ?>>Reino Unido</option>
+        <option value="Rusia" <?= ($direccion ?? '') == 'Rusia' ? 'selected' : '' ?>>Rusia</option>
+        <option value="Taiwán" <?= ($direccion ?? '') == 'Taiwán' ? 'selected' : '' ?>>Taiwán</option>
+
+    </select>
+</div>
 
                 <div class="form-actions">
                     <button type="submit" class="btn-sistema btn-guardar">

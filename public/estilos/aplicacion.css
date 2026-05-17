@@ -1,0 +1,330 @@
+/* ================= RESET GENERAL ================= */
+
+body{
+    margin:0;
+    overflow-x:hidden;
+    background:#f5f6fa;
+    font-family:Arial, Helvetica, sans-serif;
+    min-height:100vh;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar-app{
+
+    width:180px;
+
+    flex-shrink:0;
+
+    min-height:100vh;
+}
+
+/* ================= CONTENEDOR PRINCIPAL ================= */
+
+.main-content{
+
+    flex:1;
+
+    padding:20px;
+
+    box-sizing:border-box;
+}
+
+/* ================= CONTENEDOR ================= */
+
+.container{
+
+    width:100%;
+
+    margin:0 auto;
+
+    padding:10px;
+}
+
+/* ================= PRODUCTOS ================= */
+
+.producto-item{
+
+    margin-bottom:20px;
+}
+
+/* ================= TARJETA ================= */
+
+.producto-item .card{
+
+    border:none;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+    height:100%;
+
+    box-shadow:0 4px 10px rgba(0,0,0,.08);
+
+    transition:.3s;
+
+    background:white;
+}
+
+.producto-item .card:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 8px 18px rgba(0,0,0,.15);
+}
+
+/* ================= IMAGEN ================= */
+
+.producto-item img{
+
+    width:100%;
+
+    height:180px;
+
+    object-fit:contain;
+
+    background:#fff;
+
+    padding:10px;
+}
+
+/* ================= BODY CARD ================= */
+
+.producto-item .card-body{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+    padding:15px;
+}
+
+/* ================= TITULO ================= */
+
+.producto-item h5{
+
+    font-size:20px;
+
+    margin:0;
+
+    font-weight:bold;
+
+    color:#222;
+}
+
+/* ================= TEXTO ================= */
+
+.producto-item p{
+
+    margin:0;
+
+    font-size:14px;
+
+    color:#555;
+}
+
+/* ================= PRECIO ================= */
+
+.producto-precio{
+
+    color:#16a34a;
+
+    font-size:22px;
+
+    font-weight:bold;
+}
+
+/* ================= STOCK ================= */
+
+.producto-stock{
+
+    font-size:15px;
+
+    font-weight:bold;
+}
+
+/* ================= INPUT ================= */
+
+.producto-item input{
+
+    width:100%;
+
+    height:42px;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
+
+    padding:8px;
+
+    font-size:15px;
+}
+
+/* ================= BOTONES ================= */
+
+.btn-agregar{
+
+    width:100%;
+
+    height:44px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+    cursor:pointer;
+}
+
+.btn-agregar:hover{
+
+    background:#1d4ed8;
+}
+
+.btn-sinstock{
+
+    width:100%;
+
+    height:44px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#9ca3af;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:not-allowed;
+}
+
+/* ================= PAGINACION ================= */
+
+.pagination-custom{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin:25px 0;
+
+    flex-wrap:wrap;
+}
+
+.pagination-custom a{
+
+    width:40px;
+
+    height:40px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-decoration:none;
+
+    border-radius:10px;
+
+    background:#e5e7eb;
+
+    color:#111;
+
+    font-weight:bold;
+
+    transition:.3s;
+}
+
+.pagination-custom a:hover{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+.pagination-custom a.active{
+
+    background:#2563eb;
+
+    color:white;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media screen and (max-width:768px){
+
+    body{
+
+        display:block !important;
+    }
+
+    .sidebar-app{
+
+        width:100% !important;
+
+        min-height:auto !important;
+
+        height:auto !important;
+
+        position:relative !important;
+
+        display:block !important;
+    }
+
+    .main-content{
+
+        width:100% !important;
+
+        display:block !important;
+
+        margin-left:0 !important;
+
+        padding:10px !important;
+    }
+
+    .container{
+
+        padding:5px;
+    }
+
+    .producto-item img{
+
+        height:160px;
+    }
+
+    .producto-item h5{
+
+        font-size:18px;
+    }
+
+    .producto-item p{
+
+        font-size:13px;
+    }
+
+    .producto-precio{
+
+        font-size:20px;
+    }
+}

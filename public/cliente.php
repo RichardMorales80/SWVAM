@@ -1,16 +1,16 @@
 <?php
-ini_set('display_errors', 1);
+ini_set('display_errors', 0);
 error_reporting(E_ALL);
 
 session_start();
 
-require_once '../config/Conexion.php';
-require_once __DIR__ . '/../config/seguridad.php';
+require_once __DIR__ . '/../config/Conexion.php';
+require_once __DIR__ . '/../config/seguridad.php'; 
 
 verificarRoles([2]);
 
 if (!isset($_SESSION['id_usuario'])) {
-    header("Location: ../index.php");
+    header("Location: " . BASE_URL . "index.php");
     exit();
 }
 
@@ -18,13 +18,13 @@ $db = Conexion::conectar();
 
 $nombreUsuario = $_SESSION['nombre'] ?? 'Cliente';
 $rolUsuario    = 'Cliente';
-$avatar        = "../public/imagenes/avatar.png";
+$avatar        = BASE_URL . "public/imagenes/avatar.png";
 
 $totalFacturas = 0;
 $totalCotizaciones = 0;
 $totalPedidos = 0;
-try {
 
+try {
     $stmtFacturas = $db->prepare("
         SELECT COUNT(*) AS total 
         FROM facturas f
@@ -33,16 +33,15 @@ try {
     ");
 
     $stmtFacturas->execute([$_SESSION['id_usuario']]);
-
     $row = $stmtFacturas->fetch(PDO::FETCH_ASSOC);
-
     $totalFacturas = (int)($row['total'] ?? 0);
 
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
 }
 
-include("../views/navbar.php");
+// INCLUDE CORRECTO
+include(__DIR__ . "/../views/navbar.php");
 ?>
 
 <!DOCTYPE html>
@@ -52,66 +51,68 @@ include("../views/navbar.php");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Cliente</title>
 
-    <link rel="stylesheet" href="../public/estilos/cliente.css">
-    <link rel="stylesheet" href="../public/estilos/estilos.css">
+    <!-- CSS -->
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/cliente.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/estilos.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
+    <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body>
 
 <div class="main">
+
+    <!-- TOPBAR -->
     <div class="topbar">
         <div class="titulo">Panel del Cliente</div>
 
         <div class="usuario-box">
-            <img src="<?php echo htmlspecialchars($avatar); ?>" alt="Avatar">
+            <img src="<?= htmlspecialchars($avatar); ?>" alt="Avatar">
             <div class="usuario-info">
-                <span class="nombre"><?php echo htmlspecialchars($nombreUsuario); ?></span>
-                <span class="rol"><?php echo htmlspecialchars($rolUsuario); ?></span>
+                <span class="nombre"><?= htmlspecialchars($nombreUsuario); ?></span>
+                <span class="rol"><?= htmlspecialchars($rolUsuario); ?></span>
             </div>
         </div>
     </div>
 
+    <!-- CONTENIDO -->
     <div class="content">
 
+        <!-- CARDS -->
         <div class="cards">
             <div class="card">
                 <h3>Mis Facturas</h3>
-                <p><?php echo (int)$totalFacturas; ?></p>
+                <p><?= (int)$totalFacturas; ?></p>
             </div>
-
-           
         </div>
 
+        <!-- ACCESOS -->
         <div class="seccion">
             <h3>Accesos permitidos</h3>
 
             <div class="accesos">
+
                 <div class="acceso-card">
                     <h4>Aplicación</h4>
                     <p>Ver catálogo de productos y gestionar carrito.</p>
-                    <a href="../app/aplicacion.php" class="btn-ir">Entrar</a>
+                    <a href="<?= BASE_URL ?>app/cliente_app.php" class="btn-ir">Entrar</a>
                 </div>
 
                 <div class="acceso-card">
                     <h4>Facturas</h4>
                     <p>Consultar y revisar tus facturas registradas.</p>
-                    <a href="../data/facturas.php" class="btn-ir">Entrar</a>
+                    <a href="<?= BASE_URL ?>data/facturas.php" class="btn-ir">Entrar</a>
                 </div>
 
                 
-                <div class="acceso-card">
-                    <h4>Generar factura</h4>
-                    <p>Generar factura.</p>
-                    <a href="../data/facturar_cliente.php" class="btn-ir">Entrar</a>
-                </div>
 
-                
             </div>
         </div>
 
+        <!-- GRÁFICA -->
         <div class="seccion">
             <h3>Resumen visual</h3>
             <div class="chart-container">
@@ -122,6 +123,7 @@ include("../views/navbar.php");
     </div>
 </div>
 
+<!-- SCRIPT GRÁFICA -->
 <script>
 const ctx = document.getElementById('graficaCliente').getContext('2d');
 
@@ -132,9 +134,9 @@ new Chart(ctx, {
         datasets: [{
             label: 'Cantidad',
             data: [
-                <?php echo (int)$totalFacturas; ?>,
-                <?php echo (int)$totalCotizaciones; ?>,
-                <?php echo (int)$totalPedidos; ?>
+                <?= (int)$totalFacturas; ?>,
+                <?= (int)$totalCotizaciones; ?>,
+                <?= (int)$totalPedidos; ?>
             ],
             backgroundColor: [
                 'rgba(30, 60, 114, 0.8)',
@@ -169,6 +171,7 @@ new Chart(ctx, {
 });
 </script>
 
+<!-- BLOQUEAR BOTÓN ATRÁS -->
 <script>
 history.pushState(null, null, location.href);
 
@@ -182,7 +185,7 @@ window.addEventListener("popstate", function () {
         cancelButtonText: "Cancelar"
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = "../config/cerrar_sesion.php";
+            window.location.href = "<?= BASE_URL ?>config/cerrar_sesion.php";
         } else {
             history.pushState(null, null, location.href);
         }

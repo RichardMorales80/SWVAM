@@ -6,7 +6,7 @@
 .dashboard-container {
     width: 95%;
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 20px auto; 
 }
 
 /* CARD */
@@ -14,10 +14,14 @@
     background: #ffffff;
     border-radius: 12px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-    padding: 25px;
+    padding: 15px;
+    margin-bottom: 10px;
 }
 
-/* TABLA PRO */
+/* =========================
+   TABLA PRO
+========================= */
+
 .table-pro {
     width: 100%;
     border-collapse: collapse;
@@ -30,161 +34,279 @@
 }
 
 .table-pro th {
-    padding: 14px;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    padding: 10px; 
+    font-size: 12px;
 }
 
 .table-pro td {
-    padding: 12px;
+    padding: 8px; 
     border-bottom: 1px solid #eee;
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .table-pro tbody tr:hover {
     background-color: #f8f9fc;
-    transition: 0.2s ease-in-out;
 }
 
-/* TOTAL */
+/* =========================
+   TOTAL
+========================= */
+
 .total-box {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: right;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     color: #1cc88a;
 }
 
-/* FILTRO */
+/* =========================
+   FILTRO COMPACTO
+========================= */
+
 .filtro-container {
     width: 95%;
     max-width: 1200px;
-    margin: 20px auto;
+    margin: 10px auto;
 }
 
 .filtro-form {
     display: flex;
-    gap: 20px;
-    align-items: end;
+    gap: 10px; 
+    align-items: center;
     flex-wrap: wrap;
-    background: #ffffff;
-    padding: 20px;
+    background:#ffffff;
+    padding: 10px; 
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
+/* CAMPOS */
 .campo {
     display: flex;
     flex-direction: column;
-    min-width: 180px;
+    min-width: 140px; 
 }
 
 .campo label {
-    font-size: 13px;
-    margin-bottom: 6px;
-    font-weight: 500;
-    color: #444;
+    font-size: 11px;
+    margin-bottom: 4px;
 }
 
 .campo input {
-    padding: 10px 12px;
+    padding: 6px 8px; 
     border-radius: 6px;
     border: 1px solid #ddd;
-    font-size: 14px;
-    transition: 0.2s ease;
+    font-size: 12px;
 }
 
-.campo input:focus {
-    outline: none;
-    border-color: #1cc88a;
-    box-shadow: 0 0 6px rgba(28,200,138,0.3);
-}
-
+/* BOTONES */
 .campo.boton button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    background:#888989;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-.campo.boton button:hover {
-    opacity: 0.9;
+    padding: 6px 12px;
+    font-size: 12px;
+    
 }
 
 /* =========================
    PAGINACION PRO
 ========================= */
 
-#paginacion{
-    margin-top:20px;
-    display:flex;
-    justify-content:center;
-    gap:6px;
+#paginacion {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
 }
 
-/* botones normales */
-
-#paginacion button{
-    border:1px solid #E5E7EB;
-    background:#F9FAFB;
-    color:#374151;
-    padding:8px 14px;
-    border-radius:6px;
-    cursor:pointer;
-    font-size:14px;
-    transition:all .2s ease;
+#paginacion button {
+    border: 1px solid #E5E7EB;
+    background: #F9FAFB;
+    color: #374151;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
 }
 
-/* hover */
-
-#paginacion button:hover{
-    background:#F3F4F6;
+#paginacion button.activo {
+    background: #E5E7EB;
+    font-weight: 600;
 }
 
-/* botón activo */
-
-#paginacion button.activo{
-    background:#E5E7EB;
-    color:#111827;
-    font-weight:600;
-}
 /* =========================
    BOTON LIMPIAR
 ========================= */
 
 .btn-limpiar {
-    padding: 10px 20px;
-    border-radius: 6px;
-    border: none;
-    background: #e74a3b;
-    color: white;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s;
+    padding: 6px 12px;
+    font-size: 12px;
 }
 
-.btn-limpiar:hover {
-    background: #c0392b;
-}
 /* =========================
-   TOTAL GASTOS
+   TOTAL GRANDE
 ========================= */
+
 .total-gastos {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: right;
-    font-size: 2.2rem;       /* tamaño grande para la cantidad */
-    font-weight: 700;         /* negrita */
-    color: #2d2324;           /* rojo llamativo */
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2d2324;
 }
 
 .total-gastos label {
-    font-size: 1.2rem;        /* tamaño de la etiqueta */
-    font-weight: 600;
-    margin-right: 10px;
+    font-size: 1rem;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+/* TABLET */
+@media (max-width: 992px) {
+
+    .dashboard-container {
+        width: 98%;
+    }
+
+    .filtro-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .campo {
+        width: 100%;
+    }
+
+    .total-gastos {
+        text-align: center;
+    }
+
+}
+
+/* CELULAR */
+@media (max-width: 600px) {
+
+    .table-pro th,
+    .table-pro td {
+        font-size: 11px;
+        padding: 6px;
+    }
+
+    .total-gastos {
+        font-size: 1.5rem;
+    }
+
+}
+/* ================= CARD ================= */
+.card-sistema{
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-top: 20px;
+}
+
+/* ================= TABLA RESPONSIVA ================= */
+.tabla-container{
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* ================= TABLA ================= */
+.tabla-sistema{
+    width: 100%;
+    min-width: 900px;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* ENCABEZADO */
+.tabla-sistema thead{
+    background: #2f3e46;
+    color: #fff;
+}
+
+.tabla-sistema th{
+    padding: 12px;
+    font-size: 14px;
+    text-align: left;
+}
+
+/* FILAS */
+.tabla-sistema td{
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+/* DIRECCIÓN NO SE ROMPA FEO */
+.tabla-sistema td.direccion{
+    max-width: 250px;
+    white-space: normal;
+    word-break: break-word;
+}
+
+/* HOVER */
+.tabla-sistema tbody tr:hover{
+    background: #f5f7fa;
+}
+
+/* ================= BOTONES ================= */
+.btn-sistema{
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+/* AZUL (MODIFICAR) */
+.btn-editar{
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-editar:hover{
+    background: #2563eb;
+}
+
+/* ================= PAGINACIÓN ================= */
+.paginacion{
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination{
+    display: flex;
+    gap: 5px;
+}
+
+.page-link{
+    padding: 6px 12px;
+    background: #e5e7eb;
+    border-radius: 6px;
+    text-decoration: none;
     color: #333;
+}
+
+.page-item.active .page-link{
+    background: #3b82f6;
+    color: #fff;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width:768px){
+
+    .tabla-sistema{
+        min-width: 700px;
+    }
+
+    .btn-sistema{
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+
 }

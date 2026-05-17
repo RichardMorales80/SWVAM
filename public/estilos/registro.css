@@ -14,11 +14,10 @@ font-family:Arial, sans-serif;
 /* ================= CONTENIDO ================= */
 
 .main-content{
-margin-left:220px;
-margin-top:80px;
-padding:20px;
-max-width:calc(100% - 220px);
-position:relative;
+    margin-left:250px;   
+    margin-top:40px;
+    padding:20px;
+    width:calc(100% - 250px); 
 }
 
 /* ================= FORMULARIO ================= */
@@ -84,17 +83,21 @@ background:white;
 outline:none;
 box-shadow:0 0 6px rgba(37,99,235,0.15);
 }
+.form-grid-3 input {
+    color: #000;
+    background: #fff;  
+}
 
 /* ================= VALIDACIONES ================= */
 
-input.valid{
-border:2px solid #28a745 !important;
-background-color:#e9f7ef !important;
+.form-grid-3 input.valid{
+    border:2px solid #28a745 !important;
+    background:#e9f7ef !important;
 }
 
-input.invalid{
-border:2px solid #dc3545 !important;
-background-color:#fdecea !important;
+.form-grid-3 input.invalid{
+    border:2px solid #dc3545 !important;
+    background:#fdecea !important;
 }
 
 /* ================= BOTON ================= */
@@ -128,35 +131,50 @@ justify-content:center;
 margin:15px 0;
 }
 
-/* ================= TOOLTIP ================= */
-
-.tooltip{
-position:relative;
-display:inline-block;
-cursor:pointer;
+.form-grid-3{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
 }
 
-.tooltip .tooltiptext{
-visibility:hidden;
-width:220px;
-background:#333;
-color:#fff;
-text-align:left;
-border-radius:5px;
-padding:8px;
-position:absolute;
-z-index:10;
-bottom:125%;
-left:50%;
-transform:translateX(-50%);
-opacity:0;
-transition:opacity .3s;
-font-size:12px;
+.control{
+    width:100%;
+    padding:8px;
+    border:1px solid #ccc;
+    border-radius:6px;
 }
 
-.tooltip:hover .tooltiptext{
-visibility:visible;
-opacity:1;
+/* VALIDACIONES */
+.control.valid{
+    border:2px solid #28a745;
+    background:#e9f7ef;
+}
+
+.control.invalid{
+    border:2px solid #dc3545;
+    background:#fdecea;
+}
+
+/* TOOLTIP */
+.tooltip-box{
+    display:none;
+    background:#333;
+    color:#fff;
+    padding:8px;
+    border-radius:6px;
+    font-size:12px;
+    margin-top:5px;
+}
+
+/* BOTÓN */
+.boton{
+    background:#2563eb;
+    color:#fff;
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    margin-top:10px;
+    cursor:pointer;
 }
 
 /* ================= ANIMACION ================= */
@@ -212,6 +230,10 @@ backdrop-filter:blur(4px);
 justify-content:center;
 align-items:center;
 z-index:2000;
+
+}
+.swal2-container {
+    z-index: 9999 !important;
 }
 
 .modal-content{
@@ -297,4 +319,117 @@ color:#9ca3af;
 
 .close:hover{
 color:#111827;
+}
+/* ================= NAVBAR ================= */
+
+.main_nav{
+    width: 100%;
+    background: #ffffff;
+    position: relative; 
+    z-index: 10;
+    padding: 10px 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* CONTENEDOR MENU */
+.menu{
+    display: flex;
+    align-items: center;
+    max-width: 1200px;
+    margin: auto;
+    list-style: none;
+    padding: 0;
+    
+}
+
+/* LOGO A LA IZQUIERDA */
+.logo-item{
+    margin-right: auto;
+}
+
+.logo{
+    height: 90px;
+}
+
+/* BOTONES */
+.menu li{
+    margin-left: 0px;
+}
+
+.main_menu_link{
+    background: #979797;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.main_menu_link:hover{
+    background:#ccc;
+}
+
+/* ================= SEPARACIÓN CON CARRUSEL ================= */
+
+.carrusel{
+    margin-top: 45px; /*  CLAVE para que no se encime */
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* ===== FIX VISUAL INPUTS MODAL ===== */
+
+#modalRegistro .form-grid-3 input,
+#modalRegistro .form-grid-3 select {
+    background-color: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #000 !important;
+}
+
+/* FOCUS (cuando escribes) */
+#modalRegistro .form-grid-3 input:focus {
+    border-color: #2563eb !important;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
+}
+
+/* VALIDACIONES */
+#modalRegistro .form-grid-3 input.valid {
+    border: 2px solid #28a745 !important;
+    background-color: #e9f7ef !important;
+}
+
+#modalRegistro .form-grid-3 input.invalid {
+    border: 2px solid #dc3545 !important;
+    background-color: #fdecea !important;
+}
+
+#btnSubmit{
+    width: 100%;
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#btnSubmit:disabled{
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.mensaje-error{
+    background:#fdecea;
+    color:#dc2626;
+    padding:10px;
+    border-radius:6px;
+}
+
+.mensaje-ok{
+    background:#e9f7ef;
+    color:#16a34a;
+    padding:10px;
+    border-radius:6px;
 }

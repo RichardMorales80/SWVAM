@@ -1,63 +1,120 @@
 <?php
-// ============================
-// CONEXIÓN A LA BASE DE DATOS
-// ============================
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once '../config/Conexion.php';
 
 $pdo = Conexion::conectar();
 
-// ============================
-// OBTENER CORREO DEL FORMULARIO
-// ============================
+/* =========================
+   OBTENER CORREO
+========================= */
+
 $correo = trim($_POST['correo'] ?? '');
 
-// Validar que no venga vacío
 if(empty($correo)){
-    echo "Debes ingresar un correo";
-    exit;
+    exit('Debes ingresar un correo');
 }
 
-// ============================
-// BUSCAR USUARIO EN LA TABLA
-// ============================
-$sql = "SELECT id_usuario FROM usuarios WHERE correo = ? LIMIT 1";
+/* =========================
+   BUSCAR USUARIO
+========================= */
+
+$sql = "SELECT id_usuario
+        FROM usuarios
+        WHERE correo = ?
+        LIMIT 1";
+
 $stmt = $pdo->prepare($sql);
+
 $stmt->execute([$correo]);
 
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Si no existe el correo
 if(!$usuario){
-    echo "Este correo no está registrado";
-    exit;
+    exit('Este correo no está registrado');
 }
 
-// ============================
-// GENERAR TOKEN SEGURO
-// ============================
+/* =========================
+   GENERAR TOKEN
+========================= */
 
-// token aleatorio seguro
 $token = bin2hex(random_bytes(32));
 
-// Fecha de expiración (1 hora)
 $expira = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
-// ============================
-// GUARDAR TOKEN EN USUARIOS
-// ============================
+/* =========================
+   GUARDAR TOKEN
+========================= */
+
 $update = $pdo->prepare("
-    UPDATE usuarios 
-    SET token_recuperacion = ?, token_expira = ?
+    UPDATE usuarios
+    SET token_recuperacion = ?,
+        token_expira = ?
     WHERE correo = ?
 ");
 
-$update->execute([$token, $expira, $correo]);
+$update->execute([
+    $token,
+    $expira,
+    $correo
+]);
 
-// ============================
-// MOSTRAR TOKEN (PRUEBA)
-// ============================
-// Luego aquí mandaremos correo
+/* =========================
+   CREAR LINK
+========================= */
 
-echo "Token generado correctamente:<br>";
-echo $token;
+$link = "https://morqui.org/templetes/nueva_password.php?token=" . $token;
+
 ?>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+window.top.Swal.fire({
+
+    icon: 'success',
+
+    title: 'Correo enviado',
+
+    text: 'Da clic en el botón para cambiar tu contraseña.',
+
+    showCancelButton: true,
+
+    confirmButtonText: 'Cambiar contraseña',
+
+    cancelButtonText: 'Cerrar',
+
+    confirmButtonColor: '#2563eb',
+
+    cancelButtonColor: '#6b7280',
+
+    allowOutsideClick: false,
+
+    backdrop: true
+
+}).then((result) => {
+
+    // SI PRESIONA CAMBIAR CONTRASEÑA
+    if(result.isConfirmed){
+
+        // REDIRECCIONAR A NUEVA PASSWORD
+        window.top.location.href =
+        "<?php echo $link; ?>";
+    }
+
+    // SI CIERRA
+    else{
+
+        // RECARGAR
+        window.top.location.href =
+        "https://morqui.org/index.php";
+    }
+
+});
+
+</script>

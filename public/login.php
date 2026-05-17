@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 require '../config/Conexion.php';
 require_once '../config/bitacora.php';
 
@@ -55,7 +56,7 @@ if ($_SESSION['bloqueo_login'] > time()) {
 
         } else {
 
-            $secret = '6LeXHIMrAAAAAEZH2eoiGhX0bFdUk4xIPVlXZe-A';
+            $secret = '6LfDwd8rAAAAAFo0WyCcPZBVi8NxcPA8B1R-WWK8';
 
             $verify = file_get_contents(
                 "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha"
@@ -89,7 +90,7 @@ if ($_SESSION['bloqueo_login'] > time()) {
                     $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
                     if (password_verify($pass, $usuario['password'])) {
-
+                           
                         $_SESSION['intentos_login'] = 0;
                         $_SESSION['bloqueo_login'] = 0;
 
@@ -150,7 +151,7 @@ if ($_SESSION['bloqueo_login'] > time()) {
     }
 }
 
-session_regenerate_id(true);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -160,7 +161,7 @@ session_regenerate_id(true);
 
 <link rel="stylesheet" href="estilos/login.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
@@ -190,19 +191,18 @@ session_regenerate_id(true);
         </div>
 
         <div class="captcha-box">
-            <div class="g-recaptcha" data-sitekey="6LeXHIMrAAAAAOGSyamoisUJUxeRIv8kwcxuki77"></div>
+            <div class="g-recaptcha" data-sitekey="6LfDwd8rAAAAAO5jGdE_f9Es4QHlAH9KOzJWN7aK"></div>	
         </div>
 
         <button type="submit" class="login-btn">Ingresar</button>
 
         <div class="forgot-password">
-            <a href="../templetes/recuperar_password.php">
-                ¿Olvidaste tu contraseña?
-            </a>
+            <a href="#" id="abrirRecuperacion">
+¿Olvidaste tu contraseña?
+</a>
         </div>
     </form>
 </div>
-
 <?php if (!empty($alertas)): ?>
 <script>
 <?php foreach ($alertas as $a): ?>
@@ -214,6 +214,72 @@ swal({
 <?php endforeach; ?>
 </script>
 <?php endif; ?>
+<script>
+
+/* =========================================
+   RECUPERAR PASSWORD
+========================================= */
+
+const btnRecuperar =
+document.getElementById("abrirRecuperacion");
+
+if(btnRecuperar){
+
+    btnRecuperar.addEventListener("click", function(e){
+
+        e.preventDefault();
+
+        Swal.fire({
+
+            title: 'Recuperar contraseña',
+
+            html: `
+            
+                <form id="formRecuperar"
+                action="../templetes/procesar_recuperacion.php"
+                method="POST">
+
+                    <input
+                        type="email"
+                        name="correo"
+                        id="correoRecuperacion"
+                        placeholder="Ingresa tu correo"
+                        required
+                        style="
+                            width:100%;
+                            padding:12px;
+                            border:1px solid #d1d5db;
+                            border-radius:8px;
+                            margin-top:10px;
+                        "
+                    >
+
+                </form>
+
+            `,
+
+            showCancelButton: true,
+
+            confirmButtonText: 'Enviar enlace',
+
+            cancelButtonText: 'Cancelar',
+
+            confirmButtonColor: '#2563eb',
+
+            preConfirm: () => {
+
+                document
+                .getElementById('formRecuperar')
+                .submit();
+            }
+
+        });
+
+    });
+
+}
+
+</script>
 
 </body>
 </html>

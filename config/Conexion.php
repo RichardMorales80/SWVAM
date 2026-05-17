@@ -25,9 +25,9 @@ class Conexion {
             // dbname → nombre de la base de datos
             // charset → codificación UTF-8
             $base = new PDO(
-    'mysql:host=localhost;dbname=matthew;charset=utf8',
-    'root',
-    ''
+    'mysql:host=localhost;dbname=u132671509_matthew;charset=utf8',
+    'u132671509_Richard',
+    'Morqui2026'
 );
 
 

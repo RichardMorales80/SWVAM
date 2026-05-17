@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start();// Permite guardar datos del usuario mientras navega en tu sistema.
 
 require __DIR__ . '/../config/seguridad.php';
 require_once __DIR__ . '/../config/Conexion.php';

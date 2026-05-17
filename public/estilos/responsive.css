@@ -1,0 +1,221 @@
+/* =========================
+   ADMIN PANEL
+========================= */
+
+.admin-panel * {
+    box-sizing: border-box;
+}
+
+.admin-panel {
+    margin: 0;
+}
+
+/* =========================
+   SIDEBAr
+========================= */
+
+.admin-panel .sidebar-app {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+/* =========================
+layput
+========================= */
+
+.admin-panel .layout {
+    margin-left: 250px;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.admin-panel .topbar {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    width: calc(100% - 250px);
+    z-index: 900;
+    background: white;
+}
+
+/* =========================
+   CONTENIDO
+========================= */
+
+.admin-panel .dashboard-admin {
+    width: 100%;
+}
+
+.admin-panel .main-content {
+    margin: 0 !important;
+    margin-top: 70px;
+    padding: 20px;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.admin-panel .cards-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.admin-panel .card-mini {
+    flex: 1;
+    min-width: 180px;
+    text-align: center;
+}
+
+/* =========================
+   TABLA 
+========================= */
+
+.admin-panel .tabla-full {
+    width: 100%;
+}
+
+.admin-panel .tabla-full .card-table {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+.admin-panel .tabla-sistema {
+    width: 100%;
+    min-width: 1000px;
+}
+
+/* ELIMINA LIMITES DE CONTENEDOR */
+.admin-panel .catalogo-container {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* =========================
+   GRAFICAS 
+========================= */
+
+.admin-panel .graficas-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.admin-panel .graficas-row .col {
+    width: 100%;
+}
+
+/* =========================
+   movil
+========================= */
+
+@media (max-width: 768px) {
+
+    .admin-panel .sidebar-app {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .admin-panel .layout {
+        margin-left: 0;
+    }
+
+    .admin-panel .topbar {
+        left: 0;
+        width: 100%;
+    }
+
+    .admin-panel .main-content {
+        margin-top: 80px;
+    }
+
+    .admin-panel .cards-row {
+        flex-direction: column;
+    }
+
+    /* gráficas en columna */
+    .admin-panel .graficas-row {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-panel .tabla-sistema {
+        min-width: 700px;
+    }
+}
+
+/* =========================
+   ELIMINAR ESPACIO 
+========================= */
+
+/* Forzar ancho completo del layout */
+.admin-panel .layout {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+/* Asegurar que el contenido use todo el ancho */
+.admin-panel .dashboard-admin {
+    width: 100%;
+}
+
+/* Contenedor principal SIN límites */
+.admin-panel .catalogo-container {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* TABLA OCUPA TODO */
+.admin-panel .tabla-full {
+    width: 100%;
+}
+
+.admin-panel .card-table {
+    width: 100%;
+}
+
+/* eliminar posibles márgenes ocultos */
+.admin-panel .main-content {
+    width: 100%;
+}
+
+/* evitar espacios fantasmas */
+body.admin-panel {
+    overflow-x: hidden;
+}
+
+/* =========================
+   GRAFICAS RESPONSIVAS
+========================= */
+
+/* ESCRITORIO → 4 en fila */
+.admin-panel .graficas-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+
+@media (max-width: 768px) {
+
+    .admin-panel .graficas-row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* CELULARES MUY PEQUEÑOS → 1 por fila */
+@media (max-width: 480px) {
+
+    .admin-panel .graficas-row {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,230 @@
+/* =========================
+   LAYOUT GENERAL
+========================= */
+
+body{
+    overflow-x: hidden;
+    background: #f5f6fa;
+}
+
+/* SIDEBAR */
+.menu{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100vh;
+    background: #1e1e2f;
+    padding-top: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu li{
+    list-style: none;
+}
+
+.menu li a{
+    display: block;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.menu li a:hover{
+    background: #2f2f44;
+}
+
+/* CONTENIDO */
+.container{
+    margin-left: 240px;
+    max-width: calc(100% - 260px);
+}
+
+/* =========================
+   TITULOS
+========================= */
+
+h2{
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   FILTROS
+========================= */
+
+.filtro-container{
+    margin-bottom: 20px;
+}
+
+.filtro-form{
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* CAMPOS */
+.campo{
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+}
+
+.campo label{
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #555;
+}
+
+/* INPUT */
+.campo input{
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* BOTONES */
+.campo.boton{
+    min-width: auto;
+}
+
+.campo.boton button{
+    height: 38px;
+    padding: 0 15px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* COLORES BOTONES */
+.btn-editar{
+    background: #3b82f6;
+    color: #fff;
+}
+
+.btn-eliminar{
+    background: #ef4444;
+    color: #fff;
+}
+
+/* =========================
+   TABLA
+========================= */
+
+.table{
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.table thead{
+    background: #1e293b;
+    color: #fff;
+}
+
+.table td, .table th{
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+.table img{
+    border-radius: 5px;
+}
+
+/* BOTONES TABLA */
+.btn-primary{
+    background: #3b82f6;
+    border: none;
+}
+
+.btn-warning{
+    background: #f59e0b;
+    border: none;
+    color: #000;
+}
+
+/* =========================
+   BADGES
+========================= */
+
+.badge{
+    padding: 6px 10px;
+    font-size: 12px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-content{
+    border-radius: 12px;
+}
+
+.modal-header{
+    background: #f1f5f9;
+}
+
+.modal-title{
+    font-weight: bold;
+}
+
+/* INPUT MODAL */
+.modal input,
+.modal textarea,
+.modal select{
+    font-size: 14px;
+}
+
+/* =========================
+   PAGINACIÓN
+========================= */
+
+.pagination .page-link{
+    border-radius: 6px;
+    margin: 0 3px;
+}
+
+.pagination .active .page-link{
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px){
+
+    .menu{
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .container{
+        margin-left: 0;
+        max-width: 100%;
+    }
+
+    .filtro-form{
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .campo{
+        width: 100%;
+    }
+
+    .campo.boton button{
+        width: 100%;
+    }
+}

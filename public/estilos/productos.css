@@ -1,230 +1,214 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
-
+/* ================= RESET ================= */
 *{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-
+/* ================= VARIABLES ================= */
 :root{
-    --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --gradient1: linear-gradient(135deg, #667eea86 0%, #764ba28e 100%);
-    --url-img: url("imagenes/bg.png");
-    --box-shadow: 6px 6px 10px rgba(0,0,0,.6);
-    --width: 100%;
-    --radius: 8px;
+    --color-primario: #0d6efd;
+    --color-secundario: #6c757d;
+    --color-exito: #198754;
+    --color-peligro: #dc3545;
+    --color-warning: #ffc107;
+    --fondo: #f4f6f9;
 }
 
-
-
+/* ================= BODY ================= */
 body{
-    font-family: 'Raleway', sans-serif;
-    min-height: 100vh;
-    background-image: var(--gradient1), var(--url-img);
-    background-size: cover;
-    background-position: center;
+    font-family: 'Segoe UI', sans-serif;
+    background: var(--fondo);
 }
 
-
-
-.logo{
-
-}
-
-
-
-.enlace{
-    position:fixed;
-    top: 1rem;
-    right: -11rem;
-    width: 100px;
-}
-
-.menu{
-    
-    position: fixed;
-    
-    width: 100%;
+/* ================= CONTENEDOR PRINCIPAL ================= */
+.container{
+    margin-left: 250px; /* RESPETA SIDEBAR */
     padding: 20px;
-    list-style: none;  
+}
+
+/* ================= TITULO ================= */
+h2{
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* ================= FILTROS ================= */
+.filtro-container{
+    margin-bottom: 20px;
+}
+
+.filtro-form{
     display: flex;
-    flex-direction:row;
+    gap: 12px;
+    flex-wrap: wrap;
     align-items: center;
-    background-color: grey;   
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
-.main_menu_item{
-    padding: 30px 15px;
+/* CAMPOS */
+.campo{
+    display: flex;
+    flex-direction: column;
+    min-width: 180px;
 }
 
-
-.main_menu_link{
-    color: black;
-    padding: 3px;
-    text-transform: uppercase;
-    text-decoration: none;
+/* LABEL */
+.campo label{
+    font-size: 13px;
+    margin-bottom: 4px;
+    color: #555;
 }
 
-.main_menu_link:hover
-{
-	color: white;
-	text-decoration:none;
+/* INPUT */
+.campo input{
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    transition: 0.2s;
 }
 
-
-
-.registro{
-	padding-top: 60px;
-	padding-bottom: 2px;
-	display: flex;
-	flex-direction: column;
-	
-
+.campo input:focus{
+    border-color: var(--color-primario);
+    outline: none;
 }
 
+/* BOTONES */
+.campo.boton{
+    display: flex;
+    align-items: flex-end;
+}
 
+.campo.boton button{
+    height: 38px;
+    padding: 0 15px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+}
 
-.form{
-    width: 400px;
+/* COLORES BOTONES */
+.btn-editar{
+    background: var(--color-primario);
+    color: white;
+}
+
+.btn-eliminar{
+    background: var(--color-peligro);
+    color: white;
+}
+
+.btn-editar:hover{
+    opacity: 0.9;
+}
+
+.btn-eliminar:hover{
+    opacity: 0.9;
+}
+
+/* ================= TABLA ================= */
+.table{
     background: #fff;
-    margin: 3px auto;
-    padding: 20px 20px 40px ;
-	
-    text-align: center;
-    border-radius: var(--radius);
-    box-shadow: var(--box-shadow);
+    border-radius: 10px;
     overflow: hidden;
 }
 
-
-
-
-
-
-.registro h4
-{
-	font-size: 22px;
-	margin:5% auto 0%;
-}
-.control
-{
-	width: 100%;
-	background: white;
-	padding: 10px;
-	border-radius: 4px;
-	margin-bottom: 16px;
-	border: 1px solid #1f53c5;
-	font-family: 'calibri';
-	font-size: 18px;
-	color: black;
-}
-.registro p
-{
-height: 40px;
-text-align: center;
-font-size: 18px;
-line-height: 40px;
-}
-.registro a
-{
-	color: white;
-	text-decoration: none;
-}
-.registro a:hover
-{
-	color: white;
-	text-decoration: underline;
-}
-.boton
-{
-	width: 100%;
-	background: #1f53c5;
-	border: none;
-	padding: 1em;
-	color: white;
-	margin: 1em auto 0;
+.table thead{
+    background: #212529;
+    color: #fff;
 }
 
-
-@media screen and (max-width: 768px) {
-
-
-
-	
+.table th,
+.table td{
+    vertical-align: middle;
+    font-size: 14px;
 }
 
-
-
-img{
-    max-width: 100%;
-
+.table img{
+    border-radius: 6px;
 }
 
-.enlace{
-    position:fixed;
-    top: 1rem;
-    right: 1rem;
-    width: 80px;
+/* ================= BOTONES TABLA ================= */
+.btn-primary{
+    background: var(--color-primario);
+    border: none;
 }
 
-.menu{
-    
-    position: fixed;
-    top: -1rem;   
-    width: 100%;
-    padding: 20px;
-    list-style: none;  
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: grey;   
+.btn-warning{
+    background: var(--color-warning);
+    border: none;
+    color: #000;
 }
 
+.btn-primary:hover,
+.btn-warning:hover{
+    opacity: 0.9;
+}
 
+/* ================= BADGES ================= */
+.badge{
+    padding: 6px 10px;
+    font-size: 12px;
+    border-radius: 6px;
+}
 
+/* ================= MODAL ================= */
+.modal-content{
+    border-radius: 12px;
+}
 
-@media screen and (min-width: 768px) {
-    .menu{
-        margin-bottom: 20px;
-        flex-direction: row;
-        font-size: 20px;
-        padding: 40px;
-        
-    } 
-    .main_menu_item{
-        padding: 3px;
+.modal-header{
+    background: #f1f5f9;
+}
+
+.modal-title{
+    font-weight: bold;
+}
+
+/* INPUT MODAL */
+.modal input,
+.modal textarea,
+.modal select{
+    font-size: 14px;
+}
+
+/* ================= PAGINACIÓN ================= */
+.pagination{
+    margin-top: 20px;
+}
+
+.pagination .page-link{
+    border-radius: 6px;
+    margin: 0 3px;
+}
+
+.pagination .active .page-link{
+    background: var(--color-primario);
+    border-color: var(--color-primario);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px){
+
+    .container{
+        margin-left: 0;
+    }
+
+    .filtro-form{
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .campo{
+        width: 100%;
+    }
+
+    .campo.boton button{
+        width: 100%;
     }
 }
-
-ul{
-    width: 40%;
-    height: 120px;
-}
-
-
-.main_menu_link{
-    color: black;
-    padding: 3px;
-    text-transform: uppercase;
-    text-decoration: none;
-}
-
-.main_menu_link:hover
-{
-	color: white;
-	text-decoration:none;
-}
-
-
-.nombre{
-    text-align: center;
-    color: red;
-    font-size: 15px;
-}
-
-
-
-
-
-

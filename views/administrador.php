@@ -1,6 +1,7 @@
 <?php
-session_start();
 
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
 require __DIR__ . '/../config/seguridad.php';
 require_once __DIR__ . '/../config/Conexion.php';
 require_once __DIR__ . '/../config/bitacora.php';
@@ -13,7 +14,7 @@ if(!isset($_SESSION['id_usuario'])){
 }
 
 $tipoMenu = "admin";
-include("../views/navbar.php");
+
 
 $pdo = Conexion::conectar();
 
@@ -83,12 +84,11 @@ $nombre = htmlspecialchars($_SESSION['nombre'] ?? 'Administrador');
 ========================= */
 
 $sqlProductos = "SELECT 
-                    descripcion AS nombre, 
+                    descripcion AS nombre,
                     SUM(cantidad) AS cantidad
-                 FROM ventas
+                 FROM detalle_venta
                  GROUP BY descripcion
                  ORDER BY cantidad DESC";
-
 $stmt = $pdo->prepare($sqlProductos);
 $stmt->execute();
 $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -144,7 +144,7 @@ $sqlVentasCliente = "SELECT
                         CONCAT(u.primer_nombre,' ',u.primer_apellido) AS cliente,
                         COALESCE(SUM(v.total),0) AS total
                      FROM usuarios u
-                     LEFT JOIN ventas v ON v.id_usuario = u.id_usuario
+                     LEFT JOIN ventas v ON v.id_usuario = u.id_usuario 
                      WHERE u.id_rol = 2
                      GROUP BY u.id_usuario
                      ORDER BY total DESC";
@@ -170,215 +170,216 @@ if(count($labelsClientes) == 0){
 <!DOCTYPE html>
 <html lang="es">
 <head>
+
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel Administrador</title>
 
-<link rel="stylesheet" href="../public/estilos/estilos.css">
-<link rel="stylesheet" href="../public/estilos/encabezado.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/estilos.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/estilos1.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/encabezado.css">
+<link rel="stylesheet" href="<?= BASE_URL ?>public/estilos/responsivo.css?v=99999">
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
-<body>
+<body class="admin-panel">
 
-<div class="topbar">
-    <div class="topbar-left">
-        <h2>Panel de Administración</h2>
-    </div>
+<?php include(__DIR__ . "/navbar.php"); ?>
 
-    <div class="topbar-user">
-        <span class="usuario-nombre"><?= $nombre ?></span>
-        <img src="../public/imagenes/avatar.png" class="avatar" alt="Avatar">
-    </div>
-</div>
+<div class="layout">
 
-<div class="main-content">
-    <div class="catalogo-container">
+    
 
-        <h3 style="margin-bottom:20px;">Resumen del sistema</h3>
+    <div class="dashboard-admin">
 
-        <!-- ================= CARDS ================= -->
-
-        <div class="row" style="gap:20px;margin-bottom:40px;">
-
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <h5>Ventas Totales</h5>
-                    <p class="estado-activo">$<?= number_format($totalVentas,2) ?></p>
-                </div>
+        <!-- ================= TOPBAR ================= -->
+        <div class="topbar">
+            <div class="topbar-left">
+                <h2>Panel de Administración</h2>
             </div>
 
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <h5>Gastos Totales</h5>
-                    <p class="estado-inactivo">$<?= number_format($totalGastos,2) ?></p>
-                </div>
-            </div>
+            <div class="topbar-user">
+                <span class="usuario-nombre">
+                    <?= $nombre ?>
+                </span>
 
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <h5>Balance</h5>
-                    <p>$<?= number_format($balance,2) ?></p>
-                </div>
+                <img src="../public/imagenes/avatar.png" class="avatar">
             </div>
-
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <h5>Logins Hoy</h5>
-                    <p><?= $loginsHoy ?></p>
-                </div>
-            </div>
-
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <h5>Total Accesos</h5>
-                    <p><?= $totalAccesos ?></p>
-                </div>
-            </div>
-
         </div>
 
-        <!-- ================= GRAFICAS ================= -->
+        <!-- ================= CONTENIDO ================= -->
+        <div class="main-content">
+            <div class="catalogo-container">
 
-        <div class="row graficas-row" style="gap:20px;flex-wrap:wrap;">
+                <h3 style="margin-bottom:20px;">Resumen del sistema</h3>
 
-            <div class="col-md-6">
-                <div class="card card-table">
-                    <h5 style="text-align:center;">Finanzas</h5>
-                    <canvas id="graficaFinanzas"></canvas>
+                <!-- ================= CARDS ================= -->
+                <div class="cards-row">
+
+                    <div class="card-mini">
+                        <h5>Ventas Totales</h5>
+                        <p class="estado-activo">$<?= number_format($totalVentas,2) ?></p>
+                    </div>
+
+                    <div class="card-mini">
+                        <h5>Gastos Totales</h5>
+                        <p class="estado-inactivo">$<?= number_format($totalGastos,2) ?></p>
+                    </div>
+
+                    <div class="card-mini">
+                        <h5>Balance</h5>
+                        <p>$<?= number_format($balance,2) ?></p>
+                    </div>
+
+                    <div class="card-mini">
+                        <h5>Logins Hoy</h5>
+                        <p><?= $loginsHoy ?></p>
+                    </div>
+
+                    <div class="card-mini">
+                        <h5>Total Accesos</h5>
+                        <p><?= $totalAccesos ?></p>
+                    </div>
+
                 </div>
-            </div>
 
-            <div class="col-md-6">
-                <div class="card card-table">
-                    <h5 style="text-align:center;">Productos más vendidos</h5>
-                    <canvas id="graficaProductos"></canvas>
-                </div>
-            </div>
+                <!-- ================= TABLA ================= -->
+                <div class="tabla-full">
+                    <div class="card card-table">
 
-            <div class="col-md-6">
-                <div class="card card-table">
-                    <h5 style="text-align:center;">Gastos por usuario</h5>
-                    <canvas id="graficaGastos"></canvas>
-                </div>
-            </div>
+                        <h5 style="text-align:center;">Actividad reciente</h5>
 
-            <div class="col-md-6">
-                <div class="card card-table">
-                    <h5 style="text-align:center;">Ventas por cliente</h5>
-                    <canvas id="graficaClientes"></canvas>
-                </div>
-            </div>
+                        <table class="tabla-sistema">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Usuario</th>
+                                    <th>Acción</th>
+                                    <th>Fecha</th>
+                                </tr>
+                            </thead>
 
-        </div>
+                            <tbody id="tabla-bitacora">
+                                <?php if(!empty($bitacora)): ?>
+                                    <?php foreach($bitacora as $b): ?>
 
-        <!-- ================= BITACORA ================= -->
+                                        <?php
+                                        $accion = $b['accion'];
+                                        $partes = explode('|', $accion);
 
-        <div class="card card-table" style="margin-top:40px;">
+                                        $accionTexto = trim($partes[0]);
+                                        $tiempoTexto = isset($partes[1]) ? trim($partes[1]) : '';
 
-    <h5 style="text-align:center;">Actividad reciente</h5>
+                                        $color = '#333';
 
-    <table class="tabla-sistema">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Usuario</th>
-                <th>Acción</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
+                                        if(str_contains($accionTexto, 'Inició')){
+                                            $color = 'green';
+                                        }elseif(str_contains($accionTexto, 'inactividad')){
+                                            $color = 'orange';
+                                        }elseif(str_contains($accionTexto, 'Cerró')){
+                                            $color = 'red';
+                                        }
+                                        ?>
 
-        <tbody>
-            <?php if(!empty($bitacora)): ?>
-                <?php foreach($bitacora as $b): ?>
+                                        <tr>
+                                            <td><?= $b['id_bitacora'] ?></td>
 
-                    <?php
-                    /* =========================
-                       FORMATEAR ACCION
-                    ========================= */
+                                            <td>
+                                                <?php
+                                                $nombreBit = trim($b['nombre_usuario']);
+                                                echo $nombreBit !== '' ? htmlspecialchars($nombreBit) : 'Usuario '.$b['id_usuario'];
+                                                ?>
+                                            </td>
 
-                    $accion = $b['accion'];
+                                            <td style="color:<?= $color ?>;">
+                                                <strong><?= htmlspecialchars($accionTexto) ?></strong>
 
-                    $partes = explode('|', $accion);
+                                                <?php if($tiempoTexto): ?>
+                                                    <br>
+                                                    <small style="color:#777;">
+                                                        <?= htmlspecialchars($tiempoTexto) ?>
+                                                    </small>
+                                                <?php endif; ?>
+                                            </td>
 
-                    $accionTexto = trim($partes[0]);
-                    $tiempoTexto = isset($partes[1]) ? trim($partes[1]) : '';
+                                            <td>
+                                                <?= date("d/m/Y H:i:s", strtotime($b['fecha'])) ?>
+                                            </td>
+                                        </tr>
 
-                    /* =========================
-                       COLOR SEGUN ACCION
-                    ========================= */
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="4" style="text-align:center;">
+                                            No hay actividad registrada
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
 
-                    $color = '#333';
+                        <div style="text-align:center; margin-top:15px;">
 
-                    if(str_contains($accionTexto, 'Inició')){
-                        $color = 'green';
-                    }elseif(str_contains($accionTexto, 'inactividad')){
-                        $color = 'orange';
-                    }elseif(str_contains($accionTexto, 'Cerró')){
-                        $color = 'red';
-                    }
-                    ?>
-
-                    <tr>
-
-                        <td><?= $b['id_bitacora'] ?></td>
-
-                        <td>
-                            <?php
-                            $nombreBit = trim($b['nombre_usuario']);
-                            echo $nombreBit !== '' ? htmlspecialchars($nombreBit) : 'Usuario '.$b['id_usuario'];
-                            ?>
-                        </td>
-
-                        <td style="color:<?= $color ?>;">
-                            <strong><?= htmlspecialchars($accionTexto) ?></strong>
-
-                            <?php if($tiempoTexto): ?>
-                                <br>
-                                <small style="color:#777;">
-                                    <?= htmlspecialchars($tiempoTexto) ?>
-                                </small>
+                            <?php if($pagina > 1): ?>
+                                <a href="?pagina=<?= $pagina-1 ?>" class="btn-sistema">Anterior</a>
                             <?php endif; ?>
-                        </td>
 
-                        <td>
-                            <?= date("d/m/Y H:i:s", strtotime($b['fecha'])) ?>
-                        </td>
+                            <span style="margin:0 10px;">
+                                Página <?= $pagina ?> de <?= max($totalPaginas, 1) ?>
+                            </span>
 
-                    </tr>
+                            <?php if($pagina < $totalPaginas): ?>
+                                <a href="?pagina=<?= $pagina+1 ?>" class="btn-sistema">Siguiente</a>
+                            <?php endif; ?>
 
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="4" style="text-align:center;">
-                        No hay actividad registrada
-                    </td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+                        </div>
 
-    <div style="text-align:center; margin-top:15px;">
+                    </div>
+                </div>
 
-        <?php if($pagina > 1): ?>
-            <a href="?pagina=<?= $pagina-1 ?>" class="btn-sistema">Anterior</a>
-        <?php endif; ?>
+                <!-- ================= GRAFICAS ================= -->
+                <div class="row graficas-row">
 
-        <span style="margin:0 10px;">
-            Página <?= $pagina ?> de <?= max($totalPaginas, 1) ?>
-        </span>
+                    <div class="col">
+                        <div class="card card-table">
+                            <h5 style="text-align:center;">Finanzas</h5>
+                            <canvas id="graficaFinanzas"></canvas>
+                        </div>
+                    </div>
 
-        <?php if($pagina < $totalPaginas): ?>
-            <a href="?pagina=<?= $pagina+1 ?>" class="btn-sistema">Siguiente</a>
-        <?php endif; ?>
+                    <div class="col">
+                        <div class="card card-table">
+                            <h5 style="text-align:center;">Productos más vendidos</h5>
+                            <canvas id="graficaProductos"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card card-table">
+                            <h5 style="text-align:center;">Gastos por usuario</h5>
+                            <canvas id="graficaGastos"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card card-table">
+                            <h5 style="text-align:center;">Ventas por cliente</h5>
+                            <canvas id="graficaClientes"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
 
     </div>
 
-</div>
-
-    </div>
 </div>
 
 <script>
@@ -453,6 +454,79 @@ new Chart(document.getElementById('graficaClientes'), {
         }
     }
 });
+</script>
+
+<!-- ================= SEGURIDAD BOTON ATRAS ================= -->
+
+<script>
+
+let salirConfirmado = false;
+
+window.addEventListener("popstate", function () {
+
+Swal.fire({
+title: "¿Quieres salir del panel?",
+text: "Se cerrará tu sesión por seguridad.",
+icon: "warning",
+showCancelButton: true,
+confirmButtonText: "Sí, salir",
+cancelButtonText: "Cancelar"
+}).then((result) => {
+
+if (result.isConfirmed) {
+
+salirConfirmado = true;
+window.location.href = "../config/cerrar_sesion.php";
+
+}else{
+
+history.pushState(null, null, location.href);
+
+}
+
+});
+
+});
+
+history.pushState(null, null, location.href);
+
+</script>
+<script src="/public/sesion.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    iniciarMonitoreo();
+});
+</script>
+</script>
+<script>
+function actualizarBitacora() {
+    fetch("bitacora_ajax.php")
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("tabla-bitacora").innerHTML = data;
+    });
+}
+
+// cada 3 segundos
+setInterval(actualizarBitacora, 3000);
+
+// cargar al inicio
+actualizarBitacora();
+</script>
+<script>
+function actualizarBitacora() {
+    fetch("bitacora_ajax.php")
+    .then(res => res.text())
+    .then(data => {
+        document.getElementById("tabla-bitacora").innerHTML = data;
+    });
+}
+
+// cada 3 segundos
+setInterval(actualizarBitacora, 3000);
+
+// cargar al inicio
+actualizarBitacora();
 </script>
 
 </body>

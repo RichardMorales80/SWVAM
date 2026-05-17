@@ -1,6 +1,18 @@
 <?php
-ini_set('display_errors', 1);
+// este archivo son las validaciones del backend para el registro de usuarios que trabaja junto con modal_registro_usuarios y con validaciones del lado del frontend 
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
+
+set_error_handler(function($errno, $errstr, $errfile, $errline){
+    echo json_encode([["error","PHP: $errstr en $errfile:$errline"]]);
+    exit;
+});
+
+set_exception_handler(function($e){
+    echo json_encode([["error","EXCEPTION: ".$e->getMessage()]]);
+    exit;
+});
 
 require '../config/Conexion.php';
 
@@ -90,15 +102,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     /* ===== CAPTCHA ===== */
-    if (empty($captcha)) {
-        $errores[] = "Verifica el reCAPTCHA.";
-    } else {
-        $secret = '6LeXHIMrAAAAAEZH2eoiGhX0bFdUk4xIPVlXZe-A';
-        $verify = @file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha");
-        $captchaOK = json_decode($verify, true);
+    if (true) {
 
-        if (!$captchaOK || empty($captchaOK['success'])) {
-            $errores[] = "reCAPTCHA inválido.";
+        if (empty($captcha)) {
+
+            $errores[] = "Verifica el reCAPTCHA.";
+
+        } else {
+
+            $secret = '6LfDwd8rAAAAAFo0WyCcPZBVi8NxcPA8B1R-WWK8';
+
+            $verify = @file_get_contents(
+                "https://www.google.com/recaptcha/api/siteverify?secret=$secret&response=$captcha"
+            );
+
+            $captchaOK = json_decode($verify, true);
+
+            if (!$captchaOK || empty($captchaOK['success'])) {
+                $errores[] = "reCAPTCHA inválido.";
+            }
         }
     }
 
@@ -115,19 +137,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 SELECT d_asenta, D_mnpio, d_estado
                 FROM cat_cp
                 WHERE d_codigo = ?
-                  AND d_asenta = ?
-                LIMIT 1
             ");
-            $stmtCP->execute([$codigo_postal, $colonia]);
 
-            $cpData = $stmtCP->fetch(PDO::FETCH_ASSOC);
+            $stmtCP->execute([$codigo_postal]);
 
-            if (!$cpData) {
-                $errores[] = "La colonia seleccionada no corresponde al código postal capturado.";
+            $coloniasBD = $stmtCP->fetchAll(PDO::FETCH_ASSOC);
+
+            if (!$coloniasBD) {
+                $errores[] = "Código postal inválido.";
             } else {
-                $coloniaOficial = $cpData['d_asenta'];
-                $ciudad = $cpData['D_mnpio'];   // municipio lo manejas como ciudad
-                $estado = $cpData['d_estado'];
+
+                $coloniaValida = false;
+
+                foreach ($coloniasBD as $fila) {
+                    if (mb_strtolower(trim($fila['d_asenta'])) === mb_strtolower(trim($colonia))) {
+                        $coloniaValida = true;
+                        $coloniaOficial = $fila['d_asenta'];
+                        $ciudad = $fila['D_mnpio'];
+                        $estado = $fila['d_estado'];
+                        break;
+                    }
+                }
+
+                if (!$coloniaValida) {
+                    $errores[] = "La colonia no corresponde al código postal.";
+                }
             }
 
         } catch (PDOException $e) {
@@ -150,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->rollBack();
             } else {
 
-                /* 1️⃣ INSERTAR DIRECCIÓN */
+                /* INSERTAR DIRECCIÓN */
                 $stmtDireccion = $db->prepare("
                     INSERT INTO direcciones
                     (calle, numero_exterior, numero_interior, colonia, ciudad, estado, codigo_postal, created_at)
@@ -170,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Obtener id generado
                 $id_direccion = $db->lastInsertId();
 
-                /* 2️⃣ INSERTAR USUARIO */
+                /*  INSERTAR USUARIO */
                 $hash = password_hash($pass, PASSWORD_DEFAULT);
 
                 $stmtUsuario = $db->prepare("
@@ -208,5 +242,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 header('Content-Type: application/json; charset=utf-8');
-echo json_encode($alertas);
+
+if (!isset($alertas) || empty($alertas)) {
+    echo json_encode([["error","Error interno del servidor"]]);
+} else {
+    echo json_encode($alertas);
+}
+
 exit();

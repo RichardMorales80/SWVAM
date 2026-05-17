@@ -1,0 +1,170 @@
+/* ================= DASHBOARD ADMIN ================= */
+
+/* ===== CONTENEDOR GENERAL ===== */
+.dashboard-admin .top-section {
+    display: block; 
+}
+
+/* ================= CARDS ARRIBA ================= */
+
+.dashboard-admin .cards-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: nowrap;
+}
+
+/* Cards pequeñas */
+.dashboard-admin .card-mini {
+    flex: 1;
+    background: #fff;
+    padding: 12px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    min-width: 120px;
+}
+
+/* Texto cards */
+.dashboard-admin .card-mini h5 {
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.dashboard-admin .card-mini p {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* ================= TABLA ABAJO ================= */
+
+.dashboard-admin .tabla-full {
+    width: 100%;
+}
+
+.dashboard-admin .tabla-full .card-table {
+    width: 100%;
+    max-height: 500px;
+    overflow-y: auto;
+    border-radius: 12px;
+}
+
+/* ================= GRAFICAS ================= */
+
+.dashboard-admin .graficas-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: nowrap; /* todas en una fila */
+    margin-top: 30px;
+}
+
+.dashboard-admin .graficas-row .col {
+    flex: 1;
+    min-width: 250px;
+}
+
+/* Ajuste de tamaño */
+.dashboard-admin .graficas-row canvas {
+    max-height: 200px;
+}
+
+/* ================= ESTILO GENERAL CARDS ================= */
+
+.dashboard-admin .card {
+    padding: 15px 10px;
+    border-radius: 12px;
+}
+
+.dashboard-admin .card h5 {
+    font-size: 14px;
+}
+
+.dashboard-admin .card p {
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+    /* Cards se bajan */
+    .dashboard-admin .cards-row {
+        flex-wrap: wrap;
+    }
+
+    /* Gráficas se acomodan */
+    .dashboard-admin .graficas-row {
+        flex-wrap: wrap;
+    }
+}
+
+/* ===== FILTROS + CARDS EN UNA FILA ===== */
+
+.dashboard-admin .reporte-top {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* Filtros (lado izquierdo) */
+.dashboard-admin .filtros {
+    flex: 2;
+}
+
+/* Contenedor de cards */
+.dashboard-admin .resumen-cards {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+}
+
+/* Cada card */
+.dashboard-admin .resumen-cards .card-mini {
+    flex: 1;
+    min-width: 100px;
+}
+
+/* Diseño de cards */
+.dashboard-admin .card-mini {
+    background: #fff;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* Texto */
+.dashboard-admin .card-mini h5 {
+    font-size: 13px;
+}
+
+.dashboard-admin .card-mini p {
+    font-size: 16px;
+    font-weight: bold;
+}
+/* ===== ARREGLO DEFINITIVO ===== */
+
+.dashboard-admin .reporte-top {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+/*LIMITA EL ANCHO DEL FILTRO */
+.dashboard-admin .filtros {
+    flex: 1;
+    max-width: 60%;
+}
+
+/* CARDS */
+.dashboard-admin .resumen-cards {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+}
+
+/*  CARDS MÁS PEQUEÑAS */
+.dashboard-admin .card-mini {
+    flex: 1;
+    min-width: 90px;
+}

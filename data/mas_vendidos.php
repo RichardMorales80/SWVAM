@@ -16,20 +16,21 @@ try {
     $params = [];
 
     if($fecha_inicio && $fecha_fin){
-        $condicion = " WHERE fecha BETWEEN :inicio AND :fin ";
+        $condicion = " WHERE v.fecha BETWEEN :inicio AND :fin ";
         $params[':inicio'] = $fecha_inicio;
         $params[':fin'] = $fecha_fin;
     }
 
-    $sql = "SELECT 
-                descripcion AS nombre,
-                SUM(cantidad) AS cantidad,
-                precio,
-                SUM(total) AS total
-            FROM ventas
-            $condicion
-            GROUP BY id_producto, descripcion, precio
-            ORDER BY cantidad DESC";
+   $sql = "SELECT 
+            dv.descripcion AS nombre,
+            SUM(dv.cantidad) AS cantidad,
+            dv.precio,
+            SUM(dv.total) AS total
+        FROM detalle_venta dv
+        INNER JOIN ventas v ON dv.id_venta = v.id_venta
+        $condicion
+        GROUP BY dv.descripcion, dv.precio
+        ORDER BY cantidad DESC";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);

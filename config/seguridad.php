@@ -1,34 +1,69 @@
 <?php
 
+// ================= CONFIGURACIÓN GLOBAL =================
+define("BASE_URL", "https://morqui.org/");
+
+// ================= INICIAR SESIÓN =================
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Cargar control de inactividad
+// ================= CONTROL DE INACTIVIDAD =================
 require __DIR__ . '/inactividad.php';
 
-/**
- * Verifica que el usuario tenga un rol específico
- */
+// ================= VERIFICAR UN SOLO ROL =================
 function verificarRol($rolPermitido) {
-    if (!isset($_SESSION['id_rol']) || $_SESSION['id_rol'] != $rolPermitido) {
+
+    if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['id_rol'])) {
+        redirigirInicio();
+    }
+
+    if ($_SESSION['id_rol'] != $rolPermitido) {
         redirigirInicio();
     }
 }
 
-/**
- * Verifica que el usuario tenga uno de varios roles permitidos
- */
+// ================= VERIFICAR MÚLTIPLES ROLES =================
 function verificarRoles(array $rolesPermitidos) {
-    if (!isset($_SESSION['id_rol']) || !in_array($_SESSION['id_rol'], $rolesPermitidos)) {
+
+    if (!isset($_SESSION['id_usuario']) || !isset($_SESSION['id_rol'])) {
+        redirigirInicio();
+    }
+
+    if (!in_array($_SESSION['id_rol'], $rolesPermitidos)) {
         redirigirInicio();
     }
 }
 
-/**
- * Redirección centralizada
- */
+// ================= REDIRECCIÓN INTELIGENTE =================
 function redirigirInicio() {
-    header("Location: /SWVAM/index.php");
+
+    // Si no hay sesión → login
+    if (!isset($_SESSION['id_rol'])) {
+        header("Location: " . BASE_URL . "index.php");
+        exit();
+    }
+
+    // Redirigir según rol
+    switch ($_SESSION['id_rol']) {
+
+        case 1: // ADMIN
+            header("Location: " . BASE_URL . "views/administrador.php");
+            break;
+
+        case 2: // CLIENTE
+            header("Location: " . BASE_URL . "public/cliente.php");
+            break;
+
+        case 3: // VENDEDOR
+            header("Location: " . BASE_URL . "views/vendedor.php");
+            break;
+
+        default:
+            header("Location: " . BASE_URL . "index.php");
+            break;
+    }
+
     exit();
 }
+

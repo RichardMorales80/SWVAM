@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+
 session_start();
 require '../config/Conexion.php';
 
@@ -20,7 +23,7 @@ $id_usuario = intval($_POST['id_usuario']);
 $base = Conexion::conectar();
 
 /* =========================
-   NO BORRAR ADMIN PRINCIPAL
+   NO DESACTIVAR ADMIN PRINCIPAL
 ========================= */
 $adminProtegido = "richardmr77@gmail.com";
 
@@ -37,21 +40,37 @@ if (!$usuario) {
     $tipo = "error";
 
 } elseif ($usuario['correo'] === $adminProtegido) {
-    $mensaje = "No puedes eliminar al administrador principal";
+    $mensaje = "No puedes desactivar al administrador principal";
     $tipo = "error";
 
 } else {
 
-    $delete = $base->prepare("
-        DELETE FROM usuarios 
-        WHERE id_usuario = ?
-    ");
+    try {
+        //  INICIAR TRANSACCIÓN
+        $base->beginTransaction();
 
-    if ($delete->execute([$id_usuario])) {
-        $mensaje = "Usuario eliminado correctamente";
+        /* =========================
+           DESACTIVAR SOLO USUARIO
+        ========================= */
+        $update = $base->prepare("
+            UPDATE usuarios 
+            SET estado = 0
+            WHERE id_usuario = ?
+        ");
+        $update->execute([$id_usuario]);
+
+        
+        $base->commit();
+
+        $mensaje = "Usuario desactivado correctamente";
         $tipo = "success";
-    } else {
-        $mensaje = "No se pudo eliminar el usuario";
+
+    } catch (Exception $e) {
+
+        
+        $base->rollBack();
+
+        $mensaje = "Error al desactivar: " . $e->getMessage();
         $tipo = "error";
     }
 }

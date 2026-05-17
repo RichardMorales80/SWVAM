@@ -1,43 +1,170 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+session_start();
 
-require_once '../global/configuracion.php';
-require_once '../config/Conexion.php';
-include 'caqrrito.php';
-include '../templetes/cabecera.php';
-require __DIR__ . '/../config/seguridad.php';
+require_once __DIR__ . '/../global/configuracion.php';
+require_once __DIR__ . '/../config/Conexion.php';
+require_once __DIR__ . '/../config/seguridad.php';
 
-verificarRol(1,2,3);
+include __DIR__ . '/../templetes/cabecera.php';
+
+verificarRoles([1,2,3]);
 
 $pdo = Conexion::conectar();
-$id_usuario = $_SESSION['id_usuario'] ?? null;
 
-if(!$id_usuario){
-    echo "<div class='alert alert-danger'>Inicia sesión</div>";
+$id_usuario = $_SESSION['id_usuario'] ?? null;
+$id_cliente = $_SESSION['id_cliente'] ?? null;
+
+// USAR CLIENTE SI EXISTE
+$usuario_carrito = $id_cliente ?? $id_usuario;
+
+if(!$usuario_carrito){
+    header("Location: " . BASE_URL . "index.php");
     exit;
 }
 
-$sql = "SELECT * FROM carrito WHERE id_usuario=?";
+if(!$id_cliente){
+    header("Location: seleccionar_cliente.php");
+    exit;
+}
+
+/* =========================
+   ACCIONES
+========================= */
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    if (isset($_POST['accion_cantidad'])) {
+
+        $id_producto = openssl_decrypt($_POST['id'], COD, KEY);
+
+        if ($id_producto) {
+
+            $stmt = $pdo->prepare("SELECT cantidad FROM carrito WHERE id_producto=? AND id_usuario=?");
+            $stmt->execute([$id_producto, $usuario_carrito]);
+            $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($producto) {
+
+                $cantidad = $producto['cantidad'];
+
+                $stmtStock = $pdo->prepare("SELECT cantidad FROM productos WHERE id_producto=?");
+                $stmtStock->execute([$id_producto]);
+                $stock = $stmtStock->fetchColumn() ?? 0;
+
+                if ($_POST['accion_cantidad'] == 'sumar') {
+
+                    if ($cantidad < $stock) {
+                        $cantidad++;
+                    } else {
+                        $_SESSION['error_stock'] = "No hay stock disponible";
+                    }
+                }
+
+                if ($_POST['accion_cantidad'] == 'restar') {
+                    $cantidad--;
+                }
+
+                if ($cantidad <= 0) {
+                    $delete = $pdo->prepare("DELETE FROM carrito WHERE id_producto=? AND id_usuario=?");
+                    $delete->execute([$id_producto, $usuario_carrito]);
+                } else {
+                    $update = $pdo->prepare("UPDATE carrito SET cantidad=? WHERE id_producto=? AND id_usuario=?");
+                    $update->execute([$cantidad, $id_producto, $usuario_carrito]);
+                }
+            }
+
+            header("Location: mostrarcarro.php");
+            exit;
+        }
+    }
+
+    if (isset($_POST['btnaccion']) && $_POST['btnaccion'] == "Eliminar") {
+
+        $id_producto = openssl_decrypt($_POST['id'], COD, KEY);
+
+        if ($id_producto) {
+
+            $sql = "DELETE FROM carrito WHERE id_producto = ? AND id_usuario = ?";
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute([$id_producto, $usuario_carrito]);
+              $_SESSION['mensaje'] = "Producto eliminado correctamente";
+            header("Location: mostrarcarro.php");
+            exit;
+        }
+    }
+}
+
+/* =========================
+   OBTENER PRODUCTOS
+========================= */
+
+$sql = "SELECT c.*, IFNULL(p.cantidad, 9999) AS stock 
+        FROM carrito c
+        LEFT JOIN productos p ON c.id_producto = p.id_producto
+        WHERE c.id_usuario=?";
+
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$id_usuario]);
+$stmt->execute([$usuario_carrito]);
 $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-<br>
-<h3 style="text-align:center; color:burlywood;">
-Lista de artículos del carrito
-</h3>
+<div class="contenedor-carrito">
+<div class="topbar">
+    <div class="topbar-left">
+        <h4>Carrito de compras</h4>
+    </div>
+
+    <div class="topbar-user">
+        <span class="usuario-nombre">
+            <?= $_SESSION['nombre'] ?? 'Usuario' ?>
+        </span>
+
+        <img src="../public/imagenes/avatar.png" class="avatar" alt="Avatar">
+    </div>
+</div>
+<div style="text-align:center; margin-bottom:10px;">
+Cliente: <strong><?= $_SESSION['nombre_cliente'] ?? 'Sin cliente' ?></strong>
+</div>
+
+<h3 style="text-align:center;">Lista de artículos del carrito</h3>
+<?php if(isset($_SESSION['mensaje'])): ?>
+<script>
+Swal.fire({
+    icon: 'success',
+    title: '<?= $_SESSION['mensaje'] ?>',
+    timer: 2000,
+    showConfirmButton: false
+});
+</script>
+<?php unset($_SESSION['mensaje']); endif; ?>
+
+<?php if(isset($_SESSION['error_stock'])): ?>
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Stock insuficiente',
+    text: 'No hay stock disponible'
+});
+</script>
+<?php unset($_SESSION['error_stock']); endif; ?>
 
 <?php if(count($productos) > 0): ?>
 
-<table class="table table-striped table-responsive">
-<tbody>
-
+<table class="table table-striped">
 <tr>
-   <th width="40%">Descripción</th>
-   <th width="15%" class="text-center">Cantidad</th>
-   <th width="20%" class="text-center">Precio</th>
-   <th width="20%" class="text-center">Total</th>
-   <th width="5%">--</th>
+<th>Descripción</th>
+<th class="text-center">Cantidad</th>
+<th class="text-center">Precio</th>
+<th class="text-center">Total</th>
+<th></th>
+</tr>
+<tr>
+<td colspan="5" style="text-align:center; padding:20px;">
+
+
+
+</td>
 </tr>
 
 <?php $total = 0; ?>
@@ -46,41 +173,43 @@ Lista de artículos del carrito
 
 <tr>
 
-<td width="40%">
-    <?= htmlspecialchars($producto['descripcion']) ?>
-</td>
+<td><?= htmlspecialchars($producto['descripcion']) ?></td>
 
-<td width="15%" class="text-center">
-    <?= $producto['cantidad'] ?>
-</td>
-
-<td width="20%" class="text-center">
-    $<?= number_format($producto['precio'],2) ?>
-</td>
-
-<td width="20%" class="text-center">
-    $<?= number_format($producto['precio'] * $producto['cantidad'],2) ?>
-</td>
-
-<td width="5%">
-
-<form method="post">
+<td class="text-center">
+<form method="post" style="display:flex; justify-content:center; gap:5px;">
 
 <input type="hidden" name="id"
 value="<?= openssl_encrypt($producto['id_producto'], COD, KEY); ?>">
 
-<button class="btn btn-danger"
- type="submit"
- name="btnaccion"
- value="Eliminar">
-Eliminar
+<button type="submit" name="accion_cantidad" value="restar" class="btn btn-secondary btn-sm">-</button>
+
+<span><?= $producto['cantidad'] ?></span>
+
+<button type="submit" name="accion_cantidad" value="sumar"
+class="btn btn-secondary btn-sm"
+<?= ($producto['cantidad'] >= $producto['stock']) ? 'disabled' : '' ?>>
++
 </button>
 
 </form>
+</td>
 
+<td class="text-center">$<?= number_format($producto['precio'],2) ?></td>
+
+<td class="text-center">
+$<?= number_format($producto['precio'] * $producto['cantidad'],2) ?>
+</td>
+
+<td>
+<form method="post">
+<input type="hidden" name="id"
+value="<?= openssl_encrypt($producto['id_producto'], COD, KEY); ?>">
+<button class="btn btn-danger btn-sm" name="btnaccion" value="Eliminar">X</button>
+</form>
 </td>
 
 </tr>
+
 
 <?php 
 $total += $producto['precio'] * $producto['cantidad']; 
@@ -89,49 +218,23 @@ $total += $producto['precio'] * $producto['cantidad'];
 <?php endforeach; ?>
 
 <tr>
-<td colspan="3" align="right"><h4>Total</h4></td>
-<td align="right"><h4>$<?= number_format($total,2) ?></h4></td>
+<td colspan="3" align="right"><strong>Total:</strong></td>
+<td align="center"><strong>$<?= number_format($total,2) ?></strong></td>
 <td></td>
 </tr>
 
+</table>
 <tr>
-<td colspan="5">
+<td colspan="5" style="text-align:center; padding:20px;">
 
-<form action="../privadas/pagar.php" method="post">
-
-<div class="alert alert-dark">
-
-<div class="form-group">
-<label>Correo de contacto:</label>
-
-<input name="email"
- class="form-control"
- type="email"
- placeholder="Ingrese su correo electrónico"
- required>
-
-<small class="form-text text-muted">
-Los datos de compra se enviarán a este correo
-</small>
-
-</div>
-</div>
-
-<button class="btn btn-primary btn-lg btn-block"
- type="submit"
- name="btnaccion"
- value="proceder">
-Enviar pedido al correo >>
-</button>
-
+<form action="../privadas/pagar.php" method="POST">
+    <button class="btn btn-success btn-lg" name="btnaccion" value="proceder">
+        Confirmar Pedido
+    </button>
 </form>
 
 </td>
 </tr>
-
-</tbody>
-</table>
-
 <?php else: ?>
 
 <div class="alert alert-success">
@@ -140,39 +243,4 @@ No hay ningún producto en el carrito...
 
 <?php endif; ?>
 
-<?php include '../templetes/pie.php'; ?>
-<!-- ================= SEGURIDAD BOTON ATRAS ================= -->
-
-<script>
-
-let salirConfirmado = false;
-
-window.addEventListener("popstate", function () {
-
-Swal.fire({
-title: "¿Quieres salir del panel?",
-text: "Se cerrará tu sesión por seguridad.",
-icon: "warning",
-showCancelButton: true,
-confirmButtonText: "Sí, salir",
-cancelButtonText: "Cancelar"
-}).then((result) => {
-
-if (result.isConfirmed) {
-
-salirConfirmado = true;
-window.location.href = "../config/cerrar_sesion.php";
-
-}else{
-
-history.pushState(null, null, location.href);
-
-}
-
-});
-
-});
-
-history.pushState(null, null, location.href);
-
-</script>
+</div>

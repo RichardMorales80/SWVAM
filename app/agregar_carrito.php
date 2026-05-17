@@ -1,3 +1,6 @@
+
+
+<?php
 session_start();
 include 'conex.php';
 
@@ -37,3 +40,7 @@ if(isset($_GET['id'])){
         VALUES('$id_usuario','$id_producto','$nombre','$precio','$imagen',1)");
   }
 }
+
+?>
+
+

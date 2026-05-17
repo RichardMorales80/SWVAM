@@ -1,9 +1,13 @@
 <?php
 session_start();
-include '../config/Conexion.php';
+
+require_once __DIR__ . '/../config/Conexion.php';
+require_once __DIR__ . '/../config/seguridad.php';
+
+verificarRoles([1,2,3]);
 
 if(!isset($_SESSION['id_usuario'])){
-    header("Location: ../public/login.php");
+    header("Location: " . BASE_URL . "index.php");
     exit();
 }
 
@@ -16,14 +20,12 @@ if(isset($_POST['btnaccion']) && $_POST['btnaccion'] === 'proceder'){
         $base->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $base->beginTransaction();
 
-        $id_usuario = $_SESSION['id_usuario'];
+       $id_usuario = $_SESSION['id_cliente'] ?? $_SESSION['id_usuario'];
 
         // ============================
-        // OBTENER CARRITO DESDE BD
+        // OBTENER CARRITO
         // ============================
-
-        $sqlCarrito = "SELECT * FROM carrito WHERE id_usuario=?";
-        $stmtCarrito = $base->prepare($sqlCarrito);
+        $stmtCarrito = $base->prepare("SELECT * FROM carrito WHERE id_usuario=?");
         $stmtCarrito->execute([$id_usuario]);
         $carrito = $stmtCarrito->fetchAll(PDO::FETCH_ASSOC);
 
@@ -32,77 +34,114 @@ if(isset($_POST['btnaccion']) && $_POST['btnaccion'] === 'proceder'){
         }
 
         // ============================
-        // PROCESAR COMPRA
+        // CALCULAR TOTAL
         // ============================
+        $total_general = 0;
+        foreach($carrito as $p){
+            $total_general += $p['precio'] * $p['cantidad'];
+        }
 
+        $fecha = date('Y-m-d H:i:s');
+
+        // ============================
+        // INSERTAR VENTA (CABECERA)
+        // ============================
+        $stmtVenta = $base->prepare("
+           INSERT INTO ventas (id_usuario, total, fecha, estado_pago)
+           VALUES (?, ?, ?, 'pendiente')
+        ");
+
+        $stmtVenta->execute([$id_usuario, $total_general, $fecha]);
+
+        $id_venta = $base->lastInsertId();
+
+        // ============================
+        // INSERTAR DETALLE + STOCK
+        // ============================
         foreach($carrito as $producto){
 
-            $id_producto = $producto['id_producto'];
             $descripcion = $producto['descripcion'];
             $precio = $producto['precio'];
             $cantidad = $producto['cantidad'];
             $total = $precio * $cantidad;
-            $fecha = date('Y-m-d H:i:s');
 
-            // -------- DESCONTAR STOCK --------
-
-            $sqlStock = "
+            // -------- STOCK --------
+            $stmtStock = $base->prepare("
                 UPDATE productos 
-                SET cantidad = cantidad - :cantidad 
-                WHERE id_producto = :id_producto
-                AND cantidad >= :cantidad
-                AND estado = 1
-            ";
-
-            $stmtStock = $base->prepare($sqlStock);
+                SET cantidad = cantidad - ? 
+                WHERE id_producto = ? 
+                AND cantidad >= ?
+            ");
 
             $stmtStock->execute([
-                ':cantidad' => $cantidad,
-                ':id_producto' => $id_producto
+                $cantidad,
+                $producto['id_producto'],
+                $cantidad
             ]);
 
             if($stmtStock->rowCount() == 0){
-                throw new Exception("Sin stock para producto ID $id_producto");
+                throw new Exception("Sin stock suficiente");
             }
 
-            // -------- INSERTAR VENTA --------
+            // -------- DETALLE --------
+            $stmtDetalle = $base->prepare("
+                INSERT INTO detalle_venta
+                (id_venta, descripcion, cantidad, precio, total)
+                VALUES (?, ?, ?, ?, ?)
+            ");
 
-            $sqlVenta = "
-                INSERT INTO ventas
-                (id_usuario, id_producto, descripcion, precio, cantidad, total, fecha)
-                VALUES
-                (:id_usuario, :id_producto, :descripcion, :precio, :cantidad, :total, :fecha)
-            ";
-
-            $stmtVenta = $base->prepare($sqlVenta);
-
-            $stmtVenta->execute([
-                ':id_usuario' => $id_usuario,
-                ':id_producto' => $id_producto,
-                ':descripcion' => $descripcion,
-                ':precio' => $precio,
-                ':cantidad' => $cantidad,
-                ':total' => $total,
-                ':fecha' => $fecha
+            $stmtDetalle->execute([
+                $id_venta,
+                $descripcion,
+                $cantidad,
+                $precio,
+                $total
             ]);
         }
 
+        
         // ============================
-        // VACIAR CARRITO EN BD
+        // VACIAR CARRITO
         // ============================
-
-        $sqlVaciar = "DELETE FROM carrito WHERE id_usuario=?";
-        $stmtVaciar = $base->prepare($sqlVaciar);
+        $stmtVaciar = $base->prepare("DELETE FROM carrito WHERE id_usuario=?");
         $stmtVaciar->execute([$id_usuario]);
 
         $base->commit();
+                // ============================
+               // ENVIAR CORREO
+               // ============================
 
+                 $correo = $_SESSION['correo'] ?? '';
+
+                   if($correo){
+
+                     $asunto = "Pedido confirmado";
+
+                        $mensajeCorreo = "
+                         Hola ".$_SESSION['nombre']."<br><br>
+
+                      Tu pedido ha sido registrado correctamente.<br><br>
+
+                          <b>Total:</b> $".$total_general."<br>
+                            <b>Fecha:</b> ".$fecha."<br><br>
+
+                             En breve podrás realizar el pago desde tu panel.<br><br>
+
+                            Gracias por tu compra.
+                                                  ";
+
+                                     $headers = "MIME-Version: 1.0" . "\r\n";
+                                     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+                                     $headers .= "From: sistema@tuempresa.com";
+
+                                       mail($correo, $asunto, $mensajeCorreo, $headers);
+                                            }
         $mensaje = 'Swal.fire({
             icon:"success",
             title:"Compra realizada correctamente",
-            showConfirmButton:false,
-            timer:2000
-        }).then(()=>{window.location.href="../app/index.php";});';
+            timer:2000,
+            showConfirmButton:false
+        }).then(()=>{window.location.href="' . BASE_URL . 'data/facturas.php";});';
 
     } catch(Exception $e){
 
@@ -111,9 +150,8 @@ if(isset($_POST['btnaccion']) && $_POST['btnaccion'] === 'proceder'){
         $mensaje = 'Swal.fire({
             icon:"error",
             title:"Error en la compra",
-            text:"'.$e->getMessage().'",
-            showConfirmButton:true
-        }).then(()=>{window.location.href="../app/mostrarcarro.php";});';
+            text:"'.$e->getMessage().'"
+        }).then(()=>{window.location.href="' . BASE_URL . 'app/mostrarcarro.php";});';
     }
 
 } else {
@@ -121,25 +159,20 @@ if(isset($_POST['btnaccion']) && $_POST['btnaccion'] === 'proceder'){
     $mensaje = 'Swal.fire({
         icon:"warning",
         title:"Acción inválida",
-        showConfirmButton:false,
-        timer:2000
-    }).then(()=>{window.location.href="../app/mostrarcarro.php";});';
+        timer:2000,
+        showConfirmButton:false
+    }).then(()=>{window.location.href="' . BASE_URL . 'app/mostrarcarro.php";});';
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Procesando compra</title>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
 <body>
-
 <script>
 <?= $mensaje ?>
 </script>
-
 </body>
 </html>

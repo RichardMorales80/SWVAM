@@ -23,11 +23,11 @@ try {
     }
 
     $db = Conexion::conectar();
-
-    $sql = "SELECT d_asenta, D_mnpio, d_estado
-            FROM cat_cp
-            WHERE d_codigo = :cp
-            ORDER BY d_asenta ASC";
+            
+   $sql = "SELECT DISTINCT d_asenta, D_mnpio, d_estado
+        FROM cat_cp
+        WHERE d_codigo = :cp
+        ORDER BY d_asenta ASC";
 
     $stmt = $db->prepare($sql);
     $stmt->bindParam(':cp', $cp, PDO::PARAM_STR);
