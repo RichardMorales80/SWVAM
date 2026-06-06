@@ -206,7 +206,7 @@ if ($_SESSION['bloqueo_login'] > time()) {
 <?php if (!empty($alertas)): ?>
 <script>
 <?php foreach ($alertas as $a): ?>
-swal({
+Swal.fire({
     title: "<?php echo $a[0] === 'error' ? 'Error' : 'Éxito'; ?>",
     text: "<?php echo $a[1]; ?>",
     icon: "<?php echo $a[0]; ?>"
